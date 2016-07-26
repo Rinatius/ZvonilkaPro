@@ -44,7 +44,7 @@ public class EventActivity extends AppCompatActivity {
                 date.setText(text);
                 text = R.string.city + event.getCity();
                 city.setText(text);
-                text = R.string.city + event.getAppCompany_ID().getName();
+                text = R.string.company + event.getAppCompany_ID().getName();
                 company.setText(text);
                 text = R.string.eventDescription + event.getNote();
                 notes.setText(text);

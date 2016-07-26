@@ -31,5 +31,18 @@
     <string name="fragment_select_events">Events</string>
     <string name="fragment_select_users">Users</string>
     <string name="fragment_select_search">Search</string>
+    <string name="city">City: </string>
+    <string name="date">Date: </string>
+    <string name="company">Company: </string>
+    <string name="eventDescription">Description: </string>
+    <string name="name">Name: </string>
+    <string name="surname">Surname: </string>
+    <string name="email">Email: </string>
+    <string name="phone">Phone: </string>
+    <string name="address">Address: </string>
+    <string name="interests">Interests: </string>
+    <string name="bithdaydate">Birthday date: </string>
+    <string name="family">Family: </string>
+    <string name="imagebuttondescription">Call to current contact</string>
 
 </resources>
