@@ -25,5 +25,10 @@
     <string name="default_registered_text">Registered successfully!</string>
                                         
     <string name="registration_success_message">Thank you for registering with the %1$s. Click the button below to proceed to the login.</string>
-                                            
+
+    <string name="date">Date: </string>
+    <string name="city">City: </string>
+    <string name="company">Company: </string>
+    <string name="eventDescription">Event description: </string>
+
 </resources>
