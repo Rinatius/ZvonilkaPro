@@ -3,6 +3,7 @@ package kg.kloop.rinat.zvonilka.login;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -10,7 +11,7 @@ import com.backendless.Backendless;
 
 import kg.kloop.rinat.zvonilka.R;
 
-public class RestorePasswordActivity extends Activity
+public class RestorePasswordActivity extends AppCompatActivity
 {
   private Button restorePasswordButton;
   private EditText loginField;

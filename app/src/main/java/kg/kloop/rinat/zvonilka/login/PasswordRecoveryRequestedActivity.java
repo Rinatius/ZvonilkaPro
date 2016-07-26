@@ -1,14 +1,14 @@
 package kg.kloop.rinat.zvonilka.login;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
 import kg.kloop.rinat.zvonilka.R;
 
-public class PasswordRecoveryRequestedActivity extends Activity
+public class PasswordRecoveryRequestedActivity extends AppCompatActivity
 {
   private Button loginButton;
 
