@@ -1,9 +1,8 @@
 package kg.kloop.rinat.zvonilka.login;
 
-import android.app.Activity;
-import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.*;
 import com.backendless.Backendless;
@@ -11,7 +10,7 @@ import com.backendless.BackendlessUser;
 
 import kg.kloop.rinat.zvonilka.R;
 
-public class RegisterActivity extends Activity
+public class RegisterActivity extends AppCompatActivity
 {
   private final static java.text.SimpleDateFormat SIMPLE_DATE_FORMAT = new java.text.SimpleDateFormat( "yyyy/MM/dd" );
 

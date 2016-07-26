@@ -1,8 +1,8 @@
 package kg.kloop.rinat.zvonilka.login;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
 import android.view.View;
@@ -10,17 +10,14 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import com.backendless.Backendless;
 import com.backendless.BackendlessUser;
 
 import kg.kloop.rinat.zvonilka.R;
+import kg.kloop.rinat.zvonilka.SelectActivity;
 
-public class LoginActivity extends Activity
+public class LoginActivity extends AppCompatActivity
 {
   private TextView registerLink, restoreLink;
   private EditText identityField, passwordField;
@@ -56,7 +53,7 @@ public class LoginActivity extends Activity
               {
                 super.handleResponse( currentUser );
                 Backendless.UserService.setCurrentUser( currentUser );
-                startActivity( new Intent( getBaseContext(), LoginSuccessActivity.class ) );
+                startActivity( new Intent( getBaseContext(), SelectActivity.class ) );
                 finish();
               }
             } );
@@ -125,7 +122,7 @@ public class LoginActivity extends Activity
       public void handleResponse( BackendlessUser backendlessUser )
       {
         super.handleResponse( backendlessUser );
-        startActivity( new Intent( LoginActivity.this, LoginSuccessActivity.class ) );
+        startActivity( new Intent( LoginActivity.this, SelectActivity.class ) );
         finish();
       }
     }, rememberLogin );
