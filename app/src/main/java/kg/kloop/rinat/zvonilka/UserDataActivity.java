@@ -40,9 +40,9 @@ public class UserDataActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_data);
         initUi();
-        userId = getIntent().getExtras().getString("event");
+        userId = getIntent().getExtras().getString(R.string.userDataIdkey);
         querry = new BackendlessDataQuery();
-        querry.setWhereClause("objectId = '" + userId + "'");
+        querry.setWhereClause(R.string.objectidquerry + userId + "'");
 
         Backendless.Persistence.of(UserData.class).find(querry, new DefaultCallback<BackendlessCollection<UserData>>(this){
             @Override
