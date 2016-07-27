@@ -47,7 +47,7 @@ public class ToDoActivity extends AppCompatActivity {
             @Override
             public void handleResponse(BackendlessCollection<ToDo> toDoBackendlessCollection) {
                 toDo = toDoBackendlessCollection.getData().get(0);
-                querry.setWhereClause(Resources.userDataIdKey + "'"+ toDo.getUserData_ID());
+//                querry.setWhereClause(Resources.userDataIdKey + "'"+ toDo.getUserData_ID());
                 Backendless.Persistence.of(UserData.class).find(querry, new AsyncCallback<BackendlessCollection<UserData>>() {
                     @Override
                     public void handleResponse(BackendlessCollection<UserData> userDataBackendlessCollection) {

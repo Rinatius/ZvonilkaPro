@@ -50,10 +50,10 @@ public class EventActivity extends AppCompatActivity {
                     date.setText(text);
                     text = getResources().getString(R.string.city) + event.get(i).getCity();
                     city.setText(text);
-                    if (event.get(i).getAppCompany_ID() != null) {
-                        text = getResources().getString(R.string.company) + event.get(i).getAppCompany_ID().getName();
-                        company.setText(text);
-                    }
+//                    if (event.get(i).getAppCompany_ID() != null) {
+//                        text = getResources().getString(R.string.company) + event.get(i).getAppCompany_ID().getName();
+//                        company.setText(text);
+//                    }
                     text = getResources().getString(R.string.eventDescription) + event.get(i).getNote();
                     notes.setText(text);
                     super.handleResponse(eventBackendlessCollection);
