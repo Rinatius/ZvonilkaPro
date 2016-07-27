@@ -42,30 +42,30 @@ public class UserDataActivity extends AppCompatActivity {
         initUi();
         userId = getIntent().getExtras().getString(getResources().getString(R.string.userDataIdkey));
         querry = new BackendlessDataQuery();
-        querry.setWhereClause(R.string.objectidquerry + userId + "'");
+        querry.setWhereClause(getResources().getString(R.string.objectidquerry) + " = '" + userId + "'");
 
         Backendless.Persistence.of(UserData.class).find(querry, new DefaultCallback<BackendlessCollection<UserData>>(this){
             @Override
             public void handleResponse(BackendlessCollection<UserData> eventBackendlessCollection) {
                 userData = eventBackendlessCollection.getData().get(0);
                 String text;
-                text = R.string.name + userData.getFirstName();
+                text = getResources().getString(R.string.name) + userData.getFirstName();
                 name.setText(text);
-                text = R.string.surname + userData.getSecondName();
+                text = getResources().getString(R.string.surname) + userData.getSecondName();
                 surname.setText(text);
-                text = R.string.email + userData.getEmail();
+                text = getResources().getString(R.string.email) + userData.getEmail();
                 email.setText(text);
-                text = R.string.phone + userData.getPhoneNumber();
+                text = getResources().getString(R.string.phone) + userData.getPhoneNumber();
                 phone.setText(text);
-                text = R.string.city + userData.getCity();
+                text = getResources().getString(R.string.city) + userData.getCity();
                 city.setText(text);
-                text = R.string.address + userData.getAdress();
+                text = getResources().getString(R.string.address) + userData.getAdress();
                 address.setText(text);
-                text = R.string.interests + userData.getInterests();
+                text = getResources().getString(R.string.interests) + userData.getInterests();
                 interests.setText(text);
-                text = R.string.bithdaydate + userData.getBirthday().toString();
+                text = getResources().getString(R.string.bithdaydate) + userData.getBirthday().toString();
                 birthday.setText(text);
-                text = R.string.family + userData.getFamily();
+                text = getResources().getString(R.string.family) + userData.getFamily();
                 family.setText(text);
 
                 number = Uri.parse("tel:"+userData.getPhoneNumber());

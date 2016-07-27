@@ -44,7 +44,7 @@
     <string name="bithdaydate">Birthday date: </string>
     <string name="family">Family: </string>
     <string name="imagebuttondescription">Call to current contact</string>
-    <string name="objectidquerry">objectId = '</string>
+    <string name="objectidquerry">objectId</string>
     <string name="eventIdkey">eventId</string>
     <string name="userDataIdkey">userDataId</string>
 
