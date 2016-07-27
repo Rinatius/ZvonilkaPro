@@ -50,8 +50,10 @@ public class SelectActivityAdapterEvents extends BaseAdapter{
         TextView name = (TextView) v.findViewById(R.id.user_data_list_name);
         TextView city = (TextView) v.findViewById(R.id.user_data_list_events);
 
-        name.append(event.getName());
-        city.append(event.getCity());
+        String nameStr = context.getResources().getString(R.string.name) + event.getName();
+        name.setText(nameStr);
+        String cityStr = context.getResources().getString(R.string.city) + event.getCity();
+        city.setText(cityStr);
         return v;
     }
 }

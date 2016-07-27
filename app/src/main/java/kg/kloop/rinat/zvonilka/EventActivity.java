@@ -29,7 +29,7 @@ public class EventActivity extends AppCompatActivity {
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
 
@@ -56,7 +56,9 @@ public class EventActivity extends AppCompatActivity {
                     }
                     text = R.string.eventDescription + event.get(i).getNote();
                     notes.setText(text);
+                    super.handleResponse(eventBackendlessCollection);
                 }
+
             }
 
             @Override

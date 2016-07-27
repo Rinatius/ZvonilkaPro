@@ -50,7 +50,8 @@ public class SelectActivityAdapterUserDatas extends BaseAdapter {
         TextView name = (TextView) v.findViewById(R.id.user_data_list_name);
         TextView events = (TextView) v.findViewById(R.id.user_data_list_events);
 
-        name.append(user.getFirstName() + " " + user.getSecondName());
+        String nameStr = user.getFirstName() + " " + user.getSecondName();
+        name.setText(nameStr);
         return v;
     }
 }
