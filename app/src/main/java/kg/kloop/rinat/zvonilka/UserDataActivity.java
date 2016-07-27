@@ -18,9 +18,11 @@ import com.backendless.persistence.BackendlessDataQuery;
 
 import java.text.SimpleDateFormat;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 
 import kg.kloop.rinat.zvonilka.data.Event;
+import kg.kloop.rinat.zvonilka.data.EventUserStatus;
 import kg.kloop.rinat.zvonilka.data.UserData;
 import kg.kloop.rinat.zvonilka.login.DefaultCallback;
 
@@ -34,11 +36,12 @@ public class UserDataActivity extends AppCompatActivity {
     TextView address;
     TextView interests;
     TextView birthday;
-    TextView family;
+    TextView family, company, position, eventListText;
     String userId;
     BackendlessDataQuery querry;
     ImageButton callBtn;
     SimpleDateFormat dateFormat;
+    List<EventUserStatus> listEvents;
 
     Uri number;
 
@@ -75,13 +78,26 @@ public class UserDataActivity extends AppCompatActivity {
                 birthday.setText(text);
                 text = Resources.family + ": " + userData.getFamily();
                 family.setText(text);
+                text = Resources.company + ": " + userData.getCompany();
+                company.setText(text);
+                text = Resources.position + ": " + userData.getPosition();
+                position.setText(text);
+                listEvents = userData.getEventUserStatus_ID();
+                text = "";
+                for (EventUserStatus status: listEvents) {
+                    text+= status.getStatus();
+                    text+= (status.getHasBeen() ? " " + Resources.participated : " " + Resources.notparticipated);
+                }
+                eventListText.setText(text);
 
                 number = Uri.parse("tel:" + userData.getPhoneNumber());
+                super.handleResponse(eventBackendlessCollection);
             }
 
             @Override
             public void handleFault(BackendlessFault backendlessFault) {
                 Log.d(TAG, "UserData didn't found: " + backendlessFault.getDetail());
+                super.handleFault(backendlessFault);
             }
         });
 
@@ -105,7 +121,12 @@ public class UserDataActivity extends AppCompatActivity {
         interests = (TextView)findViewById(R.id.userDataActivityInterests);
         birthday = (TextView)findViewById(R.id.userDataActivityBirthDay);
         family = (TextView)findViewById(R.id.userDataActivityFamily);
+        company = (TextView)findViewById(R.id.eventActivityCompany);
+        position = (TextView) findViewById(R.id.userDataActivityPosition);
+        eventListText = (TextView) findViewById(R.id.userDataActivityEventList);
+
         callBtn = (ImageButton)findViewById(R.id.userDataActivityCallBtn);
+
         dateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);
     }
 }

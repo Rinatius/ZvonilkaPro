@@ -2,6 +2,8 @@ package kg.kloop.rinat.zvonilka;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.Intent;
+import android.nfc.Tag;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,30 +22,39 @@ import com.backendless.persistence.BackendlessDataQuery;
 
 import java.util.Date;
 
+import kg.kloop.rinat.zvonilka.data.Event;
 import kg.kloop.rinat.zvonilka.data.ToDo;
 import kg.kloop.rinat.zvonilka.data.UserData;
+import kg.kloop.rinat.zvonilka.login.DefaultCallback;
 
 public class ToDoActivity extends AppCompatActivity {
     int new_year, new_month, new_day;
-    TextView deadline, name,note;
+    TextView deadline, name, note, eventName;
     String todoId;
     Date date;
     BackendlessDataQuery querry;
     ToDo toDo;
     UserData userData;
+    Event event;
+    Intent toUserDataActivity;
+    Intent toEventActivity;
     public static final String TAG = "ToDoActivity";
     static final int DIALOG_ID=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_to_do);
+        toUserDataActivity = new Intent(this, UserDataActivity.class);
+        toEventActivity = new Intent(this, EventActivity.class);
         initUi();
         showDialogOnTextClick();
+        programmButtons();
+
         todoId = getIntent().getExtras().getString(Resources.todoIdKey);
         querry = new BackendlessDataQuery();
         querry.setWhereClause(Resources.objectId + "'" + todoId + "'");
 
-        Backendless.Persistence.of(ToDo.class).find(querry, new AsyncCallback<BackendlessCollection<ToDo>>() {
+        Backendless.Persistence.of(ToDo.class).find(querry, new DefaultCallback<BackendlessCollection<ToDo>>(this){
             @Override
             public void handleResponse(BackendlessCollection<ToDo> toDoBackendlessCollection) {
                 toDo = toDoBackendlessCollection.getData().get(0);
@@ -62,22 +73,26 @@ public class ToDoActivity extends AppCompatActivity {
                 String text;
                 text = Resources.deadline + ": " + toDo.getDeadline();
                 deadline.setText(text);
-                text = Resources.name + ": "+ userData.getFirstName() + userData.getSecondName();
+//                text = Resources.name + ": "+ userData.getFirstName() + userData.getSecondName();
                 name.setText(text);
                 text = Resources.details + ": " + toDo.getNote();
                 note.setText(text);
+//                text = Resources.event + ": " + event.getName();
+                eventName.setText(text);
+                super.handleResponse(toDoBackendlessCollection);
             }
 
             @Override
             public void handleFault(BackendlessFault backendlessFault) {
                 Log.d(TAG, "ToDo didn't recieved: " + backendlessFault.getDetail());
+                super.handleFault(backendlessFault);
             }
         });
 
-
     }
-    public void showDialogOnTextClick(){
-        deadline.setClickable(true);
+
+
+    private void showDialogOnTextClick(){
         deadline.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -85,6 +100,8 @@ public class ToDoActivity extends AppCompatActivity {
             }
         });
     }
+
+
 
     protected Dialog createDialog(int id){
         if (id==DIALOG_ID)
@@ -99,11 +116,42 @@ public class ToDoActivity extends AppCompatActivity {
                     toDo.setDeadline(text);
                 }
             }, new_year, new_month, new_day);
+        toDo.setDeadline( new_day + "/" + new_month + "/" + new_year);
+        Backendless.Persistence.of(ToDo.class).save(toDo, new DefaultCallback<ToDo>(this)
+        {
+            @Override
+            public void handleFault(BackendlessFault backendlessFault){
+                Log.d(TAG, "Save failed " + backendlessFault.getDetail());
+            }
+        });
         return null;
     }
 
     private void initUi(){
         deadline = (TextView)findViewById(R.id.toDoActivityDeadline);
+        name = (TextView)findViewById(R.id.toDoActivityUserName);
+        eventName = (TextView)findViewById(R.id.toDoActivityEventName);
+        note = (TextView)findViewById(R.id.toDoActivityNote);
+        deadline.setClickable(true);
+        name.setClickable(true);
+        eventName.setClickable(true);
+    }
+
+    private void programmButtons(){
+        name.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                toUserDataActivity.putExtra(Resources.userIdKey, userData.getObjectId());
+                startActivity(toUserDataActivity);
+            }
+        });
+        eventName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                toEventActivity.putExtra(Resources.eventIdKey, event.getObjectId());
+                startActivity(toEventActivity);
+            }
+        });
     }
 }
 

@@ -16,19 +16,32 @@
         android:layout_height="wrap_content">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/userDataActivityName" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/userDataActivitySurname" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/userDataActivityEmail" />
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="300dp"
+                android:layout_height="match_parent"
+                android:id="@+id/userDataActivityEmail" />
+
+            <ImageButton
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:id="@+id/imageButton"
+                android:src="@android:drawable/ic_dialog_email"
+                android:background="@color/emailButton" />
+        </LinearLayout>
 
         <LinearLayout
             android:orientation="horizontal"
@@ -46,28 +59,28 @@
                 android:layout_height="50dp"
                 android:id="@+id/userDataActivityCallBtn"
                 android:src="@android:drawable/sym_call_outgoing"
-                android:background="#268038"
+                android:background="@color/callButton"
                 android:contentDescription="@string/imagebuttondescription"/>
 
         </LinearLayout>
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/userDataActivityCity" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/userDataActivityAdress" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/userDataActivityInterests" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/userDataActivityBirthDay" />
 
@@ -75,5 +88,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/userDataActivityFamily" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/userDataActivityCompany" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/userDataActivityPosition" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/userDataActivityEventList" />
     </LinearLayout>
 </ScrollView>

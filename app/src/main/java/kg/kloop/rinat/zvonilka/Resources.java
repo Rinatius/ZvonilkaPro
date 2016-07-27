@@ -18,6 +18,14 @@ public class Resources {
     public static final String birthday = "Birthday date";
     public static final String family = "Family";
     public static final String details = "Details";
-    public static final String deadline= "Deadline";
+    public static final String deadline = "Deadline";
+    public static final String event = "Event";
+    public static final String date = "Date";
+    public static final String description = "Description";
+    public static final String company = "Company";
+    public static final String position = "Position";
+    public static final String participated = "participated";
+    public static final String notparticipated = "not participated";
+
 
 }
