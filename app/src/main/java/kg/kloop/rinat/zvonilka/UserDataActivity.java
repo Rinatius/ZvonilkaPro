@@ -40,7 +40,7 @@ public class UserDataActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_data);
         initUi();
-        userId = getIntent().getExtras().getString(R.string.userDataIdkey);
+        userId = getIntent().getExtras().getString(getResources().getString(R.string.userDataIdkey));
         querry = new BackendlessDataQuery();
         querry.setWhereClause(R.string.objectidquerry + userId + "'");
 

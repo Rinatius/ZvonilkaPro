@@ -31,7 +31,7 @@ public class EventActivity extends AppCompatActivity {
         setContentView(R.layout.activity_event);
 
         initUI();
-        eventId = getIntent().getExtras().getString(R.string.eventIdkey);
+        eventId = getIntent().getExtras().getString(getResources().getString(R.string.eventIdkey));
         querry = new BackendlessDataQuery();
         querry.setWhereClause(R.string.objectidquerry + eventId + "'");
 
