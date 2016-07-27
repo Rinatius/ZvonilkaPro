@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -15,7 +16,9 @@ import com.backendless.BackendlessCollection;
 import com.backendless.exceptions.BackendlessFault;
 import com.backendless.persistence.BackendlessDataQuery;
 
+import java.text.SimpleDateFormat;
 import java.util.HashSet;
+import java.util.Locale;
 
 import kg.kloop.rinat.zvonilka.data.Event;
 import kg.kloop.rinat.zvonilka.data.UserData;
@@ -35,47 +38,50 @@ public class UserDataActivity extends AppCompatActivity {
     String userId;
     BackendlessDataQuery querry;
     ImageButton callBtn;
+    SimpleDateFormat dateFormat;
+
     Uri number;
 
+    private static final String TAG = "UserDataActivity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_data);
         initUi();
-        userId = getIntent().getExtras().getString(getResources().getString(R.string.userDataIdkey));
+        userId = getIntent().getExtras().getString(Resources.userDataIdKey);
         querry = new BackendlessDataQuery();
-        querry.setWhereClause(getResources().getString(R.string.objectidquerry) + " = '" + userId + "'");
+        querry.setWhereClause(Resources.objectId + " = '" + userId + "'");
 
         Backendless.Persistence.of(UserData.class).find(querry, new DefaultCallback<BackendlessCollection<UserData>>(this){
             @Override
             public void handleResponse(BackendlessCollection<UserData> eventBackendlessCollection) {
                 userData = eventBackendlessCollection.getData().get(0);
                 String text;
-                text = getResources().getString(R.string.name) + userData.getFirstName();
+                text = Resources.name + userData.getFirstName();
                 name.setText(text);
-                text = getResources().getString(R.string.surname) + userData.getSecondName();
+                text = Resources.surName + ": " + userData.getSecondName();
                 surname.setText(text);
-                text = getResources().getString(R.string.email) + userData.getEmail();
+                text = Resources.email + ": " + userData.getEmail();
                 email.setText(text);
-                text = getResources().getString(R.string.phone) + userData.getPhoneNumber();
+                text = Resources.phone + userData.getPhoneNumber();
                 phone.setText(text);
-                text = getResources().getString(R.string.city) + userData.getCity();
+                text = Resources.city + ": " + userData.getCity();
                 city.setText(text);
-                text = getResources().getString(R.string.address) + userData.getAdress();
+                text = Resources.address + ": " + userData.getAdress();
                 address.setText(text);
-                text = getResources().getString(R.string.interests) + userData.getInterests();
+                text = Resources.interest + ": " + userData.getInterests();
                 interests.setText(text);
-                text = getResources().getString(R.string.bithdaydate) + userData.getBirthday().toString();
+                text = Resources.birthday + ": " + dateFormat.format(userData.getBirthday()) ;
                 birthday.setText(text);
-                text = getResources().getString(R.string.family) + userData.getFamily();
+                text = Resources.family + ": " + userData.getFamily();
                 family.setText(text);
 
-                number = Uri.parse("tel:"+userData.getPhoneNumber());
+                number = Uri.parse("tel:" + userData.getPhoneNumber());
             }
 
             @Override
             public void handleFault(BackendlessFault backendlessFault) {
-
+                Log.d(TAG, "UserData didn't found: " + backendlessFault.getDetail());
             }
         });
 
@@ -100,5 +106,6 @@ public class UserDataActivity extends AppCompatActivity {
         birthday = (TextView)findViewById(R.id.userDataActivityBirthDay);
         family = (TextView)findViewById(R.id.userDataActivityFamily);
         callBtn = (ImageButton)findViewById(R.id.userDataActivityCallBtn);
+        dateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);
     }
 }
