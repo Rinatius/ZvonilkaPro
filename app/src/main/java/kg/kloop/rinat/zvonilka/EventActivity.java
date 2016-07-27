@@ -46,15 +46,15 @@ public class EventActivity extends AppCompatActivity {
                 Log.d("Event", event.size() + "");
                 for (int i = 0; i < event.size(); i++) {
                     String text;
-                    text = R.string.date + event.get(i).getDateOfEvent().toString();
+                    text = getResources().getString(R.string.date) + event.get(i).getDateOfEvent().toString();
                     date.setText(text);
-                    text = R.string.city + event.get(i).getCity();
+                    text = getResources().getString(R.string.city) + event.get(i).getCity();
                     city.setText(text);
                     if (event.get(i).getAppCompany_ID() != null) {
-                        text = R.string.company + event.get(i).getAppCompany_ID().getName();
+                        text = getResources().getString(R.string.company) + event.get(i).getAppCompany_ID().getName();
                         company.setText(text);
                     }
-                    text = R.string.eventDescription + event.get(i).getNote();
+                    text = getResources().getString(R.string.eventDescription) + event.get(i).getNote();
                     notes.setText(text);
                     super.handleResponse(eventBackendlessCollection);
                 }
