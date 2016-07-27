@@ -47,5 +47,6 @@
     <string name="objectidquerry">objectId</string>
     <string name="eventIdkey">eventId</string>
     <string name="userDataIdkey">userDataId</string>
+    <string name="markasdone">Mark as Done</string>
 
 </resources>

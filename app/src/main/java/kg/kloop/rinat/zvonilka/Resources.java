@@ -17,7 +17,7 @@ public class Resources {
     public static final String interest = "Interests";
     public static final String birthday = "Birthday date";
     public static final String family = "Family";
-
     public static final String details = "Details";
+    public static final String deadline= "Deadline";
 
 }
