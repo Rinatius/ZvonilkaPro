@@ -17,7 +17,7 @@ public class Event
   private String Name;
   private String Note;
   private String objectId;
-  private AppCompany AppCompany_ID;
+  private java.util.List<EventUserStatus> EventUserStatus;
   public String getOwnerId()
   {
     return ownerId;
@@ -78,14 +78,14 @@ public class Event
     return objectId;
   }
 
-  public AppCompany getAppCompany_ID()
+  public java.util.List<EventUserStatus> getEventUserStatus()
   {
-    return AppCompany_ID;
+    return EventUserStatus;
   }
 
-  public void setAppCompany_ID( AppCompany AppCompany_ID )
+  public void setEventUserStatus( java.util.List<EventUserStatus> EventUserStatus )
   {
-    this.AppCompany_ID = AppCompany_ID;
+    this.EventUserStatus = EventUserStatus;
   }
 
                                                     

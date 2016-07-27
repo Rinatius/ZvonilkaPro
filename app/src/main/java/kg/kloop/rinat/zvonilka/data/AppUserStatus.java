@@ -11,11 +11,10 @@ public class AppUserStatus
 {
   private String ownerId;
   private java.util.Date created;
+  private String Note;
   private String Status;
   private String objectId;
   private java.util.Date updated;
-  private AppCompany AppCompany_ID;
-  private UserData UserData_ID;
   public String getOwnerId()
   {
     return ownerId;
@@ -24,6 +23,16 @@ public class AppUserStatus
   public java.util.Date getCreated()
   {
     return created;
+  }
+
+  public String getNote()
+  {
+    return Note;
+  }
+
+  public void setNote( String Note )
+  {
+    this.Note = Note;
   }
 
   public String getStatus()
@@ -44,26 +53,6 @@ public class AppUserStatus
   public java.util.Date getUpdated()
   {
     return updated;
-  }
-
-  public AppCompany getAppCompany_ID()
-  {
-    return AppCompany_ID;
-  }
-
-  public void setAppCompany_ID( AppCompany AppCompany_ID )
-  {
-    this.AppCompany_ID = AppCompany_ID;
-  }
-
-  public UserData getUserData_ID()
-  {
-    return UserData_ID;
-  }
-
-  public void setUserData_ID( UserData UserData_ID )
-  {
-    this.UserData_ID = UserData_ID;
   }
 
                                                     

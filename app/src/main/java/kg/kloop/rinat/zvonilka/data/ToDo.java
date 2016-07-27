@@ -13,9 +13,9 @@ public class ToDo
   private String objectId;
   private java.util.Date updated;
   private java.util.Date created;
+  private Boolean IsDone;
   private String Note;
   private String ownerId;
-  private UserData UserData_ID;
   public String getDeadline()
   {
     return Deadline;
@@ -41,6 +41,16 @@ public class ToDo
     return created;
   }
 
+  public Boolean getIsDone()
+  {
+    return IsDone;
+  }
+
+  public void setIsDone( Boolean IsDone )
+  {
+    this.IsDone = IsDone;
+  }
+
   public String getNote()
   {
     return Note;
@@ -54,16 +64,6 @@ public class ToDo
   public String getOwnerId()
   {
     return ownerId;
-  }
-
-  public UserData getUserData_ID()
-  {
-    return UserData_ID;
-  }
-
-  public void setUserData_ID( UserData UserData_ID )
-  {
-    this.UserData_ID = UserData_ID;
   }
 
                                                     

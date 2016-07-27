@@ -16,8 +16,6 @@ public class Call
   private String objectId;
   private Integer TimeCall;
   private java.util.Date created;
-  private BackendlessUser User_ID_Caller;
-  private UserData UserData_ID_Client;
   public java.util.Date getDateCall()
   {
     return DateCall;
@@ -66,26 +64,6 @@ public class Call
   public java.util.Date getCreated()
   {
     return created;
-  }
-
-  public BackendlessUser getUser_ID_Caller()
-  {
-    return User_ID_Caller;
-  }
-
-  public void setUser_ID_Caller( BackendlessUser User_ID_Caller )
-  {
-    this.User_ID_Caller = User_ID_Caller;
-  }
-
-  public UserData getUserData_ID_Client()
-  {
-    return UserData_ID_Client;
-  }
-
-  public void setUserData_ID_Client( UserData UserData_ID_Client )
-  {
-    this.UserData_ID_Client = UserData_ID_Client;
   }
 
                                                     

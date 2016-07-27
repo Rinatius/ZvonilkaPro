@@ -18,11 +18,16 @@ public class UserData
   private String Family;
   private String Email;
   private String ownerId;
+  private String Position;
   private String Interests;
   private String objectId;
   private java.util.Date created;
+  private String Company;
   private String PhoneNumber;
-  private BackendlessUser User_ID;
+  private java.util.List<AppUserStatus> AppUserStatus_ID;
+  private java.util.List<Call> Call_ID;
+  private java.util.List<ToDo> ToDo_ID;
+  private java.util.List<EventUserStatus> EventUserStatus_ID;
   public String getCity()
   {
     return City;
@@ -103,6 +108,16 @@ public class UserData
     return ownerId;
   }
 
+  public String getPosition()
+  {
+    return Position;
+  }
+
+  public void setPosition( String Position )
+  {
+    this.Position = Position;
+  }
+
   public String getInterests()
   {
     return Interests;
@@ -123,6 +138,16 @@ public class UserData
     return created;
   }
 
+  public String getCompany()
+  {
+    return Company;
+  }
+
+  public void setCompany( String Company )
+  {
+    this.Company = Company;
+  }
+
   public String getPhoneNumber()
   {
     return PhoneNumber;
@@ -133,14 +158,44 @@ public class UserData
     this.PhoneNumber = PhoneNumber;
   }
 
-  public BackendlessUser getUser_ID()
+  public java.util.List<AppUserStatus> getAppUserStatus_ID()
   {
-    return User_ID;
+    return AppUserStatus_ID;
   }
 
-  public void setUser_ID( BackendlessUser User_ID )
+  public void setAppUserStatus_ID( java.util.List<AppUserStatus> AppUserStatus_ID )
   {
-    this.User_ID = User_ID;
+    this.AppUserStatus_ID = AppUserStatus_ID;
+  }
+
+  public java.util.List<Call> getCall_ID()
+  {
+    return Call_ID;
+  }
+
+  public void setCall_ID( java.util.List<Call> Call_ID )
+  {
+    this.Call_ID = Call_ID;
+  }
+
+  public java.util.List<ToDo> getToDo_ID()
+  {
+    return ToDo_ID;
+  }
+
+  public void setToDo_ID( java.util.List<ToDo> ToDo_ID )
+  {
+    this.ToDo_ID = ToDo_ID;
+  }
+
+  public java.util.List<EventUserStatus> getEventUserStatus_ID()
+  {
+    return EventUserStatus_ID;
+  }
+
+  public void setEventUserStatus_ID( java.util.List<EventUserStatus> EventUserStatus_ID )
+  {
+    this.EventUserStatus_ID = EventUserStatus_ID;
   }
 
                                                     
