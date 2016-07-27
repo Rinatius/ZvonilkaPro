@@ -25,7 +25,13 @@
         <activity
             android:name=".SelectActivity"
             android:label="@string/title_activity_select"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".UserDataActivity">
+
+        </activity>
+        <activity android:name=".EventActivity">
+
+        </activity>
     </application>
 
 </manifest>
