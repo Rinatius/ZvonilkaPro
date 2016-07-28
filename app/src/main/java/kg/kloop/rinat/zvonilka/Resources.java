@@ -2,30 +2,30 @@ package kg.kloop.rinat.zvonilka;
 
 public class Resources {
 //      KEYS
-    public static final String todoIdKey = "todoId";
-    public static final String userIdKey = "userId";
-    public static final String userDataIdKey = "userDataId";
-    public static final String eventIdKey = "eventId";
+    public static final String TODO_ID_KEY = "todoId";
+    public static final String USER_ID_KEY = "userId";
+    public static final String USER_DATA_ID_KEY = "userDataId";
+    public static final String EVENT_ID_KEY = "eventId";
 //     Other strings
-    public static final String objectId = "objectId";
-    public static final String name = "Name";
-    public static final String surName = "Surname";
-    public static final String email = "Email";
-    public static final String phone = "Phone";
-    public static final String city = "City";
-    public static final String address = "Address";
-    public static final String interest = "Interests";
-    public static final String birthday = "Birthday date";
-    public static final String family = "Family";
-    public static final String details = "Details";
-    public static final String deadline = "Deadline";
-    public static final String event = "Event";
-    public static final String date = "Date";
-    public static final String description = "Description";
-    public static final String company = "Company";
-    public static final String position = "Position";
-    public static final String participated = "participated";
-    public static final String notparticipated = "not participated";
+    public static final String OBJECTID = "OBJECTID";
+    public static final String NAME = "Name";
+    public static final String SUR_NAME = "Surname";
+    public static final String EMAIL = "Email";
+    public static final String PHONE = "Phone";
+    public static final String CITY = "City";
+    public static final String ADDRESS = "Address";
+    public static final String INTERESTS = "Interests";
+    public static final String BIRTHDAY_DATE = "Birthday DATE";
+    public static final String FAMILY = "Family";
+    public static final String DETAILS = "Details";
+    public static final String DEADLINE = "Deadline";
+    public static final String EVENT = "Event";
+    public static final String DATE = "Date";
+    public static final String DESCRIPTION = "Description";
+    public static final String COMPANY = "Company";
+    public static final String POSITION = "Position";
+    public static final String PARTICIPATED = "PARTICIPATED";
+    public static final String NOT_PARTICIPATED = "not PARTICIPATED";
 
 
 }
