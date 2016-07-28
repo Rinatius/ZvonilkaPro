@@ -26,6 +26,7 @@ public class UserData
   private String PhoneNumber;
   private java.util.List<AppUserStatus> AppUserStatus_ID;
   private java.util.List<Call> Call_ID;
+  private BackendlessUser User_ID_UserData;
   private java.util.List<ToDo> ToDo_ID;
   private java.util.List<EventUserStatus> EventUserStatus_ID;
   public String getCity()
@@ -176,6 +177,16 @@ public class UserData
   public void setCall_ID( java.util.List<Call> Call_ID )
   {
     this.Call_ID = Call_ID;
+  }
+
+  public BackendlessUser getUser_ID_UserData()
+  {
+    return User_ID_UserData;
+  }
+
+  public void setUser_ID_UserData( BackendlessUser User_ID_UserData )
+  {
+    this.User_ID_UserData = User_ID_UserData;
   }
 
   public java.util.List<ToDo> getToDo_ID()

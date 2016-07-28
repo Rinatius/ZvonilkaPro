@@ -17,7 +17,8 @@ public class Event
   private String Name;
   private String Note;
   private String objectId;
-  private java.util.List<EventUserStatus> EventUserStatus;
+  private AppCompany AppCompany_ID_Event;
+  private java.util.List<EventUserStatus> EventUserStatus_ID_Event;
   public String getOwnerId()
   {
     return ownerId;
@@ -78,14 +79,24 @@ public class Event
     return objectId;
   }
 
-  public java.util.List<EventUserStatus> getEventUserStatus()
+  public AppCompany getAppCompany_ID_Event()
   {
-    return EventUserStatus;
+    return AppCompany_ID_Event;
   }
 
-  public void setEventUserStatus( java.util.List<EventUserStatus> EventUserStatus )
+  public void setAppCompany_ID_Event( AppCompany AppCompany_ID_Event )
   {
-    this.EventUserStatus = EventUserStatus;
+    this.AppCompany_ID_Event = AppCompany_ID_Event;
+  }
+
+  public java.util.List<EventUserStatus> getEventUserStatus_ID_Event()
+  {
+    return EventUserStatus_ID_Event;
+  }
+
+  public void setEventUserStatus_ID_Event( java.util.List<EventUserStatus> EventUserStatus_ID_Event )
+  {
+    this.EventUserStatus_ID_Event = EventUserStatus_ID_Event;
   }
 
                                                     

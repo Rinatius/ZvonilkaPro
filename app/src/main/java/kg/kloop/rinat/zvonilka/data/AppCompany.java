@@ -16,9 +16,9 @@ public class AppCompany
   private java.util.Date updated;
   private String objectId;
   private String PhoneNumber;
-  private java.util.List<AppUserStatus> AppUserStatus_ID;
-  private java.util.List<Event> Event_ID;
-  private java.util.List<ToDo> ToDo_ID;
+  private java.util.List<AppUserStatus> AppUserStatus_ID_AppCompany;
+  private java.util.List<Event> Event_ID_AppCompany;
+  private java.util.List<ToDo> ToDo_ID_AppCompany;
   public String getName()
   {
     return Name;
@@ -69,34 +69,34 @@ public class AppCompany
     this.PhoneNumber = PhoneNumber;
   }
 
-  public java.util.List<AppUserStatus> getAppUserStatus_ID()
+  public java.util.List<AppUserStatus> getAppUserStatus_ID_AppCompany()
   {
-    return AppUserStatus_ID;
+    return AppUserStatus_ID_AppCompany;
   }
 
-  public void setAppUserStatus_ID( java.util.List<AppUserStatus> AppUserStatus_ID )
+  public void setAppUserStatus_ID_AppCompany( java.util.List<AppUserStatus> AppUserStatus_ID_AppCompany )
   {
-    this.AppUserStatus_ID = AppUserStatus_ID;
+    this.AppUserStatus_ID_AppCompany = AppUserStatus_ID_AppCompany;
   }
 
-  public java.util.List<Event> getEvent_ID()
+  public java.util.List<Event> getEvent_ID_AppCompany()
   {
-    return Event_ID;
+    return Event_ID_AppCompany;
   }
 
-  public void setEvent_ID( java.util.List<Event> Event_ID )
+  public void setEvent_ID_AppCompany( java.util.List<Event> Event_ID_AppCompany )
   {
-    this.Event_ID = Event_ID;
+    this.Event_ID_AppCompany = Event_ID_AppCompany;
   }
 
-  public java.util.List<ToDo> getToDo_ID()
+  public java.util.List<ToDo> getToDo_ID_AppCompany()
   {
-    return ToDo_ID;
+    return ToDo_ID_AppCompany;
   }
 
-  public void setToDo_ID( java.util.List<ToDo> ToDo_ID )
+  public void setToDo_ID_AppCompany( java.util.List<ToDo> ToDo_ID_AppCompany )
   {
-    this.ToDo_ID = ToDo_ID;
+    this.ToDo_ID_AppCompany = ToDo_ID_AppCompany;
   }
 
                                                     

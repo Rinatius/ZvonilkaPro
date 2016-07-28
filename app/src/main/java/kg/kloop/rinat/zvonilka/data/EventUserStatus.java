@@ -16,6 +16,8 @@ public class EventUserStatus
   private java.util.Date created;
   private String objectId;
   private java.util.List<Call> Call_ID;
+  private Event Event_ID;
+  private UserData UserData_ID_EventUserStatus;
   public Boolean getHasBeen()
   {
     return HasBeen;
@@ -64,6 +66,26 @@ public class EventUserStatus
   public void setCall_ID( java.util.List<Call> Call_ID )
   {
     this.Call_ID = Call_ID;
+  }
+
+  public Event getEvent_ID()
+  {
+    return Event_ID;
+  }
+
+  public void setEvent_ID( Event Event_ID )
+  {
+    this.Event_ID = Event_ID;
+  }
+
+  public UserData getUserData_ID_EventUserStatus()
+  {
+    return UserData_ID_EventUserStatus;
+  }
+
+  public void setUserData_ID_EventUserStatus( UserData UserData_ID_EventUserStatus )
+  {
+    this.UserData_ID_EventUserStatus = UserData_ID_EventUserStatus;
   }
 
                                                     
