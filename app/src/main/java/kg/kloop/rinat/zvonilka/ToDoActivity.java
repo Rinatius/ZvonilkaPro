@@ -1,26 +1,21 @@
 package kg.kloop.rinat.zvonilka;
 
-import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.content.Intent;
-import android.nfc.Tag;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 import com.backendless.Backendless;
 import com.backendless.BackendlessCollection;
-import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 import com.backendless.persistence.BackendlessDataQuery;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import kg.kloop.rinat.zvonilka.data.Event;
 import kg.kloop.rinat.zvonilka.data.ToDo;
@@ -38,6 +33,7 @@ public class ToDoActivity extends AppCompatActivity {
     Event event;
     Intent toUserDataActivity;
     Intent toEventActivity;
+    SimpleDateFormat dateFormat;
     public static final String TAG = "ToDoActivity";
     static final int DIALOG_ID=0;
     @Override
@@ -47,37 +43,26 @@ public class ToDoActivity extends AppCompatActivity {
         toUserDataActivity = new Intent(this, UserDataActivity.class);
         toEventActivity = new Intent(this, EventActivity.class);
         initUi();
-        showDialogOnTextClick();
+//        showDialogOnTextClick();
         programmButtons();
 
-        todoId = getIntent().getExtras().getString(Resources.todoIdKey);
+        todoId = getIntent().getExtras().getString(Resources.TODO_ID_KEY);
         querry = new BackendlessDataQuery();
-        querry.setWhereClause(Resources.objectId + "'" + todoId + "'");
+        querry.setWhereClause(Resources.OBJECTID + "'" + todoId + "'");
 
         Backendless.Persistence.of(ToDo.class).find(querry, new DefaultCallback<BackendlessCollection<ToDo>>(this){
             @Override
             public void handleResponse(BackendlessCollection<ToDo> toDoBackendlessCollection) {
                 toDo = toDoBackendlessCollection.getData().get(0);
-//                querry.setWhereClause(Resources.userDataIdKey + "'"+ toDo.getUserData_ID());
-                Backendless.Persistence.of(UserData.class).find(querry, new AsyncCallback<BackendlessCollection<UserData>>() {
-                    @Override
-                    public void handleResponse(BackendlessCollection<UserData> userDataBackendlessCollection) {
-                        userData = userDataBackendlessCollection.getData().get(0);
-                    }
-
-                    @Override
-                    public void handleFault(BackendlessFault backendlessFault) {
-                        Log.d(TAG, "UserData didn't recieved: " + backendlessFault.getDetail());
-                    }
-                });
+                userData = toDo.getUserData_ID_ToDo();
                 String text;
-                text = Resources.deadline + ": " + toDo.getDeadline();
+                text = Resources.DEADLINE + ": " + toDo.getDeadline();
                 deadline.setText(text);
-//                text = Resources.name + ": "+ userData.getFirstName() + userData.getSecondName();
+                text = Resources.NAME + ": "+ userData.getFirstName() + userData.getSecondName();
                 name.setText(text);
-                text = Resources.details + ": " + toDo.getNote();
+                text = Resources.DETAILS + ": " + toDo.getNote();
                 note.setText(text);
-//                text = Resources.event + ": " + event.getName();
+                text = Resources.EVENT + ": " + event.getName();
                 eventName.setText(text);
                 super.handleResponse(toDoBackendlessCollection);
             }
@@ -92,18 +77,18 @@ public class ToDoActivity extends AppCompatActivity {
     }
 
 
-    private void showDialogOnTextClick(){
-        deadline.setOnClickListener(new View.OnClickListener() {
+  /*  private void showDialogOnTextClick(){
+        DEADLINE.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 createDialog(DIALOG_ID).show();
             }
         });
     }
+*/
 
 
-
-    protected Dialog createDialog(int id){
+  /*  protected Dialog createDialog(int id){
         if (id==DIALOG_ID)
             return new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
                 @Override
@@ -111,27 +96,29 @@ public class ToDoActivity extends AppCompatActivity {
                     new_year = i;
                     new_month = i1;
                     new_day = i2;
-                    Date text = new Date(i, i1, i2);
-                    deadline.setText(text + "");
+                    String text = new_day + "/" + new_month + "/" + new_year;
+                    DEADLINE.setText(text);
                     toDo.setDeadline(text);
                 }
             }, new_year, new_month, new_day);
+        toDo.setDeadline( new_day + "/" + new_month + "/" + new_year);
         Backendless.Persistence.of(ToDo.class).save(toDo, new DefaultCallback<ToDo>(this)
         {
             @Override
             public void handleFault(BackendlessFault backendlessFault){
                 Log.d(TAG, "Save failed " + backendlessFault.getDetail());
-                super.handleResponse(new ToDo());
             }
         });
         return null;
     }
-
+*/
     private void initUi(){
         deadline = (TextView)findViewById(R.id.toDoActivityDeadline);
         name = (TextView)findViewById(R.id.toDoActivityUserName);
         eventName = (TextView)findViewById(R.id.toDoActivityEventName);
         note = (TextView)findViewById(R.id.toDoActivityNote);
+        dateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);
+
         deadline.setClickable(true);
         name.setClickable(true);
         eventName.setClickable(true);
@@ -141,17 +128,18 @@ public class ToDoActivity extends AppCompatActivity {
         name.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                toUserDataActivity.putExtra(Resources.userIdKey, userData.getObjectId());
+                toUserDataActivity.putExtra(Resources.USER_ID_KEY, userData.getObjectId());
                 startActivity(toUserDataActivity);
             }
         });
         eventName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                toEventActivity.putExtra(Resources.eventIdKey, event.getObjectId());
+                toEventActivity.putExtra(Resources.EVENT_ID_KEY, event.getObjectId());
                 startActivity(toEventActivity);
             }
         });
     }
+
 }
 

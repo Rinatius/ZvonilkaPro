@@ -7,7 +7,7 @@ public class Resources {
     public static final String USER_DATA_ID_KEY = "userDataId";
     public static final String EVENT_ID_KEY = "eventId";
 //     Other strings
-    public static final String OBJECTID = "OBJECTID";
+    public static final String OBJECTID = "objectId";
     public static final String NAME = "Name";
     public static final String SUR_NAME = "Surname";
     public static final String EMAIL = "Email";

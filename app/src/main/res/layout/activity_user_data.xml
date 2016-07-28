@@ -15,12 +15,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <TextView
+        <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/userDataActivityName" />
 
-        <TextView
+        <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/userDataActivitySurname" />
@@ -30,7 +30,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <TextView
+            <EditText
                 android:layout_width="300dp"
                 android:layout_height="match_parent"
                 android:id="@+id/userDataActivityEmail" />
@@ -49,7 +49,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="right">
 
-            <TextView
+            <EditText
                 android:layout_width="300dp"
                 android:layout_height="match_parent"
                 android:id="@+id/userDataActivityPhone" />
@@ -64,37 +64,37 @@
 
         </LinearLayout>
 
-        <TextView
+        <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/userDataActivityCity" />
 
-        <TextView
+        <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/userDataActivityAdress" />
 
-        <TextView
+        <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/userDataActivityInterests" />
 
-        <TextView
+        <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/userDataActivityBirthDay" />
 
-        <TextView
+        <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/userDataActivityFamily" />
 
-        <TextView
+        <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/userDataActivityCompany" />
 
-        <TextView
+        <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/userDataActivityPosition" />

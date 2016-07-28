@@ -1,9 +1,7 @@
 package kg.kloop.rinat.zvonilka;
 
 import android.content.Intent;
-import android.media.Image;
 import android.net.Uri;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,11 +15,9 @@ import com.backendless.exceptions.BackendlessFault;
 import com.backendless.persistence.BackendlessDataQuery;
 
 import java.text.SimpleDateFormat;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 
-import kg.kloop.rinat.zvonilka.data.Event;
 import kg.kloop.rinat.zvonilka.data.EventUserStatus;
 import kg.kloop.rinat.zvonilka.data.UserData;
 import kg.kloop.rinat.zvonilka.login.DefaultCallback;
@@ -51,42 +47,42 @@ public class UserDataActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_data);
         initUi();
-        userId = getIntent().getExtras().getString(Resources.userDataIdKey);
+        userId = getIntent().getExtras().getString(Resources.USER_DATA_ID_KEY);
         querry = new BackendlessDataQuery();
-        querry.setWhereClause(Resources.objectId + " = '" + userId + "'");
+        querry.setWhereClause(Resources.OBJECTID + " = '" + userId + "'");
 
         Backendless.Persistence.of(UserData.class).find(querry, new DefaultCallback<BackendlessCollection<UserData>>(this){
             @Override
             public void handleResponse(BackendlessCollection<UserData> eventBackendlessCollection) {
                 userData = eventBackendlessCollection.getData().get(0);
                 String text;
-                text = Resources.name + userData.getFirstName();
+                text = Resources.NAME + userData.getFirstName();
                 name.setText(text);
-                text = Resources.surName + ": " + userData.getSecondName();
+                text = Resources.SUR_NAME + ": " + userData.getSecondName();
                 surname.setText(text);
-                text = Resources.email + ": " + userData.getEmail();
+                text = Resources.EMAIL + ": " + userData.getEmail();
                 email.setText(text);
-                text = Resources.phone + userData.getPhoneNumber();
+                text = Resources.PHONE + userData.getPhoneNumber();
                 phone.setText(text);
-                text = Resources.city + ": " + userData.getCity();
+                text = Resources.CITY + ": " + userData.getCity();
                 city.setText(text);
-                text = Resources.address + ": " + userData.getAdress();
+                text = Resources.ADDRESS + ": " + userData.getAdress();
                 address.setText(text);
-                text = Resources.interest + ": " + userData.getInterests();
+                text = Resources.INTERESTS + ": " + userData.getInterests();
                 interests.setText(text);
-                text = Resources.birthday + ": " + dateFormat.format(userData.getBirthday()) ;
+                text = Resources.BIRTHDAY_DATE + ": " + dateFormat.format(userData.getBirthday()) ;
                 birthday.setText(text);
-                text = Resources.family + ": " + userData.getFamily();
+                text = Resources.FAMILY + ": " + userData.getFamily();
                 family.setText(text);
-                text = Resources.company + ": " + userData.getCompany();
+                text = Resources.COMPANY + ": " + userData.getCompany();
                 company.setText(text);
-                text = Resources.position + ": " + userData.getPosition();
+                text = Resources.POSITION + ": " + userData.getPosition();
                 position.setText(text);
                 listEvents = userData.getEventUserStatus_ID();
                 text = "";
                 for (EventUserStatus status: listEvents) {
                     text+= status.getStatus();
-                    text+= (status.getHasBeen() ? " " + Resources.participated : " " + Resources.notparticipated);
+                    text+= (status.getHasBeen() ? " " + Resources.PARTICIPATED : " " + Resources.NOT_PARTICIPATED);
                 }
                 eventListText.setText(text);
 

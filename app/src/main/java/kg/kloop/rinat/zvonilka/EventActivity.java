@@ -3,6 +3,9 @@ package kg.kloop.rinat.zvonilka;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.backendless.Backendless;
@@ -15,6 +18,7 @@ import java.util.List;
 import java.util.Locale;
 
 import kg.kloop.rinat.zvonilka.data.Event;
+import kg.kloop.rinat.zvonilka.data.EventUserStatus;
 import kg.kloop.rinat.zvonilka.login.DefaultCallback;
 
 
@@ -23,10 +27,8 @@ public class EventActivity extends AppCompatActivity {
 
     Event event;
     String eventId;
-    TextView date;
-    TextView city;
-    TextView company;
-    TextView notes;
+    EditText date, city, company, notes, participants, name;
+    ImageButton editBtn, saveBtn;
     BackendlessDataQuery querry;
     SimpleDateFormat dateFormat;
 
@@ -37,9 +39,11 @@ public class EventActivity extends AppCompatActivity {
         setContentView(R.layout.activity_event);
 
         initUI();
+        setOnClick();
+
         eventId = getIntent().getExtras().getString(getResources().getString(R.string.eventIdkey));
         querry = new BackendlessDataQuery();
-        querry.setWhereClause(Resources.objectId + " = '" + eventId + "'");
+        querry.setWhereClause(Resources.OBJECTID + " = '" + eventId + "'");
         Log.d("query", eventId);
 
         Backendless.Persistence.of(Event.class).find(querry, new DefaultCallback<BackendlessCollection<Event>>(this) {
@@ -49,16 +53,27 @@ public class EventActivity extends AppCompatActivity {
                 Log.d("Event", event.size() + "");
                 for (int i = 0; i < event.size(); i++) {
                     String text;
-                    text = Resources.date + dateFormat.format(event.get(i).getDateOfEvent());
+                    text = Resources.NAME + ": " + event.get(i).getName();
+                    name.setText(text);
+                    text = Resources.DATE + ": " + dateFormat.format(event.get(i).getDateOfEvent());
                     date.setText(text);
-                    text = Resources.city + event.get(i).getCity();
+                    text = Resources.CITY + ": " + event.get(i).getCity();
                     city.setText(text);
-//                    if (event.get(i).getAppCompany_ID() != null) {
-//                        text = getResources().getString(R.string.company) + event.get(i).getAppCompany_ID().getName();
-//                        company.setText(text);
-//                    }
-                    text = Resources.description + event.get(i).getNote();
+                    if (event.get(i).getAppCompany_ID_Event() != null) {
+                        text = Resources.COMPANY + ": " + event.get(i).getAppCompany_ID_Event().getName();
+                        company.setText(text);
+                    }
+                    text = Resources.DESCRIPTION + ": " + event.get(i).getNote();
                     notes.setText(text);
+                    text = "";
+                    for (int j = 0; j < event.get(i).getEventUserStatus_ID_Event().size(); j++) {
+                        EventUserStatus eventUserStatus;
+                        eventUserStatus = event.get(i).getEventUserStatus_ID_Event().get(j);
+                        text = eventUserStatus.getUserData_ID_EventUserStatus().getFirstName() +
+                                " " + eventUserStatus.getUserData_ID_EventUserStatus().getSecondName() + "\n";
+                    }
+                    participants.setText(text);
+
                     super.handleResponse(eventBackendlessCollection);
                 }
 
@@ -73,11 +88,60 @@ public class EventActivity extends AppCompatActivity {
     }
 
     private void initUI(){
-        date = (TextView) findViewById(R.id.eventActivityDate);
-        notes = (TextView) findViewById(R.id.eventActivityNotes);
-        city = (TextView) findViewById(R.id.eventActivityCity);
-        company = (TextView) findViewById(R.id.eventActivityCompany);
+        date = (EditText) findViewById(R.id.eventActivityDate);
+        notes = (EditText) findViewById(R.id.eventActivityNotes);
+        city = (EditText) findViewById(R.id.eventActivityCity);
+        company = (EditText) findViewById(R.id.eventActivityCompany);
+        participants = (EditText) findViewById(R.id.eventActivityParticipants);
+        name = (EditText) findViewById(R.id.eventActivityName);
+        editBtn = (ImageButton) findViewById(R.id.eventActivityEditBtn);
+        saveBtn = (ImageButton) findViewById(R.id.eventActivitySaveBtn);
+
         dateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);
+
+        saveBtn.setEnabled(false);
+
+        participants.setEnabled(false);
+        date.setEnabled(false);
+        city.setEnabled(false);
+        notes.setEnabled(false);
+        company.setEnabled(false);
+        name.setEnabled(false);
     }
+
+    private void setOnClick(){
+        editBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                date.setEnabled(true);
+                notes.setEnabled(true);
+                city.setEnabled(true);
+                company.setEnabled(true);
+                participants.setEnabled(true);
+                name.setEnabled(true);
+                saveBtn.setEnabled(true);
+            }
+        });
+
+        saveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                date.setEnabled(false);
+                notes.setEnabled(false);
+                city.setEnabled(false);
+                company.setEnabled(false);
+                participants.setEnabled(false);
+                name.setEnabled(false);
+                saveBtn.setEnabled(false);
+
+                String text;
+                text =notes.getText().toString();
+                event.setNote(text);
+                re
+            }
+        });
+    }
+
 
 }
