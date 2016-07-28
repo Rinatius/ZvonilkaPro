@@ -1,12 +1,17 @@
 package kg.kloop.rinat.zvonilka;
 
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+
 public class Resources {
 //      KEYS
     public static final String TODO_ID_KEY = "todoId";
     public static final String USER_ID_KEY = "userId";
     public static final String USER_DATA_ID_KEY = "userDataId";
     public static final String EVENT_ID_KEY = "eventId";
-//     Other strings
+    public static final String PHONE_NUMBER_KEY = "PhoneNumber";
+
+    //     Other strings
     public static final String OBJECT_ID = "objectId";
     public static final String NAME = "Name";
     public static final String SUR_NAME = "Surname";
@@ -29,5 +34,8 @@ public class Resources {
     public static final String SEND_EMAIL = "Send Email";
     public static final String[] SPINNER_SEARCH = {"Users", "Events"};
 
+    public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);
 
+
+    public static final String DURATION = "Duration: ";
 }

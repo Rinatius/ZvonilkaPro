@@ -52,5 +52,7 @@
     <string name="notes">Notes:</string>
     <string name="fragment_select_to_do">ToDo</string>
     <string name="save_changes">Save Changes</string>
+    <string name="action_save_changes">Save</string>
+    <string name="action_save_edit">Edit</string>
 
 </resources>
