@@ -57,7 +57,7 @@ public class RegisterActivity extends AppCompatActivity
 
     if ( emailText.isEmpty() )
     {
-      showToast( "Field 'email' cannot be empty." );
+      showToast( "Field 'EMAIL' cannot be empty." );
       return;
     }
 

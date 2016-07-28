@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.backendless.Backendless;
 import com.backendless.BackendlessCollection;
+import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 import com.backendless.persistence.BackendlessDataQuery;
 
@@ -27,7 +28,8 @@ public class EventActivity extends AppCompatActivity {
 
     Event event;
     String eventId;
-    EditText date, city, company, notes, participants, name;
+    EditText  city, company, notes, participants, name;
+    TextView date;
     ImageButton editBtn, saveBtn;
     BackendlessDataQuery querry;
     SimpleDateFormat dateFormat;
@@ -49,33 +51,33 @@ public class EventActivity extends AppCompatActivity {
         Backendless.Persistence.of(Event.class).find(querry, new DefaultCallback<BackendlessCollection<Event>>(this) {
             @Override
             public void handleResponse(BackendlessCollection<Event> eventBackendlessCollection) {
-                List<Event> event = eventBackendlessCollection.getData();
-                Log.d("Event", event.size() + "");
-                for (int i = 0; i < event.size(); i++) {
+                event = eventBackendlessCollection.getData().get(0);
+//                Log.d("Event", event.size() + "");
+//                for (int i = 0; i < event.size(); i++) {
                     String text;
-                    text = Resources.NAME + ": " + event.get(i).getName();
+                    text = Resources.NAME + ": " + event.getName();
                     name.setText(text);
-                    text = Resources.DATE + ": " + dateFormat.format(event.get(i).getDateOfEvent());
+                    text = Resources.DATE + ": " + dateFormat.format(event.getDateOfEvent());
                     date.setText(text);
-                    text = Resources.CITY + ": " + event.get(i).getCity();
+                    text = Resources.CITY + ": " + event.getCity();
                     city.setText(text);
-                    if (event.get(i).getAppCompany_ID_Event() != null) {
-                        text = Resources.COMPANY + ": " + event.get(i).getAppCompany_ID_Event().getName();
+                    if (event.getAppCompany_ID_Event() != null) {
+                        text = Resources.COMPANY + ": " + event.getAppCompany_ID_Event().getName();
                         company.setText(text);
                     }
-                    text = Resources.DESCRIPTION + ": " + event.get(i).getNote();
+                    text = Resources.DESCRIPTION + ": " + event.getNote();
                     notes.setText(text);
                     text = "";
-                    for (int j = 0; j < event.get(i).getEventUserStatus_ID_Event().size(); j++) {
+                    for (int j = 0; j < event.getEventUserStatus_ID_Event().size(); j++) {
                         EventUserStatus eventUserStatus;
-                        eventUserStatus = event.get(i).getEventUserStatus_ID_Event().get(j);
+                        eventUserStatus = event.getEventUserStatus_ID_Event().get(j);
                         text = eventUserStatus.getUserData_ID_EventUserStatus().getFirstName() +
                                 " " + eventUserStatus.getUserData_ID_EventUserStatus().getSecondName() + "\n";
                     }
                     participants.setText(text);
 
                     super.handleResponse(eventBackendlessCollection);
-                }
+
 
             }
 
@@ -88,7 +90,7 @@ public class EventActivity extends AppCompatActivity {
     }
 
     private void initUI(){
-        date = (EditText) findViewById(R.id.eventActivityDate);
+        date = (TextView) findViewById(R.id.eventActivityDate);
         notes = (EditText) findViewById(R.id.eventActivityNotes);
         city = (EditText) findViewById(R.id.eventActivityCity);
         company = (EditText) findViewById(R.id.eventActivityCompany);
@@ -101,7 +103,6 @@ public class EventActivity extends AppCompatActivity {
 
         saveBtn.setEnabled(false);
 
-        participants.setEnabled(false);
         date.setEnabled(false);
         city.setEnabled(false);
         notes.setEnabled(false);
@@ -113,11 +114,10 @@ public class EventActivity extends AppCompatActivity {
         editBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                date.setEnabled(true);
+
+//                date.setEnabled(true);
                 notes.setEnabled(true);
                 city.setEnabled(true);
-                company.setEnabled(true);
-                participants.setEnabled(true);
                 name.setEnabled(true);
                 saveBtn.setEnabled(true);
             }
@@ -127,18 +127,21 @@ public class EventActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                date.setEnabled(false);
+//                date.setEnabled(false);
                 notes.setEnabled(false);
                 city.setEnabled(false);
-                company.setEnabled(false);
-                participants.setEnabled(false);
                 name.setEnabled(false);
                 saveBtn.setEnabled(false);
 
                 String text;
-                text =notes.getText().toString();
+                text =notes.getText().toString().substring(13);
                 event.setNote(text);
-                re
+                text = name.getText().toString().substring(6);
+                event.setName(text);
+                text = city.getText().toString().substring(6);
+                event.setCity(text);
+                Backendless.Persistence.of(Event.class).save(event, new DefaultCallback<Event>(EventActivity.this));
+
             }
         });
     }

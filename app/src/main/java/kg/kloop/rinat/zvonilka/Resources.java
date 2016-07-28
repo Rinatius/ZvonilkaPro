@@ -26,6 +26,7 @@ public class Resources {
     public static final String POSITION = "Position";
     public static final String PARTICIPATED = "PARTICIPATED";
     public static final String NOT_PARTICIPATED = "not PARTICIPATED";
+    public static final String SEND_EMAIL = "Send Email";
 
 
 }

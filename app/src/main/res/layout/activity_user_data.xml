@@ -25,44 +25,63 @@
             android:layout_height="wrap_content"
             android:id="@+id/userDataActivitySurname" />
 
-        <LinearLayout
+        <RelativeLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <EditText
-                android:layout_width="300dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:id="@+id/userDataActivityEmail" />
+                android:id="@+id/userDataActivityEmail"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_toLeftOf="@+id/userDataActivitySendEmailBtn"
+                android:layout_toStartOf="@+id/userDataActivitySendEmailBtn" />
 
             <ImageButton
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:id="@+id/imageButton"
+                android:id="@+id/userDataActivitySendEmailBtn"
                 android:src="@android:drawable/ic_dialog_email"
-                android:background="@color/emailButton" />
-        </LinearLayout>
+                android:background="@color/emailButton"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
+        </RelativeLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="right">
 
             <EditText
-                android:layout_width="300dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:id="@+id/userDataActivityPhone" />
+                android:id="@+id/userDataActivityPhone"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="0dp"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="0dp"
+                android:layout_toLeftOf="@+id/userDataActivityCallBtn"
+                android:layout_toStartOf="@+id/userDataActivityCallBtn"
+                android:layout_alignParentBottom="true" />
+
 
             <ImageButton
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:id="@+id/userDataActivityCallBtn"
                 android:src="@android:drawable/sym_call_outgoing"
-                android:background="@color/callButton"
-                android:contentDescription="@string/imagebuttondescription"/>
+                android:contentDescription="@string/imagebuttondescription"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:background="@color/callButton" />
 
-        </LinearLayout>
+        </RelativeLayout>
 
         <EditText
             android:layout_width="match_parent"
@@ -85,7 +104,7 @@
             android:id="@+id/userDataActivityBirthDay" />
 
         <EditText
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/userDataActivityFamily" />
 
@@ -103,5 +122,24 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/userDataActivityEventList" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <ImageButton
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:id="@+id/userDataActivityEditBtn"
+                android:src="@android:drawable/ic_menu_edit" />
+
+            <ImageButton
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:id="@+id/userDataActivitySaveBtn"
+                android:src="@android:drawable/ic_menu_save"
+                android:contentDescription="@string/save_changes" />
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>

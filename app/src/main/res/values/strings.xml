@@ -51,5 +51,6 @@
     <string name="event">Event:</string>
     <string name="notes">Notes:</string>
     <string name="fragment_select_to_do">ToDo</string>
+    <string name="save_changes">Save Changes</string>
 
 </resources>

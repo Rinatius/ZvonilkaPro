@@ -81,7 +81,8 @@
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:id="@+id/eventActivitySaveBtn"
-                    android:src="@android:drawable/ic_menu_save" />
+                    android:src="@android:drawable/ic_menu_save"
+                    android:contentDescription="@string/save_changes" />
             </LinearLayout>
 
         </LinearLayout>

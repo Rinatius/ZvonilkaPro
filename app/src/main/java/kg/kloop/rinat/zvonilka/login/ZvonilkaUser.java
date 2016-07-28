@@ -21,11 +21,11 @@ public class ZvonilkaUser extends BackendlessUser
 
   public String getName()
   {
-    return (String) super.getProperty( "name" );
+    return (String) super.getProperty( "NAME" );
   }
 
   public void setName( String name )
   {
-    super.setProperty( "name", name );
+    super.setProperty( "NAME", name );
   }
 }
