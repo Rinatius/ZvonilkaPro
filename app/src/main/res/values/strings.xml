@@ -48,5 +48,8 @@
     <string name="eventIdkey">eventId</string>
     <string name="userDataIdkey">userDataId</string>
     <string name="markasdone">Mark as Done</string>
+    <string name="event">Event:</string>
+    <string name="notes">Notes:</string>
+    <string name="fragment_select_to_do">ToDo</string>
 
 </resources>
