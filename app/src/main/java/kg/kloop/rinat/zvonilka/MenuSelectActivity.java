@@ -206,6 +206,7 @@ public class MenuSelectActivity extends AppCompatActivity {
                         userDatasAdapter = new UsersDataAdapter(getContext(), usersData, false);
                         userDataList.setAdapter(userDatasAdapter);
                         super.handleResponse(response);
+
                     }
 
                     @Override
