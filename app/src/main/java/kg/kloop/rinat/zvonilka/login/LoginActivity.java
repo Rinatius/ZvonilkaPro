@@ -1,6 +1,5 @@
 package kg.kloop.rinat.zvonilka.login;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -16,7 +15,7 @@ import com.backendless.Backendless;
 import com.backendless.BackendlessUser;
 
 import kg.kloop.rinat.zvonilka.R;
-import kg.kloop.rinat.zvonilka.SelectActivity;
+import kg.kloop.rinat.zvonilka.MenuSelectActivity;
 
 public class LoginActivity extends AppCompatActivity
 {
@@ -54,7 +53,7 @@ public class LoginActivity extends AppCompatActivity
               {
                 super.handleResponse( currentUser );
                 Backendless.UserService.setCurrentUser( currentUser );
-                startActivity( new Intent( getBaseContext(), SelectActivity.class ) );
+                startActivity( new Intent( getBaseContext(), MenuSelectActivity.class ) );
                 finish();
               }
             } );
@@ -123,7 +122,7 @@ public class LoginActivity extends AppCompatActivity
       public void handleResponse( BackendlessUser backendlessUser )
       {
         super.handleResponse( backendlessUser );
-        startActivity( new Intent( LoginActivity.this, SelectActivity.class ) );
+        startActivity( new Intent( LoginActivity.this, MenuSelectActivity.class ) );
         finish();
       }
     }, rememberLogin );

@@ -16,10 +16,12 @@ public class UsersDataAdapter extends BaseAdapter {
 
     private Context context;
     private List<UserData> userDatas;
+    private boolean inProgress, isSelectActivity;
 
-    public UsersDataAdapter(Context context, List<UserData> userDatas) {
+    public UsersDataAdapter(Context context, List<UserData> userDatas, boolean isSelectActivity) {
         this.context = context;
         this.userDatas = userDatas;
+        this.isSelectActivity = isSelectActivity;
     }
 
     @Override
@@ -48,10 +50,12 @@ public class UsersDataAdapter extends BaseAdapter {
         }
 
         TextView name = (TextView) v.findViewById(R.id.user_data_list_name);
-        TextView events = (TextView) v.findViewById(R.id.user_data_list_events);
+//        TextView events = (TextView) v.findViewById(R.id.user_data_list_events);
 
         String nameStr = user.getFirstName() + " " + user.getSecondName();
         name.setText(nameStr);
+
+
         return v;
     }
 }

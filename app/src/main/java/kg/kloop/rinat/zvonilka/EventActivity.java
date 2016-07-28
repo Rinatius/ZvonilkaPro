@@ -45,7 +45,7 @@ public class EventActivity extends AppCompatActivity {
 
         eventId = getIntent().getExtras().getString(getResources().getString(R.string.eventIdkey));
         querry = new BackendlessDataQuery();
-        querry.setWhereClause(Resources.OBJECTID + " = '" + eventId + "'");
+        querry.setWhereClause(Resources.OBJECT_ID + " = '" + eventId + "'");
         Log.d("query", eventId);
 
         Backendless.Persistence.of(Event.class).find(querry, new DefaultCallback<BackendlessCollection<Event>>(this) {
