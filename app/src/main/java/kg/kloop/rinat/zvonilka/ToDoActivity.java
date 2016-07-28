@@ -48,7 +48,7 @@ public class ToDoActivity extends AppCompatActivity {
 
         todoId = getIntent().getExtras().getString(Resources.TODO_ID_KEY);
         querry = new BackendlessDataQuery();
-        querry.setWhereClause(Resources.OBJECTID + "'" + todoId + "'");
+        querry.setWhereClause(Resources.OBJECT_ID + "'" + todoId + "'");
 
         Backendless.Persistence.of(ToDo.class).find(querry, new DefaultCallback<BackendlessCollection<ToDo>>(this){
             @Override

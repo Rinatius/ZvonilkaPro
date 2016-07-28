@@ -12,12 +12,12 @@ import java.util.List;
 import kg.kloop.rinat.zvonilka.R;
 import kg.kloop.rinat.zvonilka.data.UserData;
 
-public class SelectActivityAdapterUserDatas extends BaseAdapter {
+public class UsersDataAdapter extends BaseAdapter {
 
     private Context context;
     private List<UserData> userDatas;
 
-    public SelectActivityAdapterUserDatas(Context context, List<UserData> userDatas) {
+    public UsersDataAdapter(Context context, List<UserData> userDatas) {
         this.context = context;
         this.userDatas = userDatas;
     }

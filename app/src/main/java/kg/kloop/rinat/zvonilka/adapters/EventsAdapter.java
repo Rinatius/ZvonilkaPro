@@ -12,12 +12,12 @@ import java.util.List;
 import kg.kloop.rinat.zvonilka.R;
 import kg.kloop.rinat.zvonilka.data.Event;
 
-public class SelectActivityAdapterEvents extends BaseAdapter{
+public class EventsAdapter extends BaseAdapter{
 
     Context context;
     List<Event> events;
 
-    public SelectActivityAdapterEvents(Context context, List<Event> events) {
+    public EventsAdapter(Context context, List<Event> events) {
         this.context = context;
         this.events = events;
     }

@@ -13,11 +13,11 @@ import kg.kloop.rinat.zvonilka.R;
 import kg.kloop.rinat.zvonilka.data.ToDo;
 
 
-public class SelectActivityAdapterToDo extends BaseAdapter {
+public class ToDoAdapter extends BaseAdapter {
     Context context;
     List<ToDo> toDoList;
 
-    public SelectActivityAdapterToDo(Context context, List<ToDo> toDoList) {
+    public ToDoAdapter(Context context, List<ToDo> toDoList) {
         this.context = context;
         this.toDoList = toDoList;
     }

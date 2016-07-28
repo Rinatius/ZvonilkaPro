@@ -7,7 +7,7 @@ public class Resources {
     public static final String USER_DATA_ID_KEY = "userDataId";
     public static final String EVENT_ID_KEY = "eventId";
 //     Other strings
-    public static final String OBJECTID = "objectId";
+    public static final String OBJECT_ID = "objectId";
     public static final String NAME = "Name";
     public static final String SUR_NAME = "Surname";
     public static final String EMAIL = "Email";
@@ -27,6 +27,7 @@ public class Resources {
     public static final String PARTICIPATED = "PARTICIPATED";
     public static final String NOT_PARTICIPATED = "not PARTICIPATED";
     public static final String SEND_EMAIL = "Send Email";
+    public static final String[] SPINNER_SEARCH = {"Users", "Events"};
 
 
 }

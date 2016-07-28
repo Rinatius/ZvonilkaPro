@@ -9,4 +9,42 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="kg.kloop.rinat.zvonilka.SearchActivity">
 
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/search_activity_search"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:src="@android:drawable/ic_menu_search" />
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/search_activity_spinner"
+        android:layout_alignTop="@+id/search_activity_edit_text"
+        android:layout_toLeftOf="@+id/search_activity_search"
+        android:layout_toStartOf="@+id/search_activity_search"
+        android:spinnerMode="dropdown"
+        />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/search_activity_edit_text"
+        android:layout_alignBottom="@+id/search_activity_search"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_toLeftOf="@+id/search_activity_spinner"
+        android:layout_toStartOf="@+id/search_activity_spinner"
+        />
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/search_activity_list"
+        android:layout_below="@+id/search_activity_edit_text"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:choiceMode="singleChoice" />
 </RelativeLayout>

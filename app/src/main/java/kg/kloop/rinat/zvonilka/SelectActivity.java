@@ -25,9 +25,9 @@ import com.backendless.exceptions.BackendlessFault;
 
 import java.util.List;
 
-import kg.kloop.rinat.zvonilka.adapters.SelectActivityAdapterEvents;
-import kg.kloop.rinat.zvonilka.adapters.SelectActivityAdapterToDo;
-import kg.kloop.rinat.zvonilka.adapters.SelectActivityAdapterUserDatas;
+import kg.kloop.rinat.zvonilka.adapters.EventsAdapter;
+import kg.kloop.rinat.zvonilka.adapters.ToDoAdapter;
+import kg.kloop.rinat.zvonilka.adapters.UsersDataAdapter;
 import kg.kloop.rinat.zvonilka.data.Event;
 import kg.kloop.rinat.zvonilka.data.ToDo;
 import kg.kloop.rinat.zvonilka.data.UserData;
@@ -50,9 +50,9 @@ public class SelectActivity extends AppCompatActivity {
      */
     private ViewPager mViewPager;
 
-    private static SelectActivityAdapterUserDatas userDatasAdapter;
-    private static SelectActivityAdapterEvents eventsAdapter;
-    private static SelectActivityAdapterToDo toDoAdapter;
+    private static UsersDataAdapter userDatasAdapter;
+    private static EventsAdapter eventsAdapter;
+    private static ToDoAdapter toDoAdapter;
     private static ListView userDataList;
     private static ListView eventsList;
     private static ListView userToDoList;
@@ -170,7 +170,7 @@ public class SelectActivity extends AppCompatActivity {
                     @Override
                     public void handleResponse(BackendlessCollection<Event> response) {
                         List<Event> events = response.getData();
-                        eventsAdapter = new SelectActivityAdapterEvents(getContext(), events);
+                        eventsAdapter = new EventsAdapter(getContext(), events);
                         eventsList.setAdapter(eventsAdapter);
                         super.handleResponse(response);
 
@@ -209,8 +209,8 @@ public class SelectActivity extends AppCompatActivity {
                 Backendless.Persistence.of(UserData.class).find(new DefaultCallback<BackendlessCollection<UserData>>(getContext()){
                     @Override
                     public void handleResponse(BackendlessCollection<UserData> response) {
-                        List<UserData> userDatas = response.getData();
-                        userDatasAdapter = new SelectActivityAdapterUserDatas(getContext(), userDatas);
+                        List<UserData> usersData = response.getData();
+                        userDatasAdapter = new UsersDataAdapter(getContext(), usersData);
                         userDataList.setAdapter(userDatasAdapter);
                         super.handleResponse(response);
                     }
@@ -243,7 +243,7 @@ public class SelectActivity extends AppCompatActivity {
                     @Override
                     public void handleResponse(BackendlessCollection<ToDo> response) {
                         List<ToDo> toDoList = response.getData();
-                        toDoAdapter = new SelectActivityAdapterToDo(getContext(), toDoList);
+                        toDoAdapter = new ToDoAdapter(getContext(), toDoList);
                         userToDoList.setAdapter(toDoAdapter);
                         super.handleResponse(response);
                     }

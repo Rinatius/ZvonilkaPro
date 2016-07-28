@@ -54,7 +54,7 @@ public class UserDataActivity extends AppCompatActivity {
         programmButtons();
         userId = getIntent().getExtras().getString(Resources.USER_DATA_ID_KEY);
         querry = new BackendlessDataQuery();
-        querry.setWhereClause(Resources.OBJECTID + " = '" + userId + "'");
+        querry.setWhereClause(Resources.OBJECT_ID + " = '" + userId + "'");
 
         Backendless.Persistence.of(UserData.class).find(querry, new DefaultCallback<BackendlessCollection<UserData>>(this){
             @Override
