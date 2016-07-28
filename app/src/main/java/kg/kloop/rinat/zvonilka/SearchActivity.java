@@ -1,9 +1,11 @@
 package kg.kloop.rinat.zvonilka;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -89,6 +91,15 @@ public class SearchActivity extends AppCompatActivity {
                 EventsAdapter adapterEvents = new EventsAdapter(getApplicationContext(), events);
                 Log.d("Data", response.getData().toString() + " " + searchQuery);
                 listView.setAdapter(adapterEvents);
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        Intent intent = new Intent(SearchActivity.this, EventActivity.class);
+                        Event event = (Event) adapterView.getItemAtPosition(i);
+                        intent.putExtra(Resources.EVENT_ID_KEY, event.getObjectId());
+                        startActivity(intent);
+                    }
+                });
                 super.handleResponse(response);
             }
 
@@ -109,9 +120,18 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void handleResponse(BackendlessCollection<UserData> response) {
                 List<UserData> userDatas = response.getData();
-                UsersDataAdapter userDatasAdapter = new UsersDataAdapter(getApplicationContext(), userDatas);
+                UsersDataAdapter userDatasAdapter = new UsersDataAdapter(getApplicationContext(), userDatas, false);
                 Log.d("Data", response.getData().toString() + " " + searchQuery);
                 listView.setAdapter(userDatasAdapter);
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        Intent intent = new Intent(SearchActivity.this, UserDataActivity.class);
+                        UserData userData = (UserData) adapterView.getItemAtPosition(i);
+                        intent.putExtra(Resources.USER_ID_KEY, userData.getObjectId());
+                        startActivity(intent);
+                    }
+                });
                 super.handleResponse(response);
             }
 
@@ -122,6 +142,7 @@ public class SearchActivity extends AppCompatActivity {
             }
         });
     }
+
     private void loadToDos() {
         final BackendlessDataQuery dataQuery = new BackendlessDataQuery();
         searchQuery = Resources.NAME + "LIKE '%" + editSearchText.getText() + "%'";
@@ -133,6 +154,15 @@ public class SearchActivity extends AppCompatActivity {
                 ToDoAdapter toDoAdapter = new ToDoAdapter(getApplicationContext(), toDos);
                 Log.d("Data", response.getData().toString() + " " + searchQuery);
                 listView.setAdapter(toDoAdapter);
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        Intent intent = new Intent(SearchActivity.this, ToDoActivity.class);
+                        ToDo toDo = (ToDo) adapterView.getItemAtPosition(i);
+                        intent.putExtra(Resources.TODO_ID_KEY, toDo.getObjectId());
+                        startActivity(intent);
+                    }
+                });
                 super.handleResponse(response);
             }
 

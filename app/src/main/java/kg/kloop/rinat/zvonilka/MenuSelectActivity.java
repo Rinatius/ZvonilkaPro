@@ -21,19 +21,22 @@ import android.widget.ListView;
 
 import com.backendless.Backendless;
 import com.backendless.BackendlessCollection;
+import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 
+import java.util.Date;
 import java.util.List;
 
 import kg.kloop.rinat.zvonilka.adapters.EventsAdapter;
 import kg.kloop.rinat.zvonilka.adapters.ToDoAdapter;
 import kg.kloop.rinat.zvonilka.adapters.UsersDataAdapter;
+import kg.kloop.rinat.zvonilka.data.AppCompany;
 import kg.kloop.rinat.zvonilka.data.Event;
 import kg.kloop.rinat.zvonilka.data.ToDo;
 import kg.kloop.rinat.zvonilka.data.UserData;
 import kg.kloop.rinat.zvonilka.login.DefaultCallback;
 
-public class SelectActivity extends AppCompatActivity {
+public class MenuSelectActivity extends AppCompatActivity {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -75,16 +78,6 @@ public class SelectActivity extends AppCompatActivity {
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
-
-
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
 
     }
 
@@ -193,7 +186,7 @@ public class SelectActivity extends AppCompatActivity {
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                     Intent intent = new Intent(getContext(), EventActivity.class);
                     Event event = (Event) adapterView.getItemAtPosition(i);
-                    intent.putExtra(getResources().getString(R.string.eventIdkey), event.getObjectId());
+                    intent.putExtra(Resources.EVENT_ID_KEY, event.getObjectId());
                     startActivity(intent);
                 }
             });
@@ -210,9 +203,10 @@ public class SelectActivity extends AppCompatActivity {
                     @Override
                     public void handleResponse(BackendlessCollection<UserData> response) {
                         List<UserData> usersData = response.getData();
-                        userDatasAdapter = new UsersDataAdapter(getContext(), usersData);
+                        userDatasAdapter = new UsersDataAdapter(getContext(), usersData, false);
                         userDataList.setAdapter(userDatasAdapter);
                         super.handleResponse(response);
+
                     }
 
                     @Override
