@@ -9,6 +9,7 @@ public class Resources {
     public static final String USER_ID_KEY = "userId";
     public static final String USER_DATA_ID_KEY = "userDataId";
     public static final String EVENT_ID_KEY = "eventId";
+    public static final String NAME_KEY = "Name";
     public static final String PHONE_NUMBER_KEY = "PhoneNumber";
 
     //     Other strings

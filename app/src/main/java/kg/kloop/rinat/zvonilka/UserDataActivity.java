@@ -113,7 +113,6 @@ public class UserDataActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_user_data_activity, menu);
-//        menu.add("Edit");
         return true;
     }
 
