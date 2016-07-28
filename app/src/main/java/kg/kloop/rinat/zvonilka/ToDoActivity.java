@@ -111,17 +111,17 @@ public class ToDoActivity extends AppCompatActivity {
                     new_year = i;
                     new_month = i1;
                     new_day = i2;
-                    String text = new_day + "/" + new_month + "/" + new_year;
-                    deadline.setText(text);
+                    Date text = new Date(i, i1, i2);
+                    deadline.setText(text + "");
                     toDo.setDeadline(text);
                 }
             }, new_year, new_month, new_day);
-        toDo.setDeadline( new_day + "/" + new_month + "/" + new_year);
         Backendless.Persistence.of(ToDo.class).save(toDo, new DefaultCallback<ToDo>(this)
         {
             @Override
             public void handleFault(BackendlessFault backendlessFault){
                 Log.d(TAG, "Save failed " + backendlessFault.getDetail());
+                super.handleResponse(new ToDo());
             }
         });
         return null;

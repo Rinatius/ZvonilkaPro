@@ -44,16 +44,18 @@ public class SelectActivityAdapterEvents extends BaseAdapter{
 
         if (view == null){
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            v = inflater.inflate(R.layout.user_data_list, null);
+            v = inflater.inflate(R.layout.user_event_list, null);
         }
 
-        TextView name = (TextView) v.findViewById(R.id.user_data_list_name);
-        TextView city = (TextView) v.findViewById(R.id.user_data_list_events);
+        TextView name = (TextView) v.findViewById(R.id.user_event_list_event_name);
+        TextView city = (TextView) v.findViewById(R.id.user_event_list_event_note);
+        TextView date = (TextView) v.findViewById(R.id.user_event_list_event_date);
 
         String nameStr = context.getResources().getString(R.string.name) + event.getName();
         name.setText(nameStr);
         String cityStr = context.getResources().getString(R.string.city) + event.getCity();
         city.setText(cityStr);
+        String dateStr = context.getResources().getString(R.string.date) + event.getDateOfEvent();
         return v;
     }
 }

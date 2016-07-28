@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
+    android:layout_width="match_parent" android:layout_height="match_parent">
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/name"
-        android:id="@+id/user_data_list_name"
+        android:id="@+id/user_event_list_event_name"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
@@ -16,9 +14,18 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/event"
-        android:id="@+id/user_data_list_events"
-        android:layout_below="@+id/user_data_list_name"
+        android:text="@string/notes"
+        android:id="@+id/user_event_list_event_note"
+        android:layout_below="@+id/user_event_list_event_name"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/date"
+        android:id="@+id/user_event_list_event_date"
+        android:layout_below="@+id/user_event_list_event_note"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 </RelativeLayout>

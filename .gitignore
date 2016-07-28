@@ -7,4 +7,4 @@
 .DS_Store
 /build
 /captures
-/app/src/main/java/kg/kloop/rinat/zvonilka/login
+/app/src/main/java/kg/kloop/rinat/zvonilka/login/Defaults.java
