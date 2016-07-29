@@ -5,16 +5,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 
 import com.backendless.Backendless;
 import com.backendless.BackendlessCollection;
+import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 import com.backendless.persistence.BackendlessDataQuery;
 
@@ -35,6 +37,9 @@ public class SearchActivity extends AppCompatActivity {
     Spinner spinner;
     String searchQuery;
     ListView listView;
+    boolean onBackground = false;
+    boolean allLoaded[]= new boolean[2];
+    ProgressBar progressBar;
 
 
     @Override
@@ -53,9 +58,14 @@ public class SearchActivity extends AppCompatActivity {
         editSearchText = (EditText) findViewById(R.id.search_activity_edit_text);
         search = (Button) findViewById(R.id.search_activity_search);
         spinner = (Spinner) findViewById(R.id.search_activity_spinner);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.search_list_adapter, Resources.SPINNER_SEARCH);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(), R.layout.search_list_adapter, Resources.SPINNER_SEARCH);
         spinner.setAdapter(adapter);
         listView = (ListView) findViewById(R.id.search_activity_list);
+        progressBar = (ProgressBar) findViewById(R.id.search_activity_progress_bar);
+        progressBar.setVisibility(View.INVISIBLE);
+
+        allLoaded[0] = false;
+        allLoaded[1] = false;
 
         search.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,9 +97,9 @@ public class SearchActivity extends AppCompatActivity {
         dataQuery.setWhereClause(searchQuery);
         Backendless.Persistence.of(Event.class).find(dataQuery, new DefaultCallback<BackendlessCollection<Event>>(SearchActivity.this) {
             @Override
-            public void handleResponse(BackendlessCollection<Event> response) {
+            public void handleResponse(final BackendlessCollection<Event> response) {
                 List<Event> events = response.getData();
-                EventsAdapter adapterEvents = new EventsAdapter(getApplicationContext(), events);
+                final EventsAdapter adapterEvents = new EventsAdapter(getApplicationContext(), events);
                 Log.d("Data", response.getData().toString() + " " + searchQuery);
                 listView.setAdapter(adapterEvents);
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -99,6 +109,35 @@ public class SearchActivity extends AppCompatActivity {
                         Event event = (Event) adapterView.getItemAtPosition(i);
                         intent.putExtra(Resources.EVENT_ID_KEY, event.getObjectId());
                         startActivity(intent);
+                    }
+                });
+                listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+                    @Override
+                    public void onScrollStateChanged(AbsListView absListView, int i) {
+
+                    }
+
+                    @Override
+                    public void onScroll(AbsListView absListView, int i, int i1, int i2) {
+                        if (!onBackground && !allLoaded[0] && i+i1*2 >= i2){
+                            onBackground = true;
+                            progressBar.setVisibility(View.VISIBLE);
+                            response.getPage(10, i2, new AsyncCallback<BackendlessCollection<Event>>() {
+                                @Override
+                                public void handleResponse(BackendlessCollection<Event> eventBackendlessCollection) {
+                                    adapterEvents.add(eventBackendlessCollection.getData());
+                                    adapterEvents.notifyDataSetChanged();
+                                    onBackground = false;
+                                    progressBar.setVisibility(View.INVISIBLE);
+                                    allLoaded[0] = eventBackendlessCollection.getData().size() == 0;
+                                }
+
+                                @Override
+                                public void handleFault(BackendlessFault backendlessFault) {
+
+                                }
+                            });
+                        }
                     }
                 });
                 super.handleResponse(response);
@@ -119,9 +158,9 @@ public class SearchActivity extends AppCompatActivity {
 
         Backendless.Persistence.of(UserData.class).find(dataQuery, new DefaultCallback<BackendlessCollection<UserData>>(SearchActivity.this) {
             @Override
-            public void handleResponse(BackendlessCollection<UserData> response) {
-                List<UserData> userDatas = response.getData();
-                UsersDataAdapter userDatasAdapter = new UsersDataAdapter(getApplicationContext(), userDatas);
+            public void handleResponse(final BackendlessCollection<UserData> response) {
+                final List<UserData> userDatas = response.getData();
+                final UsersDataAdapter userDatasAdapter = new UsersDataAdapter(getApplicationContext(), userDatas);
                 Log.d("Data", response.getData().toString() + " " + searchQuery);
                 listView.setAdapter(userDatasAdapter);
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -132,6 +171,35 @@ public class SearchActivity extends AppCompatActivity {
                         Log.d("User ID", userData.getObjectId());
                         intent.putExtra(Resources.USER_DATA_ID_KEY, userData.getObjectId());
                         startActivity(intent);
+                    }
+                });
+                listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+                    @Override
+                    public void onScrollStateChanged(AbsListView absListView, int i) {
+
+                    }
+
+                    @Override
+                    public void onScroll(AbsListView absListView, int i, int i1, int i2) {
+                        progressBar.setVisibility(View.VISIBLE);
+                        if(!onBackground && !allLoaded[0] && i+i1*2 >= i2){
+                            onBackground = true;
+                            response.getPage(10, i2, new AsyncCallback<BackendlessCollection<UserData>>() {
+                                @Override
+                                public void handleResponse(BackendlessCollection<UserData> userDataBackendlessCollection) {
+                                    userDatasAdapter.add(userDataBackendlessCollection.getData());
+                                    userDatasAdapter.notifyDataSetChanged();
+                                    onBackground = false;
+                                    progressBar.setVisibility(View.INVISIBLE);
+                                    allLoaded[0] = userDataBackendlessCollection.getData().size() == 0;
+                                }
+
+                                @Override
+                                public void handleFault(BackendlessFault backendlessFault) {
+
+                                }
+                            });
+                        }
                     }
                 });
                 super.handleResponse(response);

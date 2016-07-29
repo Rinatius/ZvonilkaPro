@@ -36,7 +36,9 @@
             android:name=".ToDoActivity"
             android:label="To Do" />
         <activity android:name=".SearchActivity" />
-        <activity android:name=".CallActivity"></activity>
+        <activity android:name=".CallActivity" />
+        <activity android:name=".AddUserDataActivity" />
+        <activity android:name=".AddEventActivity"></activity>
     </application>
 
 </manifest>

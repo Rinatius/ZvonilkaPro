@@ -54,12 +54,14 @@ public class EventsAdapter extends BaseAdapter{
         TextView name = (TextView) v.findViewById(R.id.user_event_list_event_name);
         TextView city = (TextView) v.findViewById(R.id.user_event_list_event_note);
         TextView date = (TextView) v.findViewById(R.id.user_event_list_event_date);
+        name.setTextColor(context.getResources().getColor(R.color.textColor));
 
         String nameStr = context.getResources().getString(R.string.name) + event.getName();
         name.setText(nameStr);
         String cityStr = context.getResources().getString(R.string.city) + event.getCity();
         city.setText(cityStr);
         String dateStr = context.getResources().getString(R.string.date) + event.getDateOfEvent();
+        date.setText(dateStr);
         return v;
     }
 }
