@@ -61,4 +61,8 @@
     <string name="first_name">First Name</string>
     <string name="second_name">Second Name</string>
     <string name="position">Posotion:</string>
+    <string name="cancel">Cancel</string>
+    <string name="set">Set</string>
+    <string name="set_birthday_here">Set Birthday here!</string>
+    <string name="error_didnt_write_field">Write field first name, second name and phone!</string>
 </resources>

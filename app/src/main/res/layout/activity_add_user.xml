@@ -20,7 +20,7 @@
             android:layout_height="match_parent">
 
             <EditText
-                android:id="@+id/add_user_activity_first_name"
+                android:id="@+id/activity_user_add_first_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
@@ -37,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:layout_below="@+id/add_user_activity_first_name"
+                android:layout_below="@+id/activity_user_add_first_name"
                 android:text="@string/second_name" />
 
             <TextView
@@ -53,21 +53,21 @@
                 android:id="@+id/space"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_alignTop="@+id/add_user_activity_first_name"
+                android:layout_alignTop="@+id/activity_user_add_first_name"
                 android:layout_centerHorizontal="true" />
 
             <EditText
                 android:id="@+id/activity_user_add_second_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignEnd="@+id/add_user_activity_first_name"
+                android:layout_alignEnd="@+id/activity_user_add_first_name"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:layout_alignRight="@+id/add_user_activity_first_name"
+                android:layout_alignRight="@+id/activity_user_add_first_name"
                 android:layout_below="@+id/textView3" />
 
             <EditText
-                android:id="@+id/editText"
+                android:id="@+id/activity_user_add_email"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
@@ -92,10 +92,10 @@
                 android:layout_height="wrap_content"
                 android:inputType="phone"
                 android:ems="10"
-                android:id="@+id/editText2"
+                android:id="@+id/activity_user_add_phone_number"
                 android:layout_below="@+id/textView4"
-                android:layout_toRightOf="@+id/editText"
-                android:layout_toEndOf="@+id/editText" />
+                android:layout_toRightOf="@+id/activity_user_add_email"
+                android:layout_alignParentRight="true" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -103,15 +103,15 @@
                 android:text="@string/phone"
                 android:id="@+id/textView5"
                 android:layout_below="@+id/activity_user_add_second_name"
-                android:layout_toRightOf="@+id/editText"
-                android:layout_toEndOf="@+id/editText" />
+                android:layout_toRightOf="@+id/activity_user_add_email"
+                android:layout_toEndOf="@+id/activity_user_add_email" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/city"
                 android:id="@+id/textView6"
-                android:layout_below="@+id/editText"
+                android:layout_below="@+id/activity_user_add_email"
 
                 />
             <EditText
@@ -119,7 +119,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/textView6"
                 android:layout_alignStart="@+id/textView6"
-                android:layout_alignEnd="@+id/editText"
+                android:layout_alignEnd="@+id/activity_user_add_email"
                 android:id="@+id/activity_user_add_city"
                 />
             <TextView
@@ -127,8 +127,8 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/textView7"
                 android:text="@string/address"
-                android:layout_below="@+id/editText2"
-                android:layout_alignStart="@+id/editText2"
+                android:layout_below="@+id/activity_user_add_phone_number"
+                android:layout_alignStart="@+id/activity_user_add_phone_number"
 
                 />
             <EditText
@@ -174,7 +174,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/family"
                 android:layout_below="@+id/space2"
-                android:id="@id/textView10"
+                android:id="@+id/textView10"
                 />
             <EditText
                 android:layout_width="wrap_content"
@@ -188,7 +188,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/company"
-                android:id="@id/textView11"
+                android:id="@+id/textView11"
                 android:layout_below="@+id/activity_user_add_family"
                 />
             <EditText
@@ -215,6 +215,16 @@
                 android:layout_alignStart="@+id/textView12"
                 android:layout_alignParentRight="true"
                 />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/set_birthday_here"
+                android:id="@+id/activity_add_user_birthday_text"
+                android:layout_below="@+id/textView9"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+
         </RelativeLayout>
     </ScrollView>
 
