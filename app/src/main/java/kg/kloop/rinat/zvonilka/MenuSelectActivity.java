@@ -1,8 +1,13 @@
 package kg.kloop.rinat.zvonilka;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.design.widget.TabLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DialogTitle;
 import android.support.v7.widget.Toolbar;
 
 import android.support.v4.app.Fragment;
@@ -295,12 +300,29 @@ public class MenuSelectActivity extends AppCompatActivity {
             }
             userDataList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                public void onItemClick(final AdapterView<?> adapterView, View view, int i, long l) {
                     Log.d("Item Click", "clicked" + i);
-                    Intent intent = new Intent(getContext(), UserDataActivity.class);
-                    UserData userData = (UserData) adapterView.getItemAtPosition(i);
-                    intent.putExtra(Resources.USER_DATA_ID_KEY, userData.getObjectId());
-                    startActivity(intent);
+                    final UserData userData = (UserData) adapterView.getItemAtPosition(i);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    builder.setTitle(R.string.menu_select_message)
+                            .setItems(R.array.menu_select_action, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    Intent intent = new Intent();
+                                    switch (i){
+                                        case 0:
+                                            intent.setClass(getContext(), CallActivity.class);
+                                            intent.putExtra(Resources.PHONE_NUMBER_KEY, userData.getPhoneNumber());
+                                            break;
+                                        case 1:
+                                            intent.setClass(getContext(), UserDataActivity.class);
+                                            intent.putExtra(Resources.USER_DATA_ID_KEY, userData.getObjectId());
+                                            break;
+                                    }
+                                    startActivity(intent);
+                                }
+                            });
+                    builder.show();
                 }
             });
         }
