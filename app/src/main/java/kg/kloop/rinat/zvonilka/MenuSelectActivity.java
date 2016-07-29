@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 import com.backendless.Backendless;
 import com.backendless.BackendlessCollection;
@@ -53,20 +54,22 @@ public class MenuSelectActivity extends AppCompatActivity {
     private ViewPager mViewPager;
 
     private static UsersDataAdapter usersDataAdapter;
-    private static BackendlessCollection<UserData> userDataCollection;
     private static EventsAdapter eventsAdapter;
-    private static BackendlessCollection<Event> eventCollection;
     private static ToDoAdapter toDoAdapter;
-    private static BackendlessCollection<ToDo> toDoCollection;
     private static boolean onBackground = false;
+    private static boolean[] allLoaded = new boolean[3];
     private static ListView userDataList;
     private static ListView eventsList;
     private static ListView userToDoList;
+    private static ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select);
+        for (int i = 0; i < 3; i++) {
+            allLoaded[i] = false;
+        }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -78,6 +81,7 @@ public class MenuSelectActivity extends AppCompatActivity {
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
         mViewPager.setCurrentItem(1);
+        progressBar = (ProgressBar) findViewById(R.id.progress_bar_load_background);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
@@ -101,8 +105,14 @@ public class MenuSelectActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
-        } else if (id == R.id.action_search){
+        } else if (id == R.id.action_search) {
             Intent intent = new Intent(getApplicationContext(), SearchActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.action_add_user_data) {
+            Intent intent = new Intent(getApplicationContext(), AddUserDataActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.action_add_event) {
+            Intent intent = new Intent(getApplicationContext(), AddEventActivity.class);
             startActivity(intent);
         }
 
@@ -139,7 +149,7 @@ public class MenuSelectActivity extends AppCompatActivity {
                                  Bundle savedInstanceState) {
             View rootView = null;
 
-            switch (getArguments().getInt(ARG_SECTION_NUMBER)){
+            switch (getArguments().getInt(ARG_SECTION_NUMBER)) {
                 case 0:
                     rootView = inflater.inflate(R.layout.fragment_select_events, container, false);
                     initEventsFragment(rootView);
@@ -157,16 +167,15 @@ public class MenuSelectActivity extends AppCompatActivity {
 
         }
 
-///////////********* Initial Event List *****************//////////////////
+        ///////////********* Initial Event List *****************//////////////////
         private void initEventsFragment(View view) {
 
             eventsList = (ListView) view.findViewById(R.id.select_activity_list_events);
-            if (eventsAdapter == null){
-                Backendless.Persistence.of(Event.class).find(new DefaultCallback<BackendlessCollection<Event>>(getContext()){
+            if (eventsAdapter == null) {
+                Backendless.Persistence.of(Event.class).find(new DefaultCallback<BackendlessCollection<Event>>(getContext()) {
                     @Override
                     public void handleResponse(final BackendlessCollection<Event> response) {
-                        eventCollection = response;
-                        final List<Event> events = eventCollection.getData();
+                        final List<Event> events = response.getData();
                         eventsAdapter = new EventsAdapter(getContext(), events);
                         eventsList.setAdapter(eventsAdapter);
                         eventsList.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -178,15 +187,17 @@ public class MenuSelectActivity extends AppCompatActivity {
                             @Override
                             public void onScroll(AbsListView absListView, int i, int i1, int i2) {
                                 Log.d("Events", i + " " + i1 + " " + i2);
-                                if (!onBackground && (i + i1*2 == i2 || i2 == 10)) {
+                                if (!onBackground && !allLoaded[0] && (i + i1 * 2 >= i2 || i2 == 10)) {
                                     onBackground = true;
-
-                                    eventCollection.getPage(i2%10, i2, new AsyncCallback<BackendlessCollection<Event>>() {
+                                    progressBar.setVisibility(View.VISIBLE);
+                                    response.getPage(10, i2, new AsyncCallback<BackendlessCollection<Event>>() {
                                         @Override
                                         public void handleResponse(BackendlessCollection<Event> eventBackendlessCollection) {
                                             eventsAdapter.add(eventBackendlessCollection.getData());
                                             eventsAdapter.notifyDataSetChanged();
                                             onBackground = false;
+                                            allLoaded[0] = eventBackendlessCollection.getData().size() == 0;
+                                            progressBar.setVisibility(View.INVISIBLE);
                                             Log.d("Get Item on back", "Events Successful " + eventsAdapter.getCount());
                                         }
 
@@ -194,6 +205,7 @@ public class MenuSelectActivity extends AppCompatActivity {
                                         public void handleFault(BackendlessFault backendlessFault) {
                                             Log.d("Get Item on back", "Error: " + backendlessFault.getMessage());
                                             onBackground = false;
+                                            progressBar.setVisibility(View.INVISIBLE);
                                         }
                                     });
                                 }
@@ -213,8 +225,6 @@ public class MenuSelectActivity extends AppCompatActivity {
             }
 
 
-
-
             eventsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -227,17 +237,16 @@ public class MenuSelectActivity extends AppCompatActivity {
 
         }
 
-///////////********* Initial User List *****************//////////////////
+        ///////////********* Initial User List *****************//////////////////
         private void initUsersFragment(View view) {
 
             userDataList = (ListView) view.findViewById(R.id.select_activity_list_users);
 
-            if (usersDataAdapter == null){
-                Backendless.Persistence.of(UserData.class).find(new DefaultCallback<BackendlessCollection<UserData>>(getContext()){
+            if (usersDataAdapter == null) {
+                Backendless.Persistence.of(UserData.class).find(new DefaultCallback<BackendlessCollection<UserData>>(getContext()) {
                     @Override
                     public void handleResponse(final BackendlessCollection<UserData> response) {
-                        userDataCollection = response;
-                        List<UserData> usersData = userDataCollection.getData();
+                        List<UserData> usersData = response.getData();
                         usersDataAdapter = new UsersDataAdapter(getContext(), usersData);
                         userDataList.setAdapter(usersDataAdapter);
                         userDataList.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -247,16 +256,19 @@ public class MenuSelectActivity extends AppCompatActivity {
                             }
 
                             @Override
-                            public void onScroll(AbsListView absListView, int i, int i1, int i2) {
+                            public void onScroll(final AbsListView absListView, int i, int i1, int i2) {
                                 Log.d("Users", i + " " + i1 + " " + i2);
-                                if (!onBackground && (i + i1*2 == i2 || i2 <= i1 + i)){
+                                if (!onBackground && !allLoaded[1] && (i + i1 * 2 >= i2 || i2 <= i1 + i)) {
                                     onBackground = true;
-                                    userDataCollection.getPage(i2%10, i2, new AsyncCallback<BackendlessCollection<UserData>>() {
+                                    progressBar.setVisibility(View.VISIBLE);
+                                    response.getPage(10, i2, new AsyncCallback<BackendlessCollection<UserData>>() {
                                         @Override
                                         public void handleResponse(BackendlessCollection<UserData> userDataBackendlessCollection) {
                                             usersDataAdapter.add(userDataBackendlessCollection.getData());
                                             usersDataAdapter.notifyDataSetChanged();
                                             onBackground = false;
+                                            progressBar.setVisibility(View.INVISIBLE);
+                                            allLoaded[1] = userDataBackendlessCollection.getData().size() == 0;
                                             Log.d("Get Item on back", "UsersData Successful " + usersDataAdapter.getCount());
                                         }
 
@@ -264,6 +276,7 @@ public class MenuSelectActivity extends AppCompatActivity {
                                         public void handleFault(BackendlessFault backendlessFault) {
                                             Log.d("Get Item on back", "Error: " + backendlessFault.getMessage());
                                             onBackground = false;
+                                            progressBar.setVisibility(View.INVISIBLE);
                                         }
                                     });
                                 }
@@ -292,16 +305,49 @@ public class MenuSelectActivity extends AppCompatActivity {
             });
         }
 
-//////////********** Initial ToDoUser List ************//////////////////
+        //////////********** Initial ToDoUser List ************//////////////////
         private void initToDoFragment(View view) {
             userToDoList = (ListView) view.findViewById(R.id.select_activity_list_to_do_list);
             if (toDoAdapter == null) {
                 Backendless.Persistence.of(ToDo.class).find(new DefaultCallback<BackendlessCollection<ToDo>>(getContext()) {
                     @Override
-                    public void handleResponse(BackendlessCollection<ToDo> response) {
+                    public void handleResponse(final BackendlessCollection<ToDo> response) {
                         List<ToDo> toDoList = response.getData();
                         toDoAdapter = new ToDoAdapter(getContext(), toDoList);
                         userToDoList.setAdapter(toDoAdapter);
+                        userToDoList.setOnScrollListener(new AbsListView.OnScrollListener() {
+                            @Override
+                            public void onScrollStateChanged(AbsListView absListView, int i) {
+
+                            }
+
+                            @Override
+                            public void onScroll(AbsListView absListView, int i, int i1, int i2) {
+                                Log.d("ToDos", i + " " + i1 + " " + i2);
+                                if (!onBackground && !allLoaded[2] && (i + i1 * 2 >= i2 || i2 == 10)) {
+                                    onBackground = true;
+                                    progressBar.setVisibility(View.VISIBLE);
+                                    response.getPage(10, i2, new AsyncCallback<BackendlessCollection<ToDo>>() {
+                                        @Override
+                                        public void handleResponse(BackendlessCollection<ToDo> toDoBackendlessCollection) {
+                                            toDoAdapter.add(toDoBackendlessCollection.getData());
+                                            toDoAdapter.notifyDataSetChanged();
+                                            onBackground = false;
+                                            allLoaded[2] = toDoBackendlessCollection.getData().size() == 0;
+                                            progressBar.setVisibility(View.INVISIBLE);
+                                            Log.d("ToDos", "ToDos Successful " + toDoAdapter.getCount());
+                                        }
+
+                                        @Override
+                                        public void handleFault(BackendlessFault backendlessFault) {
+                                            onBackground = false;
+                                            progressBar.setVisibility(View.INVISIBLE);
+                                        }
+                                    });
+                                }
+
+                            }
+                        });
                         super.handleResponse(response);
                     }
 

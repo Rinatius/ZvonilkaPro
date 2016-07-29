@@ -174,8 +174,8 @@ public class CallActivity extends AppCompatActivity {
                                 text = note.getText().toString();
                                 call.setNotes(text);
                                 call.setDateCall(afterCall);
-                                call.setUserCaller_ID_Call(Backendless.UserService.CurrentUser());
-                                call.setUserDataClient_ID_Call(userData);
+//                                call.setUserCaller_ID_Call(Backendless.UserService.CurrentUser());
+//                                call.setUserDataClient_ID_Call(userData);
                                 Backendless.Persistence.of(Call.class).save(call, new DefaultCallback<Call>(CallActivity.this));
 
                                 super.handleResponse(eventUserStatusBackendlessCollection);

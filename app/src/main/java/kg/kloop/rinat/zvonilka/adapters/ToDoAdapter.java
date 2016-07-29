@@ -37,6 +37,10 @@ public class ToDoAdapter extends BaseAdapter {
         return i;
     }
 
+    public void add(List<ToDo> toDos) {
+        toDoList.addAll(toDos);
+    }
+
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         View v = view;

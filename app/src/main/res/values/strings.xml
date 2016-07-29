@@ -55,4 +55,6 @@
     <string name="action_save_changes">Save</string>
     <string name="action_save_edit">Edit</string>
     <string name="status">Status:</string>
+    <string name="add_event">Add Event</string>
+    <string name="add_user_data">Add User Data</string>
 </resources>
