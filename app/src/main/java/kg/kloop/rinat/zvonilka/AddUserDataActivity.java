@@ -151,7 +151,7 @@ class SaveUserData extends AsyncTask<Integer, Integer, Integer> {
     @Override
     protected void onPreExecute() {
         Log.d("Save", "Saving...");
-        dialog = ProgressDialog.show(context, "", "Saving...", true);
+        dialog = ProgressDialog.show(context, "", context.getString(R.string.saving), true);
         super.onPreExecute();
     }
 
@@ -164,7 +164,7 @@ class SaveUserData extends AsyncTask<Integer, Integer, Integer> {
     @Override
     protected void onPostExecute(Integer integer) {
         dialog.cancel();
-        Toast.makeText(context, "Saved!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, R.string.saved, Toast.LENGTH_SHORT).show();
         Log.d("Save", "Saved!");
         super.onPostExecute(integer);
     }

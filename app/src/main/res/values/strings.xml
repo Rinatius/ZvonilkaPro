@@ -65,4 +65,8 @@
     <string name="set">Set</string>
     <string name="set_birthday_here">Set Birthday here!</string>
     <string name="error_didnt_write_field">Write field first name, second name and phone!</string>
+    <string name="set_date_here">Set Date Here!</string>
+    <string name="write_name_city">Write Enent\'s name and city!</string>
+    <string name="saving">Saving...</string>
+    <string name="saved">Saved!</string>
 </resources>
