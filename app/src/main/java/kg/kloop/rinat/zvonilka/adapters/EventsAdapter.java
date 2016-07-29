@@ -37,6 +37,10 @@ public class EventsAdapter extends BaseAdapter{
         return i;
     }
 
+    public void add(List<Event> events){
+        this.events.addAll(events);
+    }
+
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         View v = view;

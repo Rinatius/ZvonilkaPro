@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -30,7 +31,7 @@ import kg.kloop.rinat.zvonilka.login.DefaultCallback;
 
 public class SearchActivity extends AppCompatActivity {
     EditText editSearchText;
-    ImageButton search;
+    Button search;
     Spinner spinner;
     String searchQuery;
     ListView listView;
@@ -50,7 +51,7 @@ public class SearchActivity extends AppCompatActivity {
 
     private void initUI() {
         editSearchText = (EditText) findViewById(R.id.search_activity_edit_text);
-        search = (ImageButton) findViewById(R.id.search_activity_search);
+        search = (Button) findViewById(R.id.search_activity_search);
         spinner = (Spinner) findViewById(R.id.search_activity_spinner);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.search_list_adapter, Resources.SPINNER_SEARCH);
         spinner.setAdapter(adapter);
@@ -120,7 +121,7 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void handleResponse(BackendlessCollection<UserData> response) {
                 List<UserData> userDatas = response.getData();
-                UsersDataAdapter userDatasAdapter = new UsersDataAdapter(getApplicationContext(), userDatas, false);
+                UsersDataAdapter userDatasAdapter = new UsersDataAdapter(getApplicationContext(), userDatas);
                 Log.d("Data", response.getData().toString() + " " + searchQuery);
                 listView.setAdapter(userDatasAdapter);
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -128,11 +129,15 @@ public class SearchActivity extends AppCompatActivity {
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                         Intent intent = new Intent(SearchActivity.this, UserDataActivity.class);
                         UserData userData = (UserData) adapterView.getItemAtPosition(i);
-                        intent.putExtra(Resources.USER_ID_KEY, userData.getObjectId());
+                        Log.d("User ID", userData.getObjectId());
+                        intent.putExtra(Resources.USER_DATA_ID_KEY, userData.getObjectId());
                         startActivity(intent);
                     }
                 });
                 super.handleResponse(response);
+//                while (true){
+//                    if()
+//                }
             }
 
             @Override

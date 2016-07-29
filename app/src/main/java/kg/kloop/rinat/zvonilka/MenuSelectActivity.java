@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
@@ -24,13 +25,11 @@ import com.backendless.BackendlessCollection;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 
-import java.util.Date;
 import java.util.List;
 
 import kg.kloop.rinat.zvonilka.adapters.EventsAdapter;
 import kg.kloop.rinat.zvonilka.adapters.ToDoAdapter;
 import kg.kloop.rinat.zvonilka.adapters.UsersDataAdapter;
-import kg.kloop.rinat.zvonilka.data.AppCompany;
 import kg.kloop.rinat.zvonilka.data.Event;
 import kg.kloop.rinat.zvonilka.data.ToDo;
 import kg.kloop.rinat.zvonilka.data.UserData;
@@ -53,9 +52,13 @@ public class MenuSelectActivity extends AppCompatActivity {
      */
     private ViewPager mViewPager;
 
-    private static UsersDataAdapter userDatasAdapter;
+    private static UsersDataAdapter usersDataAdapter;
+    private static BackendlessCollection<UserData> userDataCollection;
     private static EventsAdapter eventsAdapter;
+    private static BackendlessCollection<Event> eventCollection;
     private static ToDoAdapter toDoAdapter;
+    private static BackendlessCollection<ToDo> toDoCollection;
+    private static boolean onBackground = false;
     private static ListView userDataList;
     private static ListView eventsList;
     private static ListView userToDoList;
@@ -161,10 +164,41 @@ public class MenuSelectActivity extends AppCompatActivity {
             if (eventsAdapter == null){
                 Backendless.Persistence.of(Event.class).find(new DefaultCallback<BackendlessCollection<Event>>(getContext()){
                     @Override
-                    public void handleResponse(BackendlessCollection<Event> response) {
-                        List<Event> events = response.getData();
+                    public void handleResponse(final BackendlessCollection<Event> response) {
+                        eventCollection = response;
+                        final List<Event> events = eventCollection.getData();
                         eventsAdapter = new EventsAdapter(getContext(), events);
                         eventsList.setAdapter(eventsAdapter);
+                        eventsList.setOnScrollListener(new AbsListView.OnScrollListener() {
+                            @Override
+                            public void onScrollStateChanged(AbsListView absListView, int i) {
+
+                            }
+
+                            @Override
+                            public void onScroll(AbsListView absListView, int i, int i1, int i2) {
+                                Log.d("Events", i + " " + i1 + " " + i2);
+                                if (!onBackground && (i + i1*2 == i2 || i2 == 10)) {
+                                    onBackground = true;
+
+                                    eventCollection.getPage(i2%10, i2, new AsyncCallback<BackendlessCollection<Event>>() {
+                                        @Override
+                                        public void handleResponse(BackendlessCollection<Event> eventBackendlessCollection) {
+                                            eventsAdapter.add(eventBackendlessCollection.getData());
+                                            eventsAdapter.notifyDataSetChanged();
+                                            onBackground = false;
+                                            Log.d("Get Item on back", "Events Successful " + eventsAdapter.getCount());
+                                        }
+
+                                        @Override
+                                        public void handleFault(BackendlessFault backendlessFault) {
+                                            Log.d("Get Item on back", "Error: " + backendlessFault.getMessage());
+                                            onBackground = false;
+                                        }
+                                    });
+                                }
+                            }
+                        });
                         super.handleResponse(response);
 
                     }
@@ -198,15 +232,44 @@ public class MenuSelectActivity extends AppCompatActivity {
 
             userDataList = (ListView) view.findViewById(R.id.select_activity_list_users);
 
-            if (userDatasAdapter == null){
+            if (usersDataAdapter == null){
                 Backendless.Persistence.of(UserData.class).find(new DefaultCallback<BackendlessCollection<UserData>>(getContext()){
                     @Override
-                    public void handleResponse(BackendlessCollection<UserData> response) {
-                        List<UserData> usersData = response.getData();
-                        userDatasAdapter = new UsersDataAdapter(getContext(), usersData, false);
-                        userDataList.setAdapter(userDatasAdapter);
-                        super.handleResponse(response);
+                    public void handleResponse(final BackendlessCollection<UserData> response) {
+                        userDataCollection = response;
+                        List<UserData> usersData = userDataCollection.getData();
+                        usersDataAdapter = new UsersDataAdapter(getContext(), usersData);
+                        userDataList.setAdapter(usersDataAdapter);
+                        userDataList.setOnScrollListener(new AbsListView.OnScrollListener() {
+                            @Override
+                            public void onScrollStateChanged(AbsListView absListView, int i) {
 
+                            }
+
+                            @Override
+                            public void onScroll(AbsListView absListView, int i, int i1, int i2) {
+                                Log.d("Users", i + " " + i1 + " " + i2);
+                                if (!onBackground && (i + i1*2 == i2 || i2 <= i1 + i)){
+                                    onBackground = true;
+                                    userDataCollection.getPage(i2%10, i2, new AsyncCallback<BackendlessCollection<UserData>>() {
+                                        @Override
+                                        public void handleResponse(BackendlessCollection<UserData> userDataBackendlessCollection) {
+                                            usersDataAdapter.add(userDataBackendlessCollection.getData());
+                                            usersDataAdapter.notifyDataSetChanged();
+                                            onBackground = false;
+                                            Log.d("Get Item on back", "UsersData Successful " + usersDataAdapter.getCount());
+                                        }
+
+                                        @Override
+                                        public void handleFault(BackendlessFault backendlessFault) {
+                                            Log.d("Get Item on back", "Error: " + backendlessFault.getMessage());
+                                            onBackground = false;
+                                        }
+                                    });
+                                }
+                            }
+                        });
+                        super.handleResponse(response);
                     }
 
                     @Override
@@ -215,7 +278,7 @@ public class MenuSelectActivity extends AppCompatActivity {
                     }
                 });
             } else {
-                userDataList.setAdapter(userDatasAdapter);
+                userDataList.setAdapter(usersDataAdapter);
             }
             userDataList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
@@ -223,7 +286,7 @@ public class MenuSelectActivity extends AppCompatActivity {
                     Log.d("Item Click", "clicked" + i);
                     Intent intent = new Intent(getContext(), UserDataActivity.class);
                     UserData userData = (UserData) adapterView.getItemAtPosition(i);
-                    intent.putExtra(getResources().getString(R.string.userDataIdkey), userData.getObjectId());
+                    intent.putExtra(Resources.USER_DATA_ID_KEY, userData.getObjectId());
                     startActivity(intent);
                 }
             });
