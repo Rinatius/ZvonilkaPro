@@ -21,6 +21,7 @@ import com.backendless.persistence.BackendlessDataQuery;
 import java.util.Collection;
 import java.util.List;
 
+import kg.kloop.rinat.zvonilka.CallActivity;
 import kg.kloop.rinat.zvonilka.R;
 import kg.kloop.rinat.zvonilka.Resources;
 import kg.kloop.rinat.zvonilka.data.UserData;
@@ -66,6 +67,7 @@ public class UsersDataAdapter extends BaseAdapter {
             v = inflater.inflate(R.layout.user_data_list, null);
         }
 
+        v.setFocusable(false);
         TextView name = (TextView) v.findViewById(R.id.user_data_list_name);
         name.setTextColor(context.getResources().getColor(R.color.textColor));
         String nameStr = user.getFirstName() + " " + user.getSecondName();
@@ -74,6 +76,17 @@ public class UsersDataAdapter extends BaseAdapter {
         TextView events = (TextView) v.findViewById(R.id.user_data_list_events);
         nameStr = Resources.EVENT + ": " + user.getEventUserStatus_ID();
         events.setText(nameStr);
+
+        ImageButton button = (ImageButton) v.findViewById(R.id.user_data_list_call);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, CallActivity.class);
+                context.startActivity(intent);
+            }
+        });
+        button.setFocusable(false);
+
         return v;
     }
 }
