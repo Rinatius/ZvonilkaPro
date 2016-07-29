@@ -226,6 +226,7 @@ public class UserDataActivity extends AppCompatActivity {
                 callIntent = new Intent(Intent.ACTION_DIAL, number);
                 startActivity(callIntent);
                 callIntent.setClass(getApplicationContext(), CallActivity.class);
+                callIntent.putExtra(Resources.PHONE_NUMBER_KEY, userData.getPhoneNumber());
                 startActivity(callIntent);
 
             }

@@ -56,12 +56,13 @@ public class CallActivity extends AppCompatActivity {
         initUi();
 //
 //        userDataNumber = getIntent().getData().toString().substring(4);
-        Log.d(TAG, userDataNumber);
 
         Intent intent = getIntent();
         userDataNumber = intent.getStringExtra(Resources.PHONE_NUMBER_KEY);
+        Log.d(TAG + "123", userDataNumber);
 
         intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + userDataNumber));
+        startActivity(intent);
 
         BackendlessDataQuery querry = new BackendlessDataQuery();
 

@@ -82,6 +82,8 @@ public class UsersDataAdapter extends BaseAdapter {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, CallActivity.class);
+                intent.putExtra(Resources.PHONE_NUMBER_KEY, user.getPhoneNumber());
+                intent.putExtra(Resources.USER_DATA_ID_KEY, user.getObjectId());
                 context.startActivity(intent);
             }
         });
