@@ -1,5 +1,6 @@
 package kg.kloop.rinat.zvonilka.data;
 
+
 import com.backendless.Backendless;
 import com.backendless.BackendlessCollection;
 import com.backendless.BackendlessUser;
@@ -16,9 +17,6 @@ public class Call
   private String objectId;
   private Integer TimeCall;
   private java.util.Date created;
-  private java.util.List<BackendlessUser> userCaller_ID_Call;
-  private EventUserStatus eventUserStatus_ID_Call;
-  private java.util.List<UserData> userDataClient_ID_Call;
   public java.util.Date getDateCall()
   {
     return DateCall;
@@ -67,36 +65,6 @@ public class Call
   public java.util.Date getCreated()
   {
     return created;
-  }
-
-  public java.util.List<BackendlessUser> getUserCaller_ID_Call()
-  {
-    return userCaller_ID_Call;
-  }
-
-  public void setUserCaller_ID_Call( java.util.List<BackendlessUser> userCaller_ID_Call )
-  {
-    this.userCaller_ID_Call = userCaller_ID_Call;
-  }
-
-  public EventUserStatus getEventUserStatus_ID_Call()
-  {
-    return eventUserStatus_ID_Call;
-  }
-
-  public void setEventUserStatus_ID_Call( EventUserStatus eventUserStatus_ID_Call )
-  {
-    this.eventUserStatus_ID_Call = eventUserStatus_ID_Call;
-  }
-
-  public java.util.List<UserData> getUserDataClient_ID_Call()
-  {
-    return userDataClient_ID_Call;
-  }
-
-  public void setUserDataClient_ID_Call( java.util.List<UserData> userDataClient_ID_Call )
-  {
-    this.userDataClient_ID_Call = userDataClient_ID_Call;
   }
 
                                                     
