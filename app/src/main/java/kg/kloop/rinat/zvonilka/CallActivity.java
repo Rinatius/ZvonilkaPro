@@ -1,5 +1,7 @@
 package kg.kloop.rinat.zvonilka;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -52,10 +54,14 @@ public class CallActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_call);
         initUi();
-
-        userDataNumber = getIntent().getData().toString().substring(4);
+//
+//        userDataNumber = getIntent().getData().toString().substring(4);
         Log.d(TAG, userDataNumber);
 
+        Intent intent = getIntent();
+        userDataNumber = intent.getStringExtra(Resources.PHONE_NUMBER_KEY);
+
+        intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + userDataNumber));
 
         BackendlessDataQuery querry = new BackendlessDataQuery();
 
@@ -123,8 +129,8 @@ public class CallActivity extends AppCompatActivity {
                 final BackendlessDataQuery querry = new BackendlessDataQuery();
 
                 event = listEvent.get((int) eventSpinner.getSelectedItemId());
-                text = "Event[EventUserStatus_ID_Event].objectId = '" + event.getObjectId() + "'" +
-                        " and UserData[EventUserStatus_ID].objectId = '" + userData.getObjectId() + "'";
+                text = Resources.EVENT_EVENTUSERSTATUS_ID_OBJECTID + " = '" + event.getObjectId() + "'" +
+                        " and " +  Resources.EVENTUSERSTATUS_CALL_ID_OBJECTID + " = '" + userData.getObjectId() + "'";
                 Log.d(TAG, text);
                 querry.setWhereClause(text);
                 Backendless.Persistence.of(EventUserStatus.class).find(querry,
