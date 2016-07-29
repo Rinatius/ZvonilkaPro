@@ -42,6 +42,8 @@ public class CallActivity extends AppCompatActivity {
     EventUserStatus eventUserStatus;
     String text;
     Event event;
+    List<Call> callList;
+    List<EventUserStatus> eventUserStatusesforEvent, eventUserStatusesforUserData;
 
     private static final String TAG = "CallActivityDebug";
 
@@ -118,31 +120,7 @@ public class CallActivity extends AppCompatActivity {
             case R.id.action_save:
                 call = new Call();
 
-
-               // Backendless.Persistence.describe( "EventUserStatus", new DefaultCallback<List<ObjectProperty>>(CallActivity.this)
-               /* {
-                    @Override
-                    public void handleResponse( List<ObjectProperty> objectProperties )
-                    {
-                        for (int i = 0; i < objectProperties.size(); i++) {
-                            Log.d("properties", objectProperties.get(i).getName());
-                        }
-                        super.handleResponse(objectProperties);
-                    }
-                } );*/Backendless.Persistence.describe( "Event", new DefaultCallback<List<ObjectProperty>>(CallActivity.this)
-                {
-                    @Override
-                    public void handleResponse( List<ObjectProperty> objectProperties )
-                    {
-                        for (int i = 0; i < objectProperties.size(); i++) {
-                            Log.d("properties", objectProperties.get(i).getName());
-                        }
-                        super.handleResponse(objectProperties);
-                    }
-                } );
-
-
-                BackendlessDataQuery querry = new BackendlessDataQuery();
+                final BackendlessDataQuery querry = new BackendlessDataQuery();
 
                 event = listEvent.get((int) eventSpinner.getSelectedItemId());
                 text = "Event[EventUserStatus_ID_Event].objectId = '" + event.getObjectId() + "'" +
@@ -153,31 +131,101 @@ public class CallActivity extends AppCompatActivity {
                         new DefaultCallback<BackendlessCollection<EventUserStatus>>(CallActivity.this) {
                             @Override
                             public void handleResponse(BackendlessCollection<EventUserStatus> eventUserStatusBackendlessCollection) {
-                                List<EventUserStatus> listEUS = eventUserStatusBackendlessCollection.getData();
+                                final List<EventUserStatus> listEUS = eventUserStatusBackendlessCollection.getData();
                                 Log.d(TAG, listEUS.size() + "");
+                                querry.setWhereClause("Event[EventUserStatus_ID_Event].objectId = '" + event.getObjectId() + "'");
+                                Backendless.Persistence.of(EventUserStatus.class).find(querry, new AsyncCallback<BackendlessCollection<EventUserStatus>>() {
+                                    @Override
+                                    public void handleResponse(BackendlessCollection<EventUserStatus> eventUserStatusBackendlessCollection) {
+                                        eventUserStatusesforEvent = eventUserStatusBackendlessCollection.getData();
+                                        querry.setWhereClause("UserData[EventUserStatus_ID].objectId = '" + userData.getObjectId() + "'");
+                                        Backendless.Persistence.of(EventUserStatus.class).find(querry, new AsyncCallback<BackendlessCollection<EventUserStatus>>() {
+                                            @Override
+                                            public void handleResponse(BackendlessCollection<EventUserStatus> eventUserStatusBackendlessCollection) {
+                                                eventUserStatusesforUserData = eventUserStatusBackendlessCollection.getData();
 
-                                if(eventUserStatusBackendlessCollection.getData().size() == 0) {
-//                                    List<Call> callList = new ArrayList<Call>();
-//                                    callList.add(call);
-                                    eventUserStatus = new EventUserStatus();
-//                                    eventUserStatus.setCall_ID(callList);
-//                                    eventUserStatus.setUserData_ID_EventUserStatus(userData);
-//                                    eventUserStatus.setEvent_ID(event);
-//                                    text = status.getText().toString();
-                                    eventUserStatus.setStatus(text);
-//                                    call.setEventUserStatus_ID_Call(eventUserStatus);
-                                    Backendless.Persistence.of(EventUserStatus.class)
-                                            .save(eventUserStatus,
-                                                    new DefaultCallback<EventUserStatus>(CallActivity.this));
-                                }
+                                                if(eventUserStatusBackendlessCollection.getData().size() == 0) {
+                                                    callList = new ArrayList<Call>();
+                                                    callList.add(call);
+                                                    eventUserStatus = new EventUserStatus();
+                                                    eventUserStatus.setCall_ID(callList);
+                                                    text = note.getText().toString();
+                                                    call.setNotes(text);
+                                                    call.setDateCall(afterCall);
+                                                    text = status.getText().toString();
+                                                    eventUserStatus.setStatus(text);
+                                                    eventUserStatus.setCall_ID(callList);
+                                                    Backendless.Persistence.of(EventUserStatus.class)
+                                                            .save(eventUserStatus, new AsyncCallback<EventUserStatus>() {
+                                                                @Override
+                                                                public void handleResponse(EventUserStatus eventUserStatus) {
 
-                                text = note.getText().toString();
-                                call.setNotes(text);
-                                call.setDateCall(afterCall);
-                                call.setUserCaller_ID_Call(Backendless.UserService.CurrentUser());
-                                call.setUserDataClient_ID_Call(userData);
-                                Backendless.Persistence.of(Call.class).save(call, new DefaultCallback<Call>(CallActivity.this));
 
+//                                                                    userData.setCall_ID(callList);
+                                                                    eventUserStatusesforEvent.add(eventUserStatus);
+                                                                    eventUserStatusesforUserData.add(eventUserStatus);
+                                                                    event.setEventUserStatus_ID_Event(eventUserStatusesforEvent);
+                                                                    userData.setEventUserStatus_ID(eventUserStatusesforUserData);
+                                                                    Backendless.Persistence.of(Event.class).save(event, new DefaultCallback<Event>(CallActivity.this));
+                                                                    Backendless.Persistence.of(UserData.class).save(userData, new DefaultCallback<UserData>(CallActivity.this));
+                                                                }
+
+                                                                @Override
+                                                                public void handleFault(BackendlessFault backendlessFault) {
+
+                                                                }
+                                                            });
+                                                }
+                                                else{
+                                                    eventUserStatus = listEUS.get(0);
+                                                    querry.setWhereClause("EventUserStatus[Call_ID].objectId = '" + eventUserStatus.getObjectId() + "'");
+                                                    Backendless.Persistence.of(Call.class).find(querry, new AsyncCallback<BackendlessCollection<Call>>() {
+                                                        @Override
+                                                        public void handleResponse(BackendlessCollection<Call> callBackendlessCollection) {
+                                                            callList = callBackendlessCollection.getData();
+                                                            text = note.getText().toString();
+                                                            call.setNotes(text);
+                                                            call.setDateCall(afterCall);
+                                                            callList.add(call);
+                                                            eventUserStatus.setCall_ID(callList);
+                                                            Backendless.Persistence.of(EventUserStatus.class)
+                                                                    .save(eventUserStatus, new AsyncCallback<EventUserStatus>() {
+                                                                        @Override
+                                                                        public void handleResponse(EventUserStatus eventUserStatus) {
+//
+//
+////                                                                    userData.setCall_ID(callList);
+//                                                                            eventUserStatusesforEvent.add(eventUserStatus);
+//                                                                            eventUserStatusesforUserData.add(eventUserStatus);
+//                                                                            event.setEventUserStatus_ID_Event(eventUserStatusesforEvent);
+//                                                                            userData.setEventUserStatus_ID(eventUserStatusesforUserData);
+//                                                                            Backendless.Persistence.of(Event.class).save(event, new DefaultCallback<Event>(CallActivity.this));
+//                                                                            Backendless.Persistence.of(UserData.class).save(userData, new DefaultCallback<UserData>(CallActivity.this));
+                                                                        }
+
+                                                                        @Override
+                                                                        public void handleFault(BackendlessFault backendlessFault) {
+
+                                                                        }
+                                                                    });
+                                                        }
+
+                                                        @Override
+                                                        public void handleFault(BackendlessFault backendlessFault) {
+
+                                                        }
+                                                    });
+                                                }
+                                            }
+                                            @Override
+                                            public void handleFault(BackendlessFault backendlessFault) {
+                                            }
+                                        });
+                                    }
+                                    @Override
+                                    public void handleFault(BackendlessFault backendlessFault) {
+                                    }
+                                });
                                 super.handleResponse(eventUserStatusBackendlessCollection);
                             }
                         });

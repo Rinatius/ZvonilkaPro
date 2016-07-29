@@ -66,7 +66,7 @@ public class EventActivity extends AppCompatActivity {
                     text = Resources.CITY + ": " + event.getCity();
                     city.setText(text);
                     if (event.getAppCompany_ID_Event() != null) {
-                        text = Resources.COMPANY + ": " + event.getAppCompany_ID_Event().getName();
+//                        text = Resources.COMPANY + ": " + event.getAppCompany_ID_Event().getName();
                         company.setText(text);
                     }
                     text = Resources.DESCRIPTION + ": " + event.getNote();
@@ -75,8 +75,8 @@ public class EventActivity extends AppCompatActivity {
                     for (int j = 0; j < event.getEventUserStatus_ID_Event().size(); j++) {
                         EventUserStatus eventUserStatus;
                         eventUserStatus = event.getEventUserStatus_ID_Event().get(j);
-                        text = eventUserStatus.getUserData_ID_EventUserStatus().getFirstName() +
-                                " " + eventUserStatus.getUserData_ID_EventUserStatus().getSecondName() + "\n";
+//                        text = eventUserStatus.getUserData_ID_EventUserStatus().getFirstName() +
+//                                " " + eventUserStatus.getUserData_ID_EventUserStatus().getSecondName() + "\n";
                     }
                     participants.setText(text);
 

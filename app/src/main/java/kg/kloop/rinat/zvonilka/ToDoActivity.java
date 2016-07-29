@@ -54,7 +54,7 @@ public class ToDoActivity extends AppCompatActivity {
             @Override
             public void handleResponse(BackendlessCollection<ToDo> toDoBackendlessCollection) {
                 toDo = toDoBackendlessCollection.getData().get(0);
-                userData = toDo.getUserData_ID_ToDo();
+//                userData = toDo.getUserData_ID_ToDo();
                 String text;
                 text = Resources.DEADLINE + ": " + toDo.getDeadline();
                 deadline.setText(text);
