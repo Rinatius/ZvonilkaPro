@@ -5,6 +5,8 @@ import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.EditText;
@@ -37,9 +39,11 @@ public class UserDataActivity extends AppCompatActivity {
     EditText family, position;
     TextView eventListText;
 
+    int editCount = 0;
+
     String userId;
     BackendlessDataQuery querry;
-    ImageButton callBtn, sendEmailBtn, editBtn, saveBtn;
+    ImageButton callBtn, sendEmailBtn;
     SimpleDateFormat dateFormat;
     List<EventUserStatus> listEvents;
 
@@ -58,8 +62,8 @@ public class UserDataActivity extends AppCompatActivity {
 
         Backendless.Persistence.of(UserData.class).find(querry, new DefaultCallback<BackendlessCollection<UserData>>(this){
             @Override
-            public void handleResponse(BackendlessCollection<UserData> eventBackendlessCollection) {
-                userData = eventBackendlessCollection.getData().get(0);
+            public void handleResponse(BackendlessCollection<UserData> userDataBackendlessCollection) {
+                userData = userDataBackendlessCollection.getData().get(0);
                 String text;
                 text = Resources.NAME + ": " + userData.getFirstName();
                 name.setText(text);
@@ -75,8 +79,8 @@ public class UserDataActivity extends AppCompatActivity {
                 address.setText(text);
                 text = Resources.INTERESTS + ": " + userData.getInterests();
                 interests.setText(text);
-                text = Resources.BIRTHDAY_DATE + ": " + dateFormat.format(userData.getBirthday()) ;
-                birthday.setText(text);
+//                text = Resources.BIRTHDAY_DATE + ": " + Resources.DATE_FORMAT.format(userData.getBirthday()) ;
+//                birthday.setText(text);
                 text = Resources.FAMILY + ": " + userData.getFamily();
                 family.setText(text);
                 text = Resources.COMPANY + ": " + userData.getCompany();
@@ -90,10 +94,10 @@ public class UserDataActivity extends AppCompatActivity {
                     text+= (status.getHasBeen() ? " " + Resources.PARTICIPATED : " " + Resources.NOT_PARTICIPATED);
                 }
                 eventListText.setText(text);
-                Log.d(TAG, userData.getPhoneNumber());
+//                Log.d(TAG, userData.getPhoneNumber());
 
 
-                super.handleResponse(eventBackendlessCollection);
+                super.handleResponse(userDataBackendlessCollection);
             }
 
             @Override
@@ -103,8 +107,77 @@ public class UserDataActivity extends AppCompatActivity {
             }
         });
 
+    }
 
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_user_data_activity, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()){
+
+            case R.id.action_edit:
+                if(editCount==0) {
+                    name.setEnabled(true);
+                    surname.setEnabled(true);
+                    email.setEnabled(true);
+                    phone.setEnabled(true);
+                    city.setEnabled(true);
+                    address.setEnabled(true);
+                    interests.setEnabled(true);
+//            birthday.setEnabled(true);
+                    family.setEnabled(true);
+                    company.setEnabled(true);
+                    position.setEnabled(true);
+                    item.setIcon(getResources().getDrawable(android.R.drawable.ic_menu_save));
+                    editCount++;
+                }
+                else{
+                    name.setEnabled(false);
+                    surname.setEnabled(false);
+                    email.setEnabled(false);
+                    phone.setEnabled(false);
+                    city.setEnabled(false);
+                    address.setEnabled(false);
+                    interests.setEnabled(false);
+//            birthday.setEnabled(false);
+                    family.setEnabled(false);
+                    company.setEnabled(false);
+                    position.setEnabled(false);
+                    String text;
+                    text = name.getText().toString().substring(6);
+                    userData.setFirstName(text);
+                    text = surname.getText().toString().substring(9);
+                    userData.setSecondName(text);
+                    text = email.getText().toString().substring(7);
+                    userData.setEmail(text);
+                    text = phone.getText().toString().substring(7);
+                    userData.setPhoneNumber(text);
+                    text = city.getText().toString().substring(6);
+                    userData.setCity(text);
+                    text = address.getText().toString().substring(9);
+                    userData.setAdress(text);
+//                text = birthday.getText().toString().substring(12);
+//                userData.setBirthday(text);
+                    text = family.getText().toString().substring(8);
+                    userData.setFamily(text);
+                    text = company.getText().toString().substring(9);
+                    userData.setCompany(text);
+                    text = position.getText().toString().substring(10);
+                    userData.setPosition(text);
+                    Backendless.Persistence.of(UserData.class).save(userData, new DefaultCallback<UserData>(UserDataActivity.this));
+                    item.setIcon(getResources().getDrawable(android.R.drawable.ic_menu_edit));
+                    editCount--;
+                }
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     private void initUi(){
@@ -123,8 +196,6 @@ public class UserDataActivity extends AppCompatActivity {
 
         callBtn = (ImageButton)findViewById(R.id.userDataActivityCallBtn);
         sendEmailBtn = (ImageButton)findViewById(R.id.userDataActivitySendEmailBtn);
-        editBtn = (ImageButton)findViewById(R.id.userDataActivityEditBtn);
-        saveBtn = (ImageButton)findViewById(R.id.userDataActivitySaveBtn);
 
         callBtn.setEnabled(true);
         callBtn.setClickable(true);
@@ -143,11 +214,7 @@ public class UserDataActivity extends AppCompatActivity {
         family.setEnabled(false);
         company.setEnabled(false);
         position.setEnabled(false);
-        saveBtn.setEnabled(false);
 
-
-
-        dateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);
     }
 
     private void programmButtons(){
@@ -155,9 +222,12 @@ public class UserDataActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Uri number = Uri.parse("tel:" + userData.getPhoneNumber());
-                Log.d(TAG, userData.getPhoneNumber());
-                Intent callIntent = new Intent(Intent.ACTION_DIAL, number);
+                Intent callIntent;
+                callIntent = new Intent(Intent.ACTION_DIAL, number);
                 startActivity(callIntent);
+                callIntent.setClass(getApplicationContext(), CallActivity.class);
+                startActivity(callIntent);
+
             }
         });
         sendEmailBtn.setOnClickListener(new View.OnClickListener() {
@@ -166,67 +236,6 @@ public class UserDataActivity extends AppCompatActivity {
                 Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
                         "mailto",userData.getEmail(), null));
                 startActivity(Intent.createChooser(emailIntent, Resources.SEND_EMAIL ));
-            }
-        });
-
-        editBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                name.setEnabled(true);
-                surname.setEnabled(true);
-                email.setEnabled(true);
-                phone.setEnabled(true);
-                city.setEnabled(true);
-                address.setEnabled(true);
-                interests.setEnabled(true);
-//                birthday.setEnabled(true);
-                family.setEnabled(true);
-                company.setEnabled(true);
-                position.setEnabled(true);
-                saveBtn.setEnabled(true);
-                editBtn.setEnabled(false);
-            }
-        });
-
-        saveBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                name.setEnabled(false);
-                surname.setEnabled(false);
-                email.setEnabled(false);
-                phone.setEnabled(false);
-                city.setEnabled(false);
-                address.setEnabled(false);
-                interests.setEnabled(false);
-//                birthday.setEnabled(false);
-                family.setEnabled(false);
-                company.setEnabled(false);
-                position.setEnabled(false);
-                saveBtn.setEnabled(false);
-                editBtn.setEnabled(true);
-
-                String text;
-                text = name.getText().toString().substring(6);
-                userData.setFirstName(text);
-                text = surname.getText().toString().substring(9);
-                userData.setSecondName(text);
-                text = email.getText().toString().substring(7);
-                userData.setEmail(text);
-                text = phone.getText().toString().substring(7);
-                userData.setPhoneNumber(text);
-                text = city.getText().toString().substring(6);
-                userData.setCity(text);
-                text = address.getText().toString().substring(10);
-                userData.setAdress(text);
-//                text = birthday.getText().toString().substring(12);
-//                userData.setBirthday(text);
-                text = family.getText().toString().substring(9);
-                userData.setFirstName(text);
-                text = company.getText().toString().substring(10);
-                userData.setPosition(text);
-                text = position.getText().toString().substring(11);
-                userData.setPosition(text);
-                Backendless.Persistence.of(UserData.class).save(userData, new DefaultCallback<UserData>(UserDataActivity.this));
             }
         });
 

@@ -28,16 +28,15 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".UserDataActivity"
-            android:label="User Data"/>
+            android:label="User Data" />
         <activity
             android:name=".EventActivity"
-            android:label="Event"/>
+            android:label="Event" />
         <activity
             android:name=".ToDoActivity"
-            android:label="To Do"/>
+            android:label="To Do" />
         <activity android:name=".SearchActivity" />
-
+        <activity android:name=".CallActivity"></activity>
     </application>
-
 
 </manifest>

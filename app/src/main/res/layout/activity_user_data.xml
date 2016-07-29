@@ -123,23 +123,5 @@
             android:layout_height="wrap_content"
             android:id="@+id/userDataActivityEventList" />
 
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-
-            <ImageButton
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:id="@+id/userDataActivityEditBtn"
-                android:src="@android:drawable/ic_menu_edit" />
-
-            <ImageButton
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:id="@+id/userDataActivitySaveBtn"
-                android:src="@android:drawable/ic_menu_save"
-                android:contentDescription="@string/save_changes" />
-        </LinearLayout>
     </LinearLayout>
 </ScrollView>

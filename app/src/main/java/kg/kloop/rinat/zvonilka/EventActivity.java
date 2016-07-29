@@ -3,6 +3,8 @@ package kg.kloop.rinat.zvonilka;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -20,6 +22,7 @@ import java.util.Locale;
 
 import kg.kloop.rinat.zvonilka.data.Event;
 import kg.kloop.rinat.zvonilka.data.EventUserStatus;
+import kg.kloop.rinat.zvonilka.data.UserData;
 import kg.kloop.rinat.zvonilka.login.DefaultCallback;
 
 
@@ -30,9 +33,10 @@ public class EventActivity extends AppCompatActivity {
     String eventId;
     EditText  city, company, notes, participants, name;
     TextView date;
-    ImageButton editBtn, saveBtn;
     BackendlessDataQuery querry;
-    SimpleDateFormat dateFormat;
+
+    int editCount = 0;
+
 
 
     @Override
@@ -57,7 +61,7 @@ public class EventActivity extends AppCompatActivity {
                     String text;
                     text = Resources.NAME + ": " + event.getName();
                     name.setText(text);
-                    text = Resources.DATE + ": " + dateFormat.format(event.getDateOfEvent());
+                    text = Resources.DATE + ": " + Resources.DATE_FORMAT.format(event.getDateOfEvent());
                     date.setText(text);
                     text = Resources.CITY + ": " + event.getCity();
                     city.setText(text);
@@ -89,6 +93,50 @@ public class EventActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_user_data_activity, menu);
+//        menu.add("Edit");
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()){
+
+            case R.id.action_edit:
+                if(editCount ==0 ){
+
+//                date.setEnabled(true);
+                    notes.setEnabled(true);
+                    city.setEnabled(true);
+                    name.setEnabled(true);
+                    editCount++;
+                    item.setIcon(getResources().getDrawable(android.R.drawable.ic_menu_save));
+                }
+                else{
+                    date.setEnabled(false);
+                    notes.setEnabled(false);
+                    city.setEnabled(false);
+                    name.setEnabled(false);
+
+                    String text;
+                    text =notes.getText().toString().substring(13);
+                    event.setNote(text);
+                    text = name.getText().toString().substring(6);
+                    event.setName(text);
+                    text = city.getText().toString().substring(6);
+                    event.setCity(text);
+                    Backendless.Persistence.of(Event.class).save(event, new DefaultCallback<Event>(EventActivity.this));
+                    item.setIcon(android.R.drawable.ic_menu_edit);
+                }
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
     private void initUI(){
         date = (TextView) findViewById(R.id.eventActivityDate);
         notes = (EditText) findViewById(R.id.eventActivityNotes);
@@ -96,12 +144,8 @@ public class EventActivity extends AppCompatActivity {
         company = (EditText) findViewById(R.id.eventActivityCompany);
         participants = (EditText) findViewById(R.id.eventActivityParticipants);
         name = (EditText) findViewById(R.id.eventActivityName);
-        editBtn = (ImageButton) findViewById(R.id.eventActivityEditBtn);
-        saveBtn = (ImageButton) findViewById(R.id.eventActivitySaveBtn);
 
-        dateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);
 
-        saveBtn.setEnabled(false);
 
         date.setEnabled(false);
         city.setEnabled(false);
@@ -111,39 +155,7 @@ public class EventActivity extends AppCompatActivity {
     }
 
     private void setOnClick(){
-        editBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
 
-//                date.setEnabled(true);
-                notes.setEnabled(true);
-                city.setEnabled(true);
-                name.setEnabled(true);
-                saveBtn.setEnabled(true);
-            }
-        });
-
-        saveBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-//                date.setEnabled(false);
-                notes.setEnabled(false);
-                city.setEnabled(false);
-                name.setEnabled(false);
-                saveBtn.setEnabled(false);
-
-                String text;
-                text =notes.getText().toString().substring(13);
-                event.setNote(text);
-                text = name.getText().toString().substring(6);
-                event.setName(text);
-                text = city.getText().toString().substring(6);
-                event.setCity(text);
-                Backendless.Persistence.of(Event.class).save(event, new DefaultCallback<Event>(EventActivity.this));
-
-            }
-        });
     }
 
 
