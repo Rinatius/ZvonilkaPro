@@ -15,8 +15,6 @@ public class AppUserStatus
   private String Status;
   private String objectId;
   private java.util.Date updated;
-  private AppUserStatus AppCompany_ID_UserStatus;
-  private UserData UserData_ID_UserStatus;
   public String getOwnerId()
   {
     return ownerId;
@@ -55,26 +53,6 @@ public class AppUserStatus
   public java.util.Date getUpdated()
   {
     return updated;
-  }
-
-  public AppUserStatus getAppCompany_ID_UserStatus()
-  {
-    return AppCompany_ID_UserStatus;
-  }
-
-  public void setAppCompany_ID_UserStatus( AppUserStatus AppCompany_ID_UserStatus )
-  {
-    this.AppCompany_ID_UserStatus = AppCompany_ID_UserStatus;
-  }
-
-  public UserData getUserData_ID_UserStatus()
-  {
-    return UserData_ID_UserStatus;
-  }
-
-  public void setUserData_ID_UserStatus( UserData UserData_ID_UserStatus )
-  {
-    this.UserData_ID_UserStatus = UserData_ID_UserStatus;
   }
 
                                                     

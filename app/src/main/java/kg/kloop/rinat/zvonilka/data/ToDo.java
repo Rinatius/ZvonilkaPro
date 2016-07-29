@@ -16,8 +16,6 @@ public class ToDo
   private Boolean IsDone;
   private String Note;
   private String ownerId;
-  private AppCompany AppCompany_ID_ToDo;
-  private UserData UserData_ID_ToDo;
   public java.util.Date getDeadline()
   {
     return Deadline;
@@ -66,26 +64,6 @@ public class ToDo
   public String getOwnerId()
   {
     return ownerId;
-  }
-
-  public AppCompany getAppCompany_ID_ToDo()
-  {
-    return AppCompany_ID_ToDo;
-  }
-
-  public void setAppCompany_ID_ToDo( AppCompany AppCompany_ID_ToDo )
-  {
-    this.AppCompany_ID_ToDo = AppCompany_ID_ToDo;
-  }
-
-  public UserData getUserData_ID_ToDo()
-  {
-    return UserData_ID_ToDo;
-  }
-
-  public void setUserData_ID_ToDo( UserData UserData_ID_ToDo )
-  {
-    this.UserData_ID_ToDo = UserData_ID_ToDo;
   }
 
                                                     

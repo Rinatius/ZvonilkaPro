@@ -17,6 +17,7 @@ import com.backendless.BackendlessCollection;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 import com.backendless.persistence.BackendlessDataQuery;
+import com.backendless.property.ObjectProperty;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -117,44 +118,58 @@ public class CallActivity extends AppCompatActivity {
             case R.id.action_save:
                 call = new Call();
 
+
+               // Backendless.Persistence.describe( "EventUserStatus", new DefaultCallback<List<ObjectProperty>>(CallActivity.this)
+               /* {
+                    @Override
+                    public void handleResponse( List<ObjectProperty> objectProperties )
+                    {
+                        for (int i = 0; i < objectProperties.size(); i++) {
+                            Log.d("properties", objectProperties.get(i).getName());
+                        }
+                        super.handleResponse(objectProperties);
+                    }
+                } );*/Backendless.Persistence.describe( "Event", new DefaultCallback<List<ObjectProperty>>(CallActivity.this)
+                {
+                    @Override
+                    public void handleResponse( List<ObjectProperty> objectProperties )
+                    {
+                        for (int i = 0; i < objectProperties.size(); i++) {
+                            Log.d("properties", objectProperties.get(i).getName());
+                        }
+                        super.handleResponse(objectProperties);
+                    }
+                } );
+
+
                 BackendlessDataQuery querry = new BackendlessDataQuery();
 
                 event = listEvent.get((int) eventSpinner.getSelectedItemId());
-
-                text = Resources.USER_DATA_ID_KEY + "'" + userData.getObjectId() + "'";
+                text = "Event[EventUserStatus_ID_Event].objectId = '" + event.getObjectId() + "'" +
+                        " and UserData[EventUserStatus_ID].objectId = '" + userData.getObjectId() + "'";
+                Log.d(TAG, text);
                 querry.setWhereClause(text);
                 Backendless.Persistence.of(EventUserStatus.class).find(querry,
                         new DefaultCallback<BackendlessCollection<EventUserStatus>>(CallActivity.this) {
                             @Override
                             public void handleResponse(BackendlessCollection<EventUserStatus> eventUserStatusBackendlessCollection) {
                                 List<EventUserStatus> listEUS = eventUserStatusBackendlessCollection.getData();
-                                Boolean old = false;
-                                int index = 0;
-                                for (int i = 0; i < listEUS.size(); i++) {
-                                    if (listEUS.get(i).getEvent_ID().equals(event)){
-                                        old = true;
-                                        index = 0;
-                                    }
-                                }
+                                Log.d(TAG, listEUS.size() + "");
 
-                                if(old){
-                                    call.setEventUserStatus_ID_Call(listEUS.get(index));
-                                }
-                                else{
-                                    List<Call> callList = new ArrayList<Call>();
-                                    callList.add(call);
+                                if(eventUserStatusBackendlessCollection.getData().size() == 0) {
+//                                    List<Call> callList = new ArrayList<Call>();
+//                                    callList.add(call);
                                     eventUserStatus = new EventUserStatus();
-                                    eventUserStatus.setCall_ID(callList);
-                                    eventUserStatus.setUserData_ID_EventUserStatus(userData);
-                                    eventUserStatus.setEvent_ID(event);
-                                    text = status.getText().toString();
+//                                    eventUserStatus.setCall_ID(callList);
+//                                    eventUserStatus.setUserData_ID_EventUserStatus(userData);
+//                                    eventUserStatus.setEvent_ID(event);
+//                                    text = status.getText().toString();
                                     eventUserStatus.setStatus(text);
-                                    call.setEventUserStatus_ID_Call(eventUserStatus);
+//                                    call.setEventUserStatus_ID_Call(eventUserStatus);
                                     Backendless.Persistence.of(EventUserStatus.class)
                                             .save(eventUserStatus,
                                                     new DefaultCallback<EventUserStatus>(CallActivity.this));
                                 }
-
 
                                 text = note.getText().toString();
                                 call.setNotes(text);
@@ -162,9 +177,9 @@ public class CallActivity extends AppCompatActivity {
                                 call.setUserCaller_ID_Call(Backendless.UserService.CurrentUser());
                                 call.setUserDataClient_ID_Call(userData);
                                 Backendless.Persistence.of(Call.class).save(call, new DefaultCallback<Call>(CallActivity.this));
+
                                 super.handleResponse(eventUserStatusBackendlessCollection);
                             }
-
                         });
                 return true;
         }

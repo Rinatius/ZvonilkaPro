@@ -29,7 +29,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPersonName"
-                android:text="Name"
                 android:ems="10"
                 android:id="@+id/callActivityClientName" />
 
@@ -56,7 +55,14 @@
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/callActivityNote" />
+                android:id="@+id/callActivityStatus"
+                android:hint="@string/status" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/callActivityNote"
+                android:hint="@string/notes" />
 
         </LinearLayout>
     </ScrollView>

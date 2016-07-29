@@ -16,9 +16,9 @@ public class Call
   private String objectId;
   private Integer TimeCall;
   private java.util.Date created;
-  private BackendlessUser UserCaller_ID_Call;
-  private EventUserStatus EventUserStatus_ID_Call;
-  private UserData UserDataClient_ID_Call;
+  private java.util.List<BackendlessUser> userCaller_ID_Call;
+  private EventUserStatus eventUserStatus_ID_Call;
+  private java.util.List<UserData> userDataClient_ID_Call;
   public java.util.Date getDateCall()
   {
     return DateCall;
@@ -69,34 +69,34 @@ public class Call
     return created;
   }
 
-  public BackendlessUser getUserCaller_ID_Call()
+  public java.util.List<BackendlessUser> getUserCaller_ID_Call()
   {
-    return UserCaller_ID_Call;
+    return userCaller_ID_Call;
   }
 
-  public void setUserCaller_ID_Call( BackendlessUser UserCaller_ID_Call )
+  public void setUserCaller_ID_Call( java.util.List<BackendlessUser> userCaller_ID_Call )
   {
-    this.UserCaller_ID_Call = UserCaller_ID_Call;
+    this.userCaller_ID_Call = userCaller_ID_Call;
   }
 
   public EventUserStatus getEventUserStatus_ID_Call()
   {
-    return EventUserStatus_ID_Call;
+    return eventUserStatus_ID_Call;
   }
 
-  public void setEventUserStatus_ID_Call( EventUserStatus EventUserStatus_ID_Call )
+  public void setEventUserStatus_ID_Call( EventUserStatus eventUserStatus_ID_Call )
   {
-    this.EventUserStatus_ID_Call = EventUserStatus_ID_Call;
+    this.eventUserStatus_ID_Call = eventUserStatus_ID_Call;
   }
 
-  public UserData getUserDataClient_ID_Call()
+  public java.util.List<UserData> getUserDataClient_ID_Call()
   {
-    return UserDataClient_ID_Call;
+    return userDataClient_ID_Call;
   }
 
-  public void setUserDataClient_ID_Call( UserData UserDataClient_ID_Call )
+  public void setUserDataClient_ID_Call( java.util.List<UserData> userDataClient_ID_Call )
   {
-    this.UserDataClient_ID_Call = UserDataClient_ID_Call;
+    this.userDataClient_ID_Call = userDataClient_ID_Call;
   }
 
                                                     
