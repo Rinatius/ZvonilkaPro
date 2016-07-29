@@ -3,8 +3,9 @@ package kg.kloop.rinat.zvonilka;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class AddUserDataActivity extends AppCompatActivity {
+import java.util.ArrayList;
 
+public class AddUserDataActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

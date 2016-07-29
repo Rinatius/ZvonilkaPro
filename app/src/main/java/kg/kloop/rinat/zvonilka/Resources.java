@@ -9,12 +9,14 @@ public class Resources {
     public static final String USER_ID_KEY = "userId";
     public static final String USER_DATA_ID_KEY = "userDataId";
     public static final String USER_DATA_ID_EVENT_KEY = "UserData_ID_EventUserStatus";
-    public static final String EVENT_ID_KEY = "eventId";
     public static final String NAME_KEY = "Name";
     public static final String PHONE_NUMBER_KEY = "PhoneNumber";
-
     //     Other strings
     public static final String OBJECT_ID = "objectId";
+    public static final String EVENTUSERSTATUS_CALL_ID_OBJECTID = "EventUserStatus[Call_ID].objectId";
+    public static final String USERDATA_EVENTUSERSTATUS_ID_OBJECTID = "UserData[EventUserStatus_ID].objectId";
+    public static final String EVENT_EVENTUSERSTATUS_ID_OBJECTID = "Event[EventUserStatus_ID].objectId";
+    public static final String EVENT_ID_KEY = "eventId";
     public static final String NAME = "Name";
     public static final String SUR_NAME = "Surname";
     public static final String EMAIL = "Email";

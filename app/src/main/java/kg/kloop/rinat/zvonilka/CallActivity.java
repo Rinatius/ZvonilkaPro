@@ -133,12 +133,12 @@ public class CallActivity extends AppCompatActivity {
                             public void handleResponse(BackendlessCollection<EventUserStatus> eventUserStatusBackendlessCollection) {
                                 final List<EventUserStatus> listEUS = eventUserStatusBackendlessCollection.getData();
                                 Log.d(TAG, listEUS.size() + "");
-                                querry.setWhereClause("Event[EventUserStatus_ID_Event].objectId = '" + event.getObjectId() + "'");
+                                querry.setWhereClause( Resources.EVENT_EVENTUSERSTATUS_ID_OBJECTID + " = '" + event.getObjectId() + "'");
                                 Backendless.Persistence.of(EventUserStatus.class).find(querry, new AsyncCallback<BackendlessCollection<EventUserStatus>>() {
                                     @Override
                                     public void handleResponse(BackendlessCollection<EventUserStatus> eventUserStatusBackendlessCollection) {
                                         eventUserStatusesforEvent = eventUserStatusBackendlessCollection.getData();
-                                        querry.setWhereClause("UserData[EventUserStatus_ID].objectId = '" + userData.getObjectId() + "'");
+                                        querry.setWhereClause( Resources.EVENTUSERSTATUS_CALL_ID_OBJECTID + " = '" + userData.getObjectId() + "'");
                                         Backendless.Persistence.of(EventUserStatus.class).find(querry, new AsyncCallback<BackendlessCollection<EventUserStatus>>() {
                                             @Override
                                             public void handleResponse(BackendlessCollection<EventUserStatus> eventUserStatusBackendlessCollection) {
@@ -178,7 +178,7 @@ public class CallActivity extends AppCompatActivity {
                                                 }
                                                 else{
                                                     eventUserStatus = listEUS.get(0);
-                                                    querry.setWhereClause("EventUserStatus[Call_ID].objectId = '" + eventUserStatus.getObjectId() + "'");
+                                                    querry.setWhereClause(Resources.EVENTUSERSTATUS_CALL_ID_OBJECTID + " = '" + eventUserStatus.getObjectId() + "'");
                                                     Backendless.Persistence.of(Call.class).find(querry, new AsyncCallback<BackendlessCollection<Call>>() {
                                                         @Override
                                                         public void handleResponse(BackendlessCollection<Call> callBackendlessCollection) {
@@ -193,14 +193,6 @@ public class CallActivity extends AppCompatActivity {
                                                                         @Override
                                                                         public void handleResponse(EventUserStatus eventUserStatus) {
 //
-//
-////                                                                    userData.setCall_ID(callList);
-//                                                                            eventUserStatusesforEvent.add(eventUserStatus);
-//                                                                            eventUserStatusesforUserData.add(eventUserStatus);
-//                                                                            event.setEventUserStatus_ID_Event(eventUserStatusesforEvent);
-//                                                                            userData.setEventUserStatus_ID(eventUserStatusesforUserData);
-//                                                                            Backendless.Persistence.of(Event.class).save(event, new DefaultCallback<Event>(CallActivity.this));
-//                                                                            Backendless.Persistence.of(UserData.class).save(userData, new DefaultCallback<UserData>(CallActivity.this));
                                                                         }
 
                                                                         @Override
