@@ -42,4 +42,6 @@ public class Resources {
 
 
     public static final String DURATION = "Duration: ";
+    public static final String PARTICIPANTS = "Participants";
+    public static final String USERS = "Users";
 }

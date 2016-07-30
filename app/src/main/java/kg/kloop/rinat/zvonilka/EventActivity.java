@@ -1,7 +1,10 @@
 package kg.kloop.rinat.zvonilka;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,14 +18,18 @@ import android.widget.TextView;
 import com.backendless.Backendless;
 import com.backendless.BackendlessCollection;
 import com.backendless.async.callback.AsyncCallback;
+import com.backendless.exceptions.BackendlessException;
 import com.backendless.exceptions.BackendlessFault;
 import com.backendless.persistence.BackendlessDataQuery;
 import com.backendless.social.BackendlessSocialJSInterface;
+
+import org.xml.sax.DTDHandler;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.ExecutionException;
 
 import kg.kloop.rinat.zvonilka.data.Event;
 import kg.kloop.rinat.zvonilka.data.EventUserStatus;
@@ -35,10 +42,13 @@ public class EventActivity extends AppCompatActivity {
 
     Event event;
     String eventId;
-    EditText  city, company, notes, participants, name;
-    TextView date;
+    EditText  city, company, notes, name;
+
+    TextView date,participants;
     BackendlessDataQuery querry;
     String text;
+    List<UserData> userDataList;
+    AlertDialog.Builder builder;
 
     private static final String TAG = "EventActivityDebug";
 
@@ -63,6 +73,8 @@ public class EventActivity extends AppCompatActivity {
             @Override
             public void handleResponse(BackendlessCollection<Event> eventBackendlessCollection) {
                 event = eventBackendlessCollection.getData().get(0);
+                LoadUsers loadUsers = new LoadUsers(event, EventActivity.this);
+                loadUsers.execute();
                 text = Resources.NAME + ": " + event.getName();
                 name.setText(text);
                 text = Resources.DATE + ": " + Resources.DATE_FORMAT.format(event.getDateOfEvent());
@@ -78,27 +90,36 @@ public class EventActivity extends AppCompatActivity {
                 text = "";
                 BackendlessDataQuery query = new BackendlessDataQuery();
                 Log.d("userData", event.getEventUserStatus_ID_Event().size() + "");
-                new LoadUsers(event, EventActivity.this).execute();
-               /* query.setWhereClause("EventUserStatus.EventUserStatus_ID_Event[UserData].objectId" + " IS NOT NULL");
-                Backendless.Persistence.of(UserData.class).find(query, new AsyncCallback<BackendlessCollection<UserData>>() {
-                    @Override
-                    public void handleResponse(BackendlessCollection<UserData> userDataBackendlessCollection) {
-                        Log.d(TAG, userDataBackendlessCollection.getData().size() + "");
-                        for (int j = 0; j < event.getEventUserStatus_ID_Event().size(); j++) {
-                            List<UserData> userDataList1 = userDataBackendlessCollection.getData();
-//                            EventUserStatus eventUserStatus;
-//                            eventUserStatus = event.getEventUserStatus_ID_Event().get(j);
-                            text += userDataList1.get(j).getFirstName() + " " + userDataList1.get(j).getSecondName() + "\n";
-                        }
-                        participants.setText(text);
-                    }
 
-                    @Override
-                    public void handleFault(BackendlessFault backendlessFault) {
-                        Log.d(TAG, backendlessFault.getDetail() + " " + backendlessFault.getMessage());
+                try {
+                    userDataList = loadUsers.get();
+                    builder = new AlertDialog.Builder(EventActivity.this);
+                    builder.setTitle(Resources.USERS + ":");
+                    CharSequence[] sequence;
+                    ArrayList<String> arrayList = new ArrayList<String>();
+                    for (int i = 0; i < userDataList.size(); i++) {
+                        arrayList.add(userDataList.get(i).getFirstName() + " " + userDataList.get(i).getSecondName());
                     }
-                });
-*/
+                    sequence = arrayList.toArray(new CharSequence[arrayList.size()]);
+                    builder.setItems(sequence, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            Intent intent = new Intent(EventActivity.this, UserDataActivity.class);
+                            UserData userData = userDataList.get(i);
+                            intent.putExtra(Resources.USER_DATA_ID_KEY, userData.getObjectId());
+                            startActivity(intent);
+                        }
+                    });
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+
+                text = Resources.PARTICIPANTS;
+
+                participants.setText(text);
+
 
 
                 super.handleResponse(eventBackendlessCollection);
@@ -163,7 +184,7 @@ public class EventActivity extends AppCompatActivity {
         notes = (EditText) findViewById(R.id.eventActivityNotes);
         city = (EditText) findViewById(R.id.eventActivityCity);
         company = (EditText) findViewById(R.id.eventActivityCompany);
-        participants = (EditText) findViewById(R.id.eventActivityParticipants);
+        participants = (TextView) findViewById(R.id.eventActivityParticipants);
         name = (EditText) findViewById(R.id.eventActivityName);
 
 
@@ -176,7 +197,12 @@ public class EventActivity extends AppCompatActivity {
     }
 
     private void setOnClick(){
-
+        participants.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                builder.show();
+            }
+        });
     }
 
 
@@ -197,6 +223,7 @@ class LoadUsers extends AsyncTask<Event, Integer , List<UserData>>{
         List<EventUserStatus> listEUSAs = event.getEventUserStatus_ID_Event();
         List<UserData> listUserData = new ArrayList<UserData>();
         BackendlessDataQuery query = new BackendlessDataQuery();
+        String text = "";
         Log.d("userData", listEUSAs.size() + "");
 
         for (int i = 0; i < listEUSAs.size(); i++) {
@@ -204,13 +231,19 @@ class LoadUsers extends AsyncTask<Event, Integer , List<UserData>>{
             query.setWhereClause("EventUserStatus_ID.objectId LIKE '%" + listEUSAs.get(i).getObjectId()+ "%'");
             Log.d("userData", query.getWhereClause());
             UserData user;
-            List<UserData> listnew;
-            listnew = Backendless.Persistence.of(UserData.class).find(query).getData();
-            if(listnew.size()!=0){
-                listUserData.add(listnew.get(0));
+            List<UserData> listnew = null;
+            try {
+                listnew = Backendless.Persistence.of(UserData.class).find(query).getData();
+                if(listnew.size()!=0){
+                    listUserData.add(listnew.get(0));
+                }
+            } catch (BackendlessException e) {
+                e.printStackTrace();
             }
-        }
 
+        }
         return listUserData;
+
     }
+
 }
