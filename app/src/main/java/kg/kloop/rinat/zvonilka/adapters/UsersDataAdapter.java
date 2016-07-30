@@ -74,7 +74,7 @@ public class UsersDataAdapter extends BaseAdapter {
         name.setText(nameStr);
 
         TextView events = (TextView) v.findViewById(R.id.user_data_list_events);
-        nameStr = Resources.EVENT + ": " + user.getEventUserStatus_ID();
+        nameStr = Resources.EVENT + ": " + user.getEventUserStatus_ID().toString();
         events.setText(nameStr);
 
         ImageButton button = (ImageButton) v.findViewById(R.id.user_data_list_call);
@@ -84,6 +84,7 @@ public class UsersDataAdapter extends BaseAdapter {
                 Intent intent = new Intent(context, CallActivity.class);
                 intent.putExtra(Resources.PHONE_NUMBER_KEY, user.getPhoneNumber());
                 intent.putExtra(Resources.USER_DATA_ID_KEY, user.getObjectId());
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
             }
         });

@@ -123,5 +123,11 @@
             android:layout_height="wrap_content"
             android:id="@+id/userDataActivityEventList" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Events:"
+            android:id="@+id/textView13" />
+
     </LinearLayout>
 </ScrollView>

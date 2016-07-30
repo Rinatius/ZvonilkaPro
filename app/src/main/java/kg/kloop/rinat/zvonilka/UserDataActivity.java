@@ -1,7 +1,12 @@
 package kg.kloop.rinat.zvonilka;
 
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,13 +19,17 @@ import android.widget.TextView;
 
 import com.backendless.Backendless;
 import com.backendless.BackendlessCollection;
+import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 import com.backendless.persistence.BackendlessDataQuery;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.ExecutionException;
 
+import kg.kloop.rinat.zvonilka.data.Event;
 import kg.kloop.rinat.zvonilka.data.EventUserStatus;
 import kg.kloop.rinat.zvonilka.data.UserData;
 import kg.kloop.rinat.zvonilka.login.DefaultCallback;
@@ -38,6 +47,8 @@ public class UserDataActivity extends AppCompatActivity {
     EditText company;
     EditText family, position;
     TextView eventListText;
+    List<Event> list;
+    AlertDialog.Builder builder;
 
     int editCount = 0;
 
@@ -59,11 +70,16 @@ public class UserDataActivity extends AppCompatActivity {
         userId = getIntent().getExtras().getString(Resources.USER_DATA_ID_KEY);
         querry = new BackendlessDataQuery();
         querry.setWhereClause(Resources.OBJECT_ID + " = '" + userId + "'");
+        Log.d("LoadUserEvents", "Executed! -");
+        final LoadUserEvents loadUserEvents = new LoadUserEvents(this);
 
-        Backendless.Persistence.of(UserData.class).find(querry, new DefaultCallback<BackendlessCollection<UserData>>(this){
+
+        Backendless.Persistence.of(UserData.class).find(querry, new AsyncCallback<BackendlessCollection<UserData>>(){
             @Override
             public void handleResponse(BackendlessCollection<UserData> userDataBackendlessCollection) {
                 userData = userDataBackendlessCollection.getData().get(0);
+                loadUserEvents.execute(userData);
+                Log.d("LoadUserEvents", "Executed!");
                 String text;
                 text = Resources.NAME + ": " + userData.getFirstName();
                 name.setText(text);
@@ -94,16 +110,43 @@ public class UserDataActivity extends AppCompatActivity {
                     text+= (status.getHasBeen() ? " " + Resources.PARTICIPATED : " " + Resources.NOT_PARTICIPATED);
                 }
                 eventListText.setText(text);
+                try {
+                    list = loadUserEvents.get();
+                    builder = new AlertDialog.Builder(UserDataActivity.this);
+                    builder.setTitle(R.string.event);
+                    CharSequence[] sequence;
+                    ArrayList<String> arrayList = new ArrayList<String>();
+                    for (int i = 0; i < list.size(); i++) {
+                        arrayList.add(list.get(i).getName());
+                    }
+                    sequence = arrayList.toArray(new CharSequence[arrayList.size()]);
+                    builder.setItems(sequence, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            Intent intent = new Intent(UserDataActivity.this, EventActivity.class);
+                            Event event = list.get(i);
+                            intent.putExtra(Resources.EVENT_ID_KEY, event.getObjectId());
+                            startActivity(intent);
+                        }
+                    });
+                    TextView textView = (TextView) findViewById(R.id.textView13);
+                    textView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            builder.show();
+                        }
+                    });
+
+                } catch (InterruptedException | ExecutionException e) {
+                    e.printStackTrace();
+                }
 //                Log.d(TAG, userData.getPhoneNumber());
 
-
-                super.handleResponse(userDataBackendlessCollection);
             }
 
             @Override
             public void handleFault(BackendlessFault backendlessFault) {
                 Log.d(TAG, "UserData didn't found: " + backendlessFault.getDetail());
-                super.handleFault(backendlessFault);
             }
         });
 
@@ -241,4 +284,40 @@ public class UserDataActivity extends AppCompatActivity {
         });
 
     }
+}
+
+class LoadUserEvents extends AsyncTask<UserData, Integer, List<Event>>{
+    Context context;
+    ProgressDialog progressDialog;
+
+    public LoadUserEvents(Context context) {
+        this.context = context;
+        progressDialog = ProgressDialog.show(context, "", context.getString(R.string.loading), true);
+    }
+
+    @Override
+    protected List<Event> doInBackground(UserData... userDatas) {
+        List<EventUserStatus> list = userDatas[0].getEventUserStatus_ID();
+        ArrayList<Event> event = new ArrayList<>();
+        Log.d("Load List", list.size() + "");
+        for (int i = 0; i < list.size(); i++) {
+            EventUserStatus status = list.get(i);
+            BackendlessDataQuery dataQuery = new BackendlessDataQuery("EventUserStatus_ID_Event.objectId = '" + status.getObjectId() + "'");
+            event.addAll(Backendless.Persistence.of(Event.class).find(dataQuery).getData());
+        }
+        return event;
+    }
+
+    @Override
+    protected void onPreExecute() {
+        Log.d("Load", "Loading...");
+        super.onPreExecute();
+    }
+
+    @Override
+    protected void onPostExecute(List<Event> events) {
+        progressDialog.cancel();
+        super.onPostExecute(events);
+    }
+
 }
