@@ -26,7 +26,6 @@ import com.backendless.persistence.BackendlessDataQuery;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 
 import kg.kloop.rinat.zvonilka.data.Event;
@@ -66,7 +65,7 @@ public class UserDataActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_data);
         initUi();
-        programmButtons();
+        programButtons();
         userId = getIntent().getExtras().getString(Resources.USER_DATA_ID_KEY);
         querry = new BackendlessDataQuery();
         querry.setWhereClause(Resources.OBJECT_ID + " = '" + userId + "'");
@@ -260,7 +259,7 @@ public class UserDataActivity extends AppCompatActivity {
 
     }
 
-    private void programmButtons(){
+    private void programButtons(){
         callBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
