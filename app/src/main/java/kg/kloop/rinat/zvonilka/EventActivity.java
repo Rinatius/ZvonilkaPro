@@ -1,5 +1,7 @@
 package kg.kloop.rinat.zvonilka;
 
+import android.content.Context;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,8 +17,10 @@ import com.backendless.BackendlessCollection;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 import com.backendless.persistence.BackendlessDataQuery;
+import com.backendless.social.BackendlessSocialJSInterface;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -34,6 +38,9 @@ public class EventActivity extends AppCompatActivity {
     EditText  city, company, notes, participants, name;
     TextView date;
     BackendlessDataQuery querry;
+    String text;
+
+    private static final String TAG = "EventActivityDebug";
 
     int editCount = 0;
 
@@ -56,31 +63,45 @@ public class EventActivity extends AppCompatActivity {
             @Override
             public void handleResponse(BackendlessCollection<Event> eventBackendlessCollection) {
                 event = eventBackendlessCollection.getData().get(0);
-//                Log.d("Event", event.size() + "");
-//                for (int i = 0; i < event.size(); i++) {
-                    String text;
-                    text = Resources.NAME + ": " + event.getName();
-                    name.setText(text);
-                    text = Resources.DATE + ": " + Resources.DATE_FORMAT.format(event.getDateOfEvent());
-                    date.setText(text);
-                    text = Resources.CITY + ": " + event.getCity();
-                    city.setText(text);
-                    if (event.getAppCompany_ID_Event() != null) {
+                text = Resources.NAME + ": " + event.getName();
+                name.setText(text);
+                text = Resources.DATE + ": " + Resources.DATE_FORMAT.format(event.getDateOfEvent());
+                date.setText(text);
+                text = Resources.CITY + ": " + event.getCity();
+                city.setText(text);
+                if (event.getAppCompany_ID_Event() != null) {
 //                        text = Resources.COMPANY + ": " + event.getAppCompany_ID_Event().getName();
-                        company.setText(text);
+                    company.setText(text);
+                }
+                text = Resources.DESCRIPTION + ": " + event.getNote();
+                notes.setText(text);
+                text = "";
+                BackendlessDataQuery query = new BackendlessDataQuery();
+                Log.d("userData", event.getEventUserStatus_ID_Event().size() + "");
+                new LoadUsers(event, EventActivity.this).execute();
+               /* query.setWhereClause("EventUserStatus.EventUserStatus_ID_Event[UserData].objectId" + " IS NOT NULL");
+                Backendless.Persistence.of(UserData.class).find(query, new AsyncCallback<BackendlessCollection<UserData>>() {
+                    @Override
+                    public void handleResponse(BackendlessCollection<UserData> userDataBackendlessCollection) {
+                        Log.d(TAG, userDataBackendlessCollection.getData().size() + "");
+                        for (int j = 0; j < event.getEventUserStatus_ID_Event().size(); j++) {
+                            List<UserData> userDataList1 = userDataBackendlessCollection.getData();
+//                            EventUserStatus eventUserStatus;
+//                            eventUserStatus = event.getEventUserStatus_ID_Event().get(j);
+                            text += userDataList1.get(j).getFirstName() + " " + userDataList1.get(j).getSecondName() + "\n";
+                        }
+                        participants.setText(text);
                     }
-                    text = Resources.DESCRIPTION + ": " + event.getNote();
-                    notes.setText(text);
-                    text = "";
-                    for (int j = 0; j < event.getEventUserStatus_ID_Event().size(); j++) {
-                        EventUserStatus eventUserStatus;
-                        eventUserStatus = event.getEventUserStatus_ID_Event().get(j);
-//                        text = eventUserStatus.getUserData_ID_EventUserStatus().getFirstName() +
-//                                " " + eventUserStatus.getUserData_ID_EventUserStatus().getSecondName() + "\n";
-                    }
-                    participants.setText(text);
 
-                    super.handleResponse(eventBackendlessCollection);
+                    @Override
+                    public void handleFault(BackendlessFault backendlessFault) {
+                        Log.d(TAG, backendlessFault.getDetail() + " " + backendlessFault.getMessage());
+                    }
+                });
+*/
+
+
+                super.handleResponse(eventBackendlessCollection);
 
 
             }
@@ -159,4 +180,37 @@ public class EventActivity extends AppCompatActivity {
     }
 
 
+}
+
+class LoadUsers extends AsyncTask<Event, Integer , List<UserData>>{
+
+    Event event;
+    Context context;
+
+    public LoadUsers(Event event, Context context) {
+        this.event = event;
+        this.context = context;
+    }
+
+    @Override
+    protected List<UserData> doInBackground(Event... events) {
+        List<EventUserStatus> listEUSAs = event.getEventUserStatus_ID_Event();
+        List<UserData> listUserData = new ArrayList<UserData>();
+        BackendlessDataQuery query = new BackendlessDataQuery();
+        Log.d("userData", listEUSAs.size() + "");
+
+        for (int i = 0; i < listEUSAs.size(); i++) {
+
+            query.setWhereClause("EventUserStatus_ID.objectId LIKE '%" + listEUSAs.get(i).getObjectId()+ "%'");
+            Log.d("userData", query.getWhereClause());
+            UserData user;
+            List<UserData> listnew;
+            listnew = Backendless.Persistence.of(UserData.class).find(query).getData();
+            if(listnew.size()!=0){
+                listUserData.add(listnew.get(0));
+            }
+        }
+
+        return listUserData;
+    }
 }
