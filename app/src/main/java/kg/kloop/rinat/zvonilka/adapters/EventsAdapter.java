@@ -12,7 +12,7 @@ import java.util.List;
 import kg.kloop.rinat.zvonilka.R;
 import kg.kloop.rinat.zvonilka.data.Event;
 
-public class EventsAdapter extends BaseAdapter{
+public class EventsAdapter extends BaseListAdapter{
 
     Context context;
     List<Event> events;
@@ -37,7 +37,7 @@ public class EventsAdapter extends BaseAdapter{
         return i;
     }
 
-    public void add(List<Event> events){
+    public void add(List events){
         this.events.addAll(events);
     }
 

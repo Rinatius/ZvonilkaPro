@@ -27,7 +27,7 @@ import kg.kloop.rinat.zvonilka.Resources;
 import kg.kloop.rinat.zvonilka.data.UserData;
 import kg.kloop.rinat.zvonilka.login.DefaultCallback;
 
-public class UsersDataAdapter extends BaseAdapter {
+public class UsersDataAdapter extends BaseListAdapter {
 
     private Context context;
     private List<UserData> userDatas;
@@ -53,7 +53,7 @@ public class UsersDataAdapter extends BaseAdapter {
         return i;
     }
 
-    public void add(List<UserData> userDatas){
+    public void add(List userDatas){
         this.userDatas.addAll(userDatas);
     }
 

@@ -4,6 +4,8 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -23,6 +25,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
@@ -30,9 +33,14 @@ import com.backendless.Backendless;
 import com.backendless.BackendlessCollection;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
+import com.backendless.persistence.BackendlessDataQuery;
+import com.backendless.persistence.QueryOptions;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
+import kg.kloop.rinat.zvonilka.adapters.BaseListAdapter;
 import kg.kloop.rinat.zvonilka.adapters.EventsAdapter;
 import kg.kloop.rinat.zvonilka.adapters.ToDoAdapter;
 import kg.kloop.rinat.zvonilka.adapters.UsersDataAdapter;
@@ -173,211 +181,270 @@ public class MenuSelectActivity extends AppCompatActivity {
         }
 
         ///////////********* Initial Event List *****************//////////////////
+//        private void initEventsFragment(View view) {
+//            eventsList = (ListView) view.findViewById(R.id.select_activity_list_events);
+//            if (eventsAdapter == null) {
+//                Backendless.Persistence.of(Event.class).find(new DefaultCallback<BackendlessCollection<Event>>(getContext()) {
+//                    @Override
+//                    public void handleResponse(final BackendlessCollection<Event> response) {
+//                        final List<Event> events = response.getData();
+//                        eventsAdapter = new EventsAdapter(getContext(), events);
+//                        eventsList.setAdapter(eventsAdapter);
+//                        eventsList.setOnScrollListener(new AbsListView.OnScrollListener() {
+//                            @Override
+//                            public void onScrollStateChanged(AbsListView absListView, int i) {
+//
+//                            }
+//
+//                            @Override
+//                            public void onScroll(AbsListView absListView, int i, int i1, int i2) {
+//                                Log.d("Events", i + " " + i1 + " " + i2);
+//                                if (!onBackground && !allLoaded[0] && (i + i1 * 2 >= i2 || i2 == 10)) {
+//                                    onBackground = true;
+//                                    progressBar.setVisibility(View.VISIBLE);
+//                                    response.getPage(10, i2, new AsyncCallback<BackendlessCollection<Event>>() {
+//                                        @Override
+//                                        public void handleResponse(BackendlessCollection<Event> eventBackendlessCollection) {
+//                                            eventsAdapter.add(eventBackendlessCollection.getData());
+//                                            eventsAdapter.notifyDataSetChanged();
+//                                            onBackground = false;
+//                                            allLoaded[0] = eventBackendlessCollection.getData().size() == 0;
+//                                            progressBar.setVisibility(View.INVISIBLE);
+//                                            Log.d("Get Item on back", "Events Successful " + eventsAdapter.getCount());
+//                                        }
+//
+//                                        @Override
+//                                        public void handleFault(BackendlessFault backendlessFault) {
+//                                            Log.d("Get Item on back", "Error: " + backendlessFault.getMessage());
+//                                            onBackground = false;
+//                                            progressBar.setVisibility(View.INVISIBLE);
+//                                        }
+//                                    });
+//                                }
+//                            }
+//                        });
+//                        super.handleResponse(response);
+//
+//                    }
+//
+//                    @Override
+//                    public void handleFault(BackendlessFault fault) {
+//                        super.handleFault(fault);
+//                    }
+//                });
+//            } else {
+//                eventsList.setAdapter(eventsAdapter);
+//            }
+//
+//
+//            eventsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//                @Override
+//                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+//                    Intent intent = new Intent(getContext(), EventActivity.class);
+//                    Event event = (Event) adapterView.getItemAtPosition(i);
+//                    intent.putExtra(Resources.EVENT_ID_KEY, event.getObjectId());
+//                    startActivity(intent);
+//                }
+//            });
+//
+//        }
+
         private void initEventsFragment(View view) {
-
             eventsList = (ListView) view.findViewById(R.id.select_activity_list_events);
-            if (eventsAdapter == null) {
-                Backendless.Persistence.of(Event.class).find(new DefaultCallback<BackendlessCollection<Event>>(getContext()) {
-                    @Override
-                    public void handleResponse(final BackendlessCollection<Event> response) {
-                        final List<Event> events = response.getData();
-                        eventsAdapter = new EventsAdapter(getContext(), events);
-                        eventsList.setAdapter(eventsAdapter);
-                        eventsList.setOnScrollListener(new AbsListView.OnScrollListener() {
-                            @Override
-                            public void onScrollStateChanged(AbsListView absListView, int i) {
-
-                            }
-
-                            @Override
-                            public void onScroll(AbsListView absListView, int i, int i1, int i2) {
-                                Log.d("Events", i + " " + i1 + " " + i2);
-                                if (!onBackground && !allLoaded[0] && (i + i1 * 2 >= i2 || i2 == 10)) {
-                                    onBackground = true;
-                                    progressBar.setVisibility(View.VISIBLE);
-                                    response.getPage(10, i2, new AsyncCallback<BackendlessCollection<Event>>() {
-                                        @Override
-                                        public void handleResponse(BackendlessCollection<Event> eventBackendlessCollection) {
-                                            eventsAdapter.add(eventBackendlessCollection.getData());
-                                            eventsAdapter.notifyDataSetChanged();
-                                            onBackground = false;
-                                            allLoaded[0] = eventBackendlessCollection.getData().size() == 0;
-                                            progressBar.setVisibility(View.INVISIBLE);
-                                            Log.d("Get Item on back", "Events Successful " + eventsAdapter.getCount());
-                                        }
-
-                                        @Override
-                                        public void handleFault(BackendlessFault backendlessFault) {
-                                            Log.d("Get Item on back", "Error: " + backendlessFault.getMessage());
-                                            onBackground = false;
-                                            progressBar.setVisibility(View.INVISIBLE);
-                                        }
-                                    });
-                                }
-                            }
-                        });
-                        super.handleResponse(response);
-
-                    }
-
-                    @Override
-                    public void handleFault(BackendlessFault fault) {
-                        super.handleFault(fault);
-                    }
-                });
-            } else {
-                eventsList.setAdapter(eventsAdapter);
-            }
-
-
-            eventsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    Intent intent = new Intent(getContext(), EventActivity.class);
-                    Event event = (Event) adapterView.getItemAtPosition(i);
-                    intent.putExtra(Resources.EVENT_ID_KEY, event.getObjectId());
-                    startActivity(intent);
-                }
-            });
-
+            eventsAdapter = new EventsAdapter(getContext(), new ArrayList<Event>());
+            eventsList.setAdapter(eventsAdapter);
+            eventsList.setOnScrollListener(new OnScroll(eventsAdapter, Event.class));
         }
+
+
+        private void initUsersFragment(View view){
+            userDataList = (ListView) view.findViewById(R.id.select_activity_list_users);
+            usersDataAdapter = new UsersDataAdapter(getContext(), new ArrayList<UserData>());
+            userDataList.setAdapter(usersDataAdapter);
+            userDataList.setOnScrollListener(new OnScroll(usersDataAdapter, UserData.class));
+        }
+
+        private void initToDoFragment(View view){
+            userToDoList = (ListView) view.findViewById(R.id.select_activity_list_to_do_list);
+            toDoAdapter = new ToDoAdapter(getContext(), new ArrayList<ToDo>());
+            userToDoList.setAdapter(toDoAdapter);
+            userToDoList.setOnScrollListener(new OnScroll(toDoAdapter, ToDo.class));
+        }
+
+        public static void update(boolean bool){
+            onBackground = bool;
+            if (bool){
+                progressBar.setVisibility(View.VISIBLE);
+            } else {
+                progressBar.setVisibility(View.INVISIBLE);
+            }
+        }
+
+
+
 
         ///////////********* Initial User List *****************//////////////////
-        private void initUsersFragment(View view) {
+//
+//        private void initUsersFragment(View view) {
+//
+//            userDataList = (ListView) view.findViewById(R.id.select_activity_list_users);
+//
+//            if (usersDataAdapter == null) {
+//                Backendless.Persistence.of(UserData.class).find(new DefaultCallback<BackendlessCollection<UserData>>(getContext()) {
+//                    @Override
+//                    public void handleResponse(final BackendlessCollection<UserData> response) {
+//                        List<UserData> usersData = response.getData();
+//                        usersDataAdapter = new UsersDataAdapter(getContext(), usersData);
+//                        userDataList.setAdapter(usersDataAdapter);
+//                        userDataList.setOnScrollListener(new AbsListView.OnScrollListener() {
+//                            @Override
+//                            public void onScrollStateChanged(AbsListView absListView, int i) {
+//
+//                            }
+//
+//                            @Override
+//                            public void onScroll(final AbsListView absListView, int i, int i1, int i2) {
+//                                Log.d("Users", i + " " + i1 + " " + i2);
+//                                if (!onBackground && !allLoaded[1] && (i + i1 * 2 >= i2 || i2 <= i1 + i)) {
+//                                    onBackground = true;
+//                                    progressBar.setVisibility(View.VISIBLE);
+//                                    response.getPage(10, i2, new AsyncCallback<BackendlessCollection<UserData>>() {
+//                                        @Override
+//                                        public void handleResponse(BackendlessCollection<UserData> userDataBackendlessCollection) {
+//                                            usersDataAdapter.add(userDataBackendlessCollection.getData());
+//                                            usersDataAdapter.notifyDataSetChanged();
+//                                            onBackground = false;
+//                                            progressBar.setVisibility(View.INVISIBLE);
+//                                            allLoaded[1] = userDataBackendlessCollection.getData().size() == 0;
+//                                            Log.d("Get Item on back", "UsersData Successful " + usersDataAdapter.getCount());
+//                                        }
+//
+//                                        @Override
+//                                        public void handleFault(BackendlessFault backendlessFault) {
+//                                            Log.d("Get Item on back", "Error: " + backendlessFault.getMessage());
+//                                            onBackground = false;
+//                                            progressBar.setVisibility(View.INVISIBLE);
+//                                        }
+//                                    });
+//                                }
+//                            }
+//                        });
+//                        super.handleResponse(response);
+//                    }
+//
+//                    @Override
+//                    public void handleFault(BackendlessFault fault) {
+//                        super.handleFault(fault);
+//                    }
+//                });
+//            } else {
+//                userDataList.setAdapter(usersDataAdapter);
+//            }
+//            userDataList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//                @Override
+//                public void onItemClick(final AdapterView<?> adapterView, View view, int i, long l) {
+//                    Log.d("Item Click", "clicked" + i);
+//                    final UserData userData = (UserData) adapterView.getItemAtPosition(i);
+//                    Intent intent = new Intent();
+//                    intent.setClass(getContext(), UserDataActivity.class);
+//                    intent.putExtra(Resources.USER_DATA_ID_KEY, userData.getObjectId());
+//                    startActivity(intent);
+//                }
+//            });
+//        }
 
-            userDataList = (ListView) view.findViewById(R.id.select_activity_list_users);
+//        //////////********** Initial ToDoUser List ************//////////////////
+//        private void initToDoFragment(View view) {
+//            userToDoList = (ListView) view.findViewById(R.id.select_activity_list_to_do_list);
+//            if (toDoAdapter == null) {
+//                Backendless.Persistence.of(ToDo.class).find(new DefaultCallback<BackendlessCollection<ToDo>>(getContext()) {
+//                    @Override
+//                    public void handleResponse(final BackendlessCollection<ToDo> response) {
+//                        List<ToDo> toDoList = response.getData();
+//                        toDoAdapter = new ToDoAdapter(getContext(), toDoList);
+//                        userToDoList.setAdapter(toDoAdapter);
+//                        userToDoList.setOnScrollListener(new AbsListView.OnScrollListener() {
+//                            @Override
+//                            public void onScrollStateChanged(AbsListView absListView, int i) {
+//
+//                            }
+//
+//                            @Override
+//                            public void onScroll(AbsListView absListView, int i, int i1, int i2) {
+//                                Log.d("ToDos", i + " " + i1 + " " + i2);
+//                                if (!onBackground && !allLoaded[2] && (i + i1 * 2 >= i2 || i2 == 10)) {
+//                                    onBackground = true;
+//                                    progressBar.setVisibility(View.VISIBLE);
+//                                    response.getPage(10, i2, new AsyncCallback<BackendlessCollection<ToDo>>() {
+//                                        @Override
+//                                        public void handleResponse(BackendlessCollection<ToDo> toDoBackendlessCollection) {
+//                                            toDoAdapter.add(toDoBackendlessCollection.getData());
+//                                            toDoAdapter.notifyDataSetChanged();
+//                                            onBackground = false;
+//                                            allLoaded[2] = toDoBackendlessCollection.getData().size() == 0;
+//                                            progressBar.setVisibility(View.INVISIBLE);
+//                                            Log.d("ToDos", "ToDos Successful " + toDoAdapter.getCount());
+//                                        }
+//
+//                                        @Override
+//                                        public void handleFault(BackendlessFault backendlessFault) {
+//                                            onBackground = false;
+//                                            progressBar.setVisibility(View.INVISIBLE);
+//                                        }
+//                                    });
+//                                }
+//
+//                            }
+//                        });
+//                        super.handleResponse(response);
+//                    }
+//
+//                    @Override
+//                    public void handleFault(BackendlessFault fault) {
+//                        super.handleFault(fault);
+//                    }
+//                });
+//            } else {
+//                userToDoList.setAdapter(toDoAdapter);
+//            }
+//            userToDoList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//                @Override
+//                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+//                    Intent intent = new Intent(getContext(), ToDoActivity.class);
+//                    intent.putExtra(getResources().getString(R.string.objectidquerry), toDoAdapter.getItem(i).getObjectId());
+//                    startActivity(intent);
+//                }
+//            });
+//
+//
+//        }
 
-            if (usersDataAdapter == null) {
-                Backendless.Persistence.of(UserData.class).find(new DefaultCallback<BackendlessCollection<UserData>>(getContext()) {
-                    @Override
-                    public void handleResponse(final BackendlessCollection<UserData> response) {
-                        List<UserData> usersData = response.getData();
-                        usersDataAdapter = new UsersDataAdapter(getContext(), usersData);
-                        userDataList.setAdapter(usersDataAdapter);
-                        userDataList.setOnScrollListener(new AbsListView.OnScrollListener() {
-                            @Override
-                            public void onScrollStateChanged(AbsListView absListView, int i) {
 
-                            }
+    }
 
-                            @Override
-                            public void onScroll(final AbsListView absListView, int i, int i1, int i2) {
-                                Log.d("Users", i + " " + i1 + " " + i2);
-                                if (!onBackground && !allLoaded[1] && (i + i1 * 2 >= i2 || i2 <= i1 + i)) {
-                                    onBackground = true;
-                                    progressBar.setVisibility(View.VISIBLE);
-                                    response.getPage(10, i2, new AsyncCallback<BackendlessCollection<UserData>>() {
-                                        @Override
-                                        public void handleResponse(BackendlessCollection<UserData> userDataBackendlessCollection) {
-                                            usersDataAdapter.add(userDataBackendlessCollection.getData());
-                                            usersDataAdapter.notifyDataSetChanged();
-                                            onBackground = false;
-                                            progressBar.setVisibility(View.INVISIBLE);
-                                            allLoaded[1] = userDataBackendlessCollection.getData().size() == 0;
-                                            Log.d("Get Item on back", "UsersData Successful " + usersDataAdapter.getCount());
-                                        }
+    static class OnScroll implements AbsListView.OnScrollListener {
+        BaseListAdapter adapter;
+        Class type;
 
-                                        @Override
-                                        public void handleFault(BackendlessFault backendlessFault) {
-                                            Log.d("Get Item on back", "Error: " + backendlessFault.getMessage());
-                                            onBackground = false;
-                                            progressBar.setVisibility(View.INVISIBLE);
-                                        }
-                                    });
-                                }
-                            }
-                        });
-                        super.handleResponse(response);
-                    }
-
-                    @Override
-                    public void handleFault(BackendlessFault fault) {
-                        super.handleFault(fault);
-                    }
-                });
-            } else {
-                userDataList.setAdapter(usersDataAdapter);
-            }
-            userDataList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(final AdapterView<?> adapterView, View view, int i, long l) {
-                    Log.d("Item Click", "clicked" + i);
-                    final UserData userData = (UserData) adapterView.getItemAtPosition(i);
-                    Intent intent = new Intent();
-                    intent.setClass(getContext(), UserDataActivity.class);
-                    intent.putExtra(Resources.USER_DATA_ID_KEY, userData.getObjectId());
-                    startActivity(intent);
-                }
-            });
+        public OnScroll(BaseListAdapter adapter, Class type) {
+            this.adapter = adapter;
+            this.type = type;
         }
 
-        //////////********** Initial ToDoUser List ************//////////////////
-        private void initToDoFragment(View view) {
-            userToDoList = (ListView) view.findViewById(R.id.select_activity_list_to_do_list);
-            if (toDoAdapter == null) {
-                Backendless.Persistence.of(ToDo.class).find(new DefaultCallback<BackendlessCollection<ToDo>>(getContext()) {
-                    @Override
-                    public void handleResponse(final BackendlessCollection<ToDo> response) {
-                        List<ToDo> toDoList = response.getData();
-                        toDoAdapter = new ToDoAdapter(getContext(), toDoList);
-                        userToDoList.setAdapter(toDoAdapter);
-                        userToDoList.setOnScrollListener(new AbsListView.OnScrollListener() {
-                            @Override
-                            public void onScrollStateChanged(AbsListView absListView, int i) {
-
-                            }
-
-                            @Override
-                            public void onScroll(AbsListView absListView, int i, int i1, int i2) {
-                                Log.d("ToDos", i + " " + i1 + " " + i2);
-                                if (!onBackground && !allLoaded[2] && (i + i1 * 2 >= i2 || i2 == 10)) {
-                                    onBackground = true;
-                                    progressBar.setVisibility(View.VISIBLE);
-                                    response.getPage(10, i2, new AsyncCallback<BackendlessCollection<ToDo>>() {
-                                        @Override
-                                        public void handleResponse(BackendlessCollection<ToDo> toDoBackendlessCollection) {
-                                            toDoAdapter.add(toDoBackendlessCollection.getData());
-                                            toDoAdapter.notifyDataSetChanged();
-                                            onBackground = false;
-                                            allLoaded[2] = toDoBackendlessCollection.getData().size() == 0;
-                                            progressBar.setVisibility(View.INVISIBLE);
-                                            Log.d("ToDos", "ToDos Successful " + toDoAdapter.getCount());
-                                        }
-
-                                        @Override
-                                        public void handleFault(BackendlessFault backendlessFault) {
-                                            onBackground = false;
-                                            progressBar.setVisibility(View.INVISIBLE);
-                                        }
-                                    });
-                                }
-
-                            }
-                        });
-                        super.handleResponse(response);
-                    }
-
-                    @Override
-                    public void handleFault(BackendlessFault fault) {
-                        super.handleFault(fault);
-                    }
-                });
-            } else {
-                userToDoList.setAdapter(toDoAdapter);
-            }
-            userToDoList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    Intent intent = new Intent(getContext(), ToDoActivity.class);
-                    intent.putExtra(getResources().getString(R.string.objectidquerry), toDoAdapter.getItem(i).getObjectId());
-                    startActivity(intent);
-                }
-            });
-
+        @Override
+        public void onScrollStateChanged(AbsListView absListView, int i) {
 
         }
 
+        @Override
+        public void onScroll(AbsListView absListView, int i, int i1, int i2) {
 
+            if (!onBackground && (i + i1 * 2 >= i2 || i2 == 0)) {
+                MenuSelectActivity.PlaceholderFragment.update(true);
+                LoadData loadData = new LoadData(i1, i2, type, adapter);
+                loadData.execute();
+            }
+        }
     }
 
     /**
@@ -416,5 +483,40 @@ public class MenuSelectActivity extends AppCompatActivity {
             return null;
         }
 
+    }
+}
+
+
+
+class LoadData extends AsyncTask<Integer, Integer, List> {
+    int offset, pageSize;
+    Class type;
+    BaseListAdapter adapter;
+
+    public LoadData(int pageSize, int offset, Class type, BaseListAdapter adapter) {
+        this.offset = offset;
+        this.pageSize = pageSize;
+        this.type = type;
+        this.adapter = adapter;
+    }
+
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+    }
+
+    @Override
+    protected List doInBackground(Integer... integers) {
+        Log.d("Load on Async", "Loading... " + type.getSimpleName());
+        return Backendless.Persistence.of(type).find(new BackendlessDataQuery(new QueryOptions(pageSize, offset))).getData();
+    }
+
+    @Override
+    protected void onPostExecute(List list) {
+        adapter.add(list);
+        adapter.notifyDataSetChanged();
+        MenuSelectActivity.PlaceholderFragment.update(false);
+        Log.d("Load on Async", "Loaded! " + type.getSimpleName());
+        super.onPostExecute(list);
     }
 }

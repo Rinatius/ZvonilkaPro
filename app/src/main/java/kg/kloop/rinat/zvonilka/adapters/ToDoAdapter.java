@@ -13,7 +13,7 @@ import kg.kloop.rinat.zvonilka.R;
 import kg.kloop.rinat.zvonilka.data.ToDo;
 
 
-public class ToDoAdapter extends BaseAdapter {
+public class ToDoAdapter extends BaseListAdapter {
     Context context;
     List<ToDo> toDoList;
 
@@ -37,7 +37,7 @@ public class ToDoAdapter extends BaseAdapter {
         return i;
     }
 
-    public void add(List<ToDo> toDos) {
+    public void add(List toDos) {
         toDoList.addAll(toDos);
     }
 
