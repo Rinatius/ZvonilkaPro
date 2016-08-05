@@ -50,6 +50,12 @@ public class MenuSelectActivity extends AppCompatActivity {
     private static boolean onBackground = false;
     static boolean[] allLoaded = new boolean[]{false, false, false};
     private static ProgressBar progressBar;
+    private static EventsAdapter eventsAdapter;
+    private static UsersDataAdapter usersDataAdapter;
+    private static ToDoAdapter toDoAdapter;
+    private static ListView eventsList;
+    private static ListView userDataList;
+    private static ListView userToDoList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +74,7 @@ public class MenuSelectActivity extends AppCompatActivity {
      */
         ViewPager mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-        mViewPager.setCurrentItem(1);
+//        mViewPager.setCurrentItem(1);
         progressBar = (ProgressBar) findViewById(R.id.progress_bar_load_background);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
@@ -156,34 +162,33 @@ public class MenuSelectActivity extends AppCompatActivity {
         }
 
         private void initEventsFragment(View view) {
-            ListView eventsList = (ListView) view.findViewById(R.id.select_activity_list_events);
-            EventsAdapter eventsAdapter = new EventsAdapter(getContext(), new ArrayList<Event>());
+            eventsList = (ListView) view.findViewById(R.id.select_activity_list_events);
+            eventsAdapter = new EventsAdapter(getContext(), new ArrayList<Event>());
             eventsList.setAdapter(eventsAdapter);
             eventsList.setOnScrollListener(new OnScroll(eventsAdapter, Event.class, 0));
+
         }
 
 
-        private void initUsersFragment(View view){
-            ListView userDataList = (ListView) view.findViewById(R.id.select_activity_list_users);
-            UsersDataAdapter usersDataAdapter = new UsersDataAdapter(getContext(), new ArrayList<UserData>());
+        private void initUsersFragment(View view) {
+            userDataList = (ListView) view.findViewById(R.id.select_activity_list_users);
+            usersDataAdapter = new UsersDataAdapter(getContext(), new ArrayList<UserData>());
             userDataList.setAdapter(usersDataAdapter);
             userDataList.setOnScrollListener(new OnScroll(usersDataAdapter, UserData.class, 1));
+
         }
 
-        private void initToDoFragment(View view){
-            ListView userToDoList = (ListView) view.findViewById(R.id.select_activity_list_to_do_list);
-            ToDoAdapter toDoAdapter = new ToDoAdapter(getContext(), new ArrayList<ToDo>());
+        private void initToDoFragment(View view) {
+            userToDoList = (ListView) view.findViewById(R.id.select_activity_list_to_do_list);
+            toDoAdapter = new ToDoAdapter(getContext(), new ArrayList<ToDo>());
             userToDoList.setAdapter(toDoAdapter);
             userToDoList.setOnScrollListener(new OnScroll(toDoAdapter, ToDo.class, 2));
+
         }
 
-        public static void updateState(boolean bool){
+        public static void updateState(boolean bool) {
             onBackground = bool;
-            if (bool){
-                progressBar.setVisibility(View.VISIBLE);
-            } else {
-                progressBar.setVisibility(View.INVISIBLE);
-            }
+            progressBar.setVisibility(bool ? View.VISIBLE : View.INVISIBLE);
         }
     }
 
@@ -205,13 +210,13 @@ public class MenuSelectActivity extends AppCompatActivity {
 
         @Override
         public void onScroll(AbsListView absListView, int i, int i1, int i2) {
-
             if (!onBackground && !allLoaded[number] && (i + i1 * 2 >= i2 || i2 == 0)) {
-                LoadData loadData = new LoadData(i1, i2, type, adapter);
+                LoadData loadData = new LoadData(i1, i2, type, adapter, number);
                 loadData.execute();
             }
         }
     }
+
 
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
@@ -253,49 +258,39 @@ public class MenuSelectActivity extends AppCompatActivity {
 }
 
 
-
 class LoadData extends AsyncTask<Integer, Integer, List> {
-    int offset, pageSize;
+    int offset, pageSize, number;
     Class type;
     BaseListAdapter adapter;
 
-    public LoadData(int pageSize, int offset, Class type, BaseListAdapter adapter) {
+
+    public LoadData(int pageSize, int offset, Class type, BaseListAdapter adapter, int number) {
         this.offset = offset;
         this.pageSize = pageSize;
         this.type = type;
         this.adapter = adapter;
+        this.number = number;
     }
 
     @Override
     protected void onPreExecute() {
+        Log.d("asd", "asd");
         MenuSelectActivity.PlaceholderFragment.updateState(true);
         super.onPreExecute();
     }
 
     @Override
     protected List doInBackground(Integer... integers) {
-        Log.d("Load on Async", "Loading... " + type.getSimpleName());
         BackendlessDataQuery dataQuery = new BackendlessDataQuery(new QueryOptions(pageSize, offset));
-        return GetBackendlessData.getData(type,dataQuery);
+        return GetBackendlessData.getData(type, dataQuery);
     }
 
     @Override
     protected void onPostExecute(List list) {
-        switch (type.getSimpleName()){
-            case "Event":
-                MenuSelectActivity.allLoaded[0] = list.size() == 0;
-                break;
-            case "UserData":
-                MenuSelectActivity.allLoaded[1] = list.size() == 0;
-                break;
-            case "ToDo":
-                MenuSelectActivity.allLoaded[2] = list.size() == 0;
-                break;
-        }
+        MenuSelectActivity.allLoaded[number] = list.size() == 0;
         adapter.add(list);
         adapter.notifyDataSetChanged();
         MenuSelectActivity.PlaceholderFragment.updateState(false);
-        Log.d("Load on Async", "Loaded! " + type.getSimpleName());
         super.onPostExecute(list);
     }
 }
