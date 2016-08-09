@@ -1,14 +1,15 @@
 package kg.kloop.rinat.zvonilka.adapters;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import java.util.List;
 
+import kg.kloop.rinat.zvonilka.LoadData;
 import kg.kloop.rinat.zvonilka.R;
 import kg.kloop.rinat.zvonilka.data.Event;
 
@@ -20,6 +21,7 @@ public class EventsAdapter extends BaseListAdapter{
     public EventsAdapter(Context context, List<Event> events) {
         this.context = context;
         this.events = events;
+        loadDataAsync();
     }
 
     @Override
@@ -42,7 +44,18 @@ public class EventsAdapter extends BaseListAdapter{
     }
 
     @Override
+    void loadDataAsync() {
+        if (!allLoaded && (loadData == null || (loadData.getStatus() == AsyncTask.Status.FINISHED))){
+            loadData = new LoadData(events.size(), 10, Event.class, this, allLoaded);
+            loadData.execute();
+        }
+    }
+
+    @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
+        if(i == getCount() - 5) {
+            loadDataAsync();
+        }
         View v = view;
         Event event = events.get(i);
 

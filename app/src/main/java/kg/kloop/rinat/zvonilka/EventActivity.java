@@ -96,7 +96,7 @@ public class EventActivity extends AppCompatActivity {
                     builder = new AlertDialog.Builder(EventActivity.this);
                     builder.setTitle(Resources.USERS + ":");
                     CharSequence[] sequence;
-                    ArrayList<String> arrayList = new ArrayList<String>();
+                    ArrayList<String> arrayList = new ArrayList<>();
                     for (int i = 0; i < userDataList.size(); i++) {
                         arrayList.add(userDataList.get(i).getFirstName() + " " + userDataList.get(i).getSecondName());
                     }
@@ -110,9 +110,7 @@ public class EventActivity extends AppCompatActivity {
                             startActivity(intent);
                         }
                     });
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
+                } catch (InterruptedException | ExecutionException e) {
                     e.printStackTrace();
                 }
 
@@ -221,21 +219,19 @@ class LoadUsers extends AsyncTask<Event, Integer , List<UserData>>{
     @Override
     protected List<UserData> doInBackground(Event... events) {
         List<EventUserStatus> listEUSAs = event.getEventUserStatus_ID_Event();
-        List<UserData> listUserData = new ArrayList<UserData>();
+        List<UserData> listUserData = new ArrayList<>();
         BackendlessDataQuery query = new BackendlessDataQuery();
-        String text = "";
         Log.d("userData", listEUSAs.size() + "");
 
         for (int i = 0; i < listEUSAs.size(); i++) {
 
             query.setWhereClause("EventUserStatus_ID.objectId = '" + listEUSAs.get(i).getObjectId()+ "'");
             Log.d("userData", query.getWhereClause());
-            UserData user;
-            List<UserData> listnew = null;
+            List<UserData> newList;
             try {
-                listnew = Backendless.Persistence.of(UserData.class).find(query).getData();
-                if(listnew.size()!=0){
-                    listUserData.add(listnew.get(0));
+                newList = Backendless.Persistence.of(UserData.class).find(query).getData();
+                if(newList.size()!=0){
+                    listUserData.add(newList.get(0));
                 }
             } catch (BackendlessException e) {
                 e.printStackTrace();

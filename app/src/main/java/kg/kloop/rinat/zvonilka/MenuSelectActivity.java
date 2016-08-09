@@ -1,6 +1,5 @@
 package kg.kloop.rinat.zvonilka;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.design.widget.TabLayout;
@@ -12,28 +11,18 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
-import com.backendless.persistence.BackendlessDataQuery;
-import com.backendless.persistence.QueryOptions;
-
 import java.util.ArrayList;
-import java.util.List;
-
-import kg.kloop.rinat.zvonilka.adapters.BaseListAdapter;
 import kg.kloop.rinat.zvonilka.adapters.EventsAdapter;
 import kg.kloop.rinat.zvonilka.adapters.ToDoAdapter;
 import kg.kloop.rinat.zvonilka.adapters.UsersDataAdapter;
-import kg.kloop.rinat.zvonilka.data.BackendlessData;
 import kg.kloop.rinat.zvonilka.data.Event;
 import kg.kloop.rinat.zvonilka.data.ToDo;
 import kg.kloop.rinat.zvonilka.data.UserData;
@@ -50,8 +39,6 @@ public class MenuSelectActivity extends AppCompatActivity {
      */
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
-    private static boolean onBackground = false;
-    static boolean[] allLoaded = new boolean[]{false, false, false};
     private static ProgressBar progressBar;
     private static EventsAdapter eventsAdapter;
     private static UsersDataAdapter usersDataAdapter;
@@ -111,10 +98,14 @@ public class MenuSelectActivity extends AppCompatActivity {
         } else if (id == R.id.action_add_event) {
             Intent intent = new Intent(getApplicationContext(), AddEventActivity.class);
             startActivity(intent);
+        } else if (id == R.id.action_add_company){
+            Intent intent = new Intent(getApplicationContext(), CompanyActivity.class);
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);
     }
+
 
     /**
      * A placeholder fragment containing a simple view.
@@ -169,18 +160,15 @@ public class MenuSelectActivity extends AppCompatActivity {
             if (eventsAdapter == null)
                 eventsAdapter = new EventsAdapter(getContext(), new ArrayList<Event>());
             eventsList.setAdapter(eventsAdapter);
-            eventsList.setOnScrollListener(new OnScroll(eventsAdapter, Event.class, 0));
             eventsList.setOnItemClickListener(new OnItemClick(getContext(), EventActivity.class));
 
         }
-
 
         private void initUsersFragment(View view) {
             userDataList = (ListView) view.findViewById(R.id.select_activity_list_users);
             if (usersDataAdapter == null)
                 usersDataAdapter = new UsersDataAdapter(getContext(), new ArrayList<UserData>());
             userDataList.setAdapter(usersDataAdapter);
-            userDataList.setOnScrollListener(new OnScroll(usersDataAdapter, UserData.class, 1));
             userDataList.setOnItemClickListener(new OnItemClick(getContext(), UserDataActivity.class));
 
         }
@@ -190,60 +178,11 @@ public class MenuSelectActivity extends AppCompatActivity {
             if (toDoAdapter == null)
                 toDoAdapter = new ToDoAdapter(getContext(), new ArrayList<ToDo>());
             userToDoList.setAdapter(toDoAdapter);
-            userToDoList.setOnScrollListener(new OnScroll(toDoAdapter, ToDo.class, 2));
             userToDoList.setOnItemClickListener(new OnItemClick(getContext(), ToDoActivity.class));
 
 
         }
 
-        public static void updateState(boolean bool) {
-            onBackground = bool;
-            progressBar.setVisibility(bool ? View.VISIBLE : View.INVISIBLE);
-        }
-    }
-
-    static class OnScroll implements AbsListView.OnScrollListener {
-        BaseListAdapter adapter;
-        Class type;
-        int number;
-
-        public OnScroll(BaseListAdapter adapter, Class type, int number) {
-            this.adapter = adapter;
-            this.type = type;
-            this.number = number;
-        }
-
-        @Override
-        public void onScrollStateChanged(AbsListView absListView, int i) {
-
-        }
-
-        @Override
-        public void onScroll(AbsListView absListView, int i, int i1, int i2) {
-            if (!onBackground && !allLoaded[number] && (i + i1 * 2 >= i2 || i2 == 0)) {
-                LoadData loadData = new LoadData(i1, i2, type, adapter, number);
-                loadData.execute();
-            }
-        }
-    }
-
-    static class OnItemClick implements AdapterView.OnItemClickListener {
-
-        Context context;
-        Class type;
-
-        public OnItemClick(Context context, Class type) {
-            this.context = context;
-            this.type = type;
-        }
-
-        @Override
-        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-            Intent intent = new Intent(context, type);
-            BackendlessData data = (BackendlessData) adapterView.getAdapter().getItem(i);
-            intent.putExtra(Resources.OBJECT_ID, data.getObjectId());
-            context.startActivity(intent);
-        }
     }
 
 
@@ -287,39 +226,3 @@ public class MenuSelectActivity extends AppCompatActivity {
 }
 
 
-class LoadData extends AsyncTask<Integer, Integer, List> {
-    int offset, pageSize, number;
-    Class type;
-    BaseListAdapter adapter;
-
-
-    public LoadData(int pageSize, int offset, Class type, BaseListAdapter adapter, int number) {
-        this.offset = offset;
-        this.pageSize = pageSize;
-        this.type = type;
-        this.adapter = adapter;
-        this.number = number;
-    }
-
-    @Override
-    protected void onPreExecute() {
-        Log.d("asd", "asd");
-        MenuSelectActivity.PlaceholderFragment.updateState(true);
-        super.onPreExecute();
-    }
-
-    @Override
-    protected List doInBackground(Integer... integers) {
-        BackendlessDataQuery dataQuery = new BackendlessDataQuery(new QueryOptions(pageSize, offset));
-        return GetBackendlessData.getData(type, dataQuery);
-    }
-
-    @Override
-    protected void onPostExecute(List list) {
-        MenuSelectActivity.allLoaded[number] = list.size() == 0;
-        adapter.add(list);
-        adapter.notifyDataSetChanged();
-        MenuSelectActivity.PlaceholderFragment.updateState(false);
-        super.onPostExecute(list);
-    }
-}

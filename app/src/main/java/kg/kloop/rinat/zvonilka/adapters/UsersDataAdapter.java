@@ -2,30 +2,19 @@ package kg.kloop.rinat.zvonilka.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
-import android.util.Log;
+import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
-
-import com.backendless.Backendless;
-import com.backendless.BackendlessCollection;
-import com.backendless.async.callback.AsyncCallback;
-import com.backendless.exceptions.BackendlessFault;
-import com.backendless.persistence.BackendlessDataQuery;
-
-import java.util.Collection;
 import java.util.List;
 
 import kg.kloop.rinat.zvonilka.CallActivity;
+import kg.kloop.rinat.zvonilka.LoadData;
 import kg.kloop.rinat.zvonilka.R;
 import kg.kloop.rinat.zvonilka.Resources;
 import kg.kloop.rinat.zvonilka.data.UserData;
-import kg.kloop.rinat.zvonilka.login.DefaultCallback;
 
 public class UsersDataAdapter extends BaseListAdapter {
 
@@ -36,6 +25,7 @@ public class UsersDataAdapter extends BaseListAdapter {
     public UsersDataAdapter(Context context, List<UserData> userDatas) {
         this.context = context;
         this.userDatas = userDatas;
+        loadDataAsync();
     }
 
     @Override
@@ -58,7 +48,18 @@ public class UsersDataAdapter extends BaseListAdapter {
     }
 
     @Override
+    void loadDataAsync() {
+        if (!allLoaded && (loadData == null || (loadData.getStatus() == AsyncTask.Status.FINISHED))){
+            loadData = new LoadData(userDatas.size(), 10, UserData.class, this, allLoaded);
+            loadData.execute();
+        }
+    }
+
+    @Override
     public View getView(final int i, View view, ViewGroup viewGroup) {
+        if(i == getCount() - 5) {
+            loadDataAsync();
+        }
         View v = view;
         final UserData user = userDatas.get(i);
 

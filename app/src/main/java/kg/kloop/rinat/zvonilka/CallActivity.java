@@ -10,7 +10,6 @@ import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ListAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -19,7 +18,6 @@ import com.backendless.BackendlessCollection;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 import com.backendless.persistence.BackendlessDataQuery;
-import com.backendless.property.ObjectProperty;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -45,7 +43,7 @@ public class CallActivity extends AppCompatActivity {
     String text;
     Event event;
     List<Call> callList;
-    List<EventUserStatus> eventUserStatusesforEvent, eventUserStatusesforUserData;
+    List<EventUserStatus> eventUserStatusForEvent, eventUserStatusForUserData;
 
     private static final String TAG = "CallActivityDebug";
 
@@ -84,7 +82,7 @@ public class CallActivity extends AppCompatActivity {
                     public void handleResponse(BackendlessCollection<Event> eventBackendlessCollection) {
                         listEvent = eventBackendlessCollection.getData();
 
-                        list = new ArrayList<String>();
+                        list = new ArrayList<>();
 
                         for (int i = 0; i < listEvent.size(); i++) {
                             list.add(listEvent.get(i).getName());
@@ -95,7 +93,7 @@ public class CallActivity extends AppCompatActivity {
 
                             Log.d(TAG, list.get(0));
 
-                            ArrayAdapter<String> adapter = new ArrayAdapter<String>(CallActivity.this, android.R.layout.simple_spinner_dropdown_item, list);
+                            ArrayAdapter<String> adapter = new ArrayAdapter<>(CallActivity.this, android.R.layout.simple_spinner_dropdown_item, list);
                             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                             eventSpinner.setAdapter(adapter);
                         }
@@ -144,15 +142,15 @@ public class CallActivity extends AppCompatActivity {
                                 Backendless.Persistence.of(EventUserStatus.class).find(querry, new AsyncCallback<BackendlessCollection<EventUserStatus>>() {
                                     @Override
                                     public void handleResponse(BackendlessCollection<EventUserStatus> eventUserStatusBackendlessCollection) {
-                                        eventUserStatusesforEvent = eventUserStatusBackendlessCollection.getData();
+                                        eventUserStatusForEvent = eventUserStatusBackendlessCollection.getData();
                                         querry.setWhereClause( Resources.EVENTUSERSTATUS_CALL_ID_OBJECTID + " = '" + userData.getObjectId() + "'");
                                         Backendless.Persistence.of(EventUserStatus.class).find(querry, new AsyncCallback<BackendlessCollection<EventUserStatus>>() {
                                             @Override
                                             public void handleResponse(BackendlessCollection<EventUserStatus> eventUserStatusBackendlessCollection) {
-                                                eventUserStatusesforUserData = eventUserStatusBackendlessCollection.getData();
+                                                eventUserStatusForUserData = eventUserStatusBackendlessCollection.getData();
 
                                                 if(eventUserStatusBackendlessCollection.getData().size() == 0) {
-                                                    callList = new ArrayList<Call>();
+                                                    callList = new ArrayList<>();
                                                     callList.add(call);
                                                     eventUserStatus = new EventUserStatus();
                                                     eventUserStatus.setCall_ID(callList);
@@ -169,10 +167,10 @@ public class CallActivity extends AppCompatActivity {
 
 
 //                                                                    userData.setCall_ID(callList);
-                                                                    eventUserStatusesforEvent.add(eventUserStatus);
-                                                                    eventUserStatusesforUserData.add(eventUserStatus);
-                                                                    event.setEventUserStatus_ID_Event(eventUserStatusesforEvent);
-                                                                    userData.setEventUserStatus_ID(eventUserStatusesforUserData);
+                                                                    eventUserStatusForEvent.add(eventUserStatus);
+                                                                    eventUserStatusForUserData.add(eventUserStatus);
+                                                                    event.setEventUserStatus_ID_Event(eventUserStatusForEvent);
+                                                                    userData.setEventUserStatus_ID(eventUserStatusForUserData);
                                                                     Backendless.Persistence.of(Event.class).save(event, new DefaultCallback<Event>(CallActivity.this));
                                                                     Backendless.Persistence.of(UserData.class).save(userData, new DefaultCallback<UserData>(CallActivity.this));
                                                                 }

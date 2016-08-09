@@ -96,7 +96,6 @@ public class SearchActivity extends AppCompatActivity {
         LoadSearchData loadSearchData = new LoadSearchData(10, 0, Event.class, adapterEvents, dataQuery);
         loadSearchData.execute();
         listView.setAdapter(adapterEvents);
-        listView.setOnScrollListener(new OnScroll(adapterEvents, Event.class, 1));
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -258,30 +257,7 @@ public class SearchActivity extends AppCompatActivity {
         });
     }
 
-    static class OnScroll implements AbsListView.OnScrollListener {
-        BaseListAdapter adapter;
-        Class type;
-        int number;
 
-        public OnScroll(BaseListAdapter adapter, Class type, int number) {
-            this.adapter = adapter;
-            this.type = type;
-            this.number = number;
-        }
-
-        @Override
-        public void onScrollStateChanged(AbsListView absListView, int i) {
-
-        }
-
-        @Override
-        public void onScroll(AbsListView absListView, int i, int i1, int i2) {
-            if (!onBackground && !allLoaded[number] && (i + i1 * 2 >= i2 || i2 == 0)) {
-                LoadData loadData = new LoadData(i1, i2, type, adapter, number);
-                loadData.execute();
-            }
-        }
-    }
 
 }
 

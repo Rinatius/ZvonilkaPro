@@ -28,4 +28,10 @@
         android:orderInCategory="100"
         android:title="@string/action_settings"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/action_add_company"
+        android:orderInCategory="60"
+        android:title="@string/add_company"
+        app:showAsAction="never"
+        />
 </menu>
