@@ -64,7 +64,7 @@ public class EventActivity extends AppCompatActivity {
         initUI();
         setOnClick();
 
-        eventId = getIntent().getExtras().getString(getResources().getString(R.string.eventIdkey));
+        eventId = getIntent().getExtras().getString(Resources.OBJECT_ID);
         querry = new BackendlessDataQuery();
         querry.setWhereClause(Resources.OBJECT_ID + " = '" + eventId + "'");
         Log.d("query", eventId);
@@ -228,7 +228,7 @@ class LoadUsers extends AsyncTask<Event, Integer , List<UserData>>{
 
         for (int i = 0; i < listEUSAs.size(); i++) {
 
-            query.setWhereClause("EventUserStatus_ID.objectId LIKE '%" + listEUSAs.get(i).getObjectId()+ "%'");
+            query.setWhereClause("EventUserStatus_ID.objectId = '" + listEUSAs.get(i).getObjectId()+ "'");
             Log.d("userData", query.getWhereClause());
             UserData user;
             List<UserData> listnew = null;

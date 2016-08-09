@@ -7,7 +7,7 @@ import com.backendless.async.callback.AsyncCallback;
 import com.backendless.geo.GeoPoint;
 import com.backendless.persistence.BackendlessDataQuery;
 
-public class UserData
+public class UserData extends BackendlessData
 {
   private String City;
   private String SecondName;

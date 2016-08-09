@@ -46,7 +46,7 @@ public class ToDoActivity extends AppCompatActivity {
 //        showDialogOnTextClick();
         programmButtons();
 
-        todoId = getIntent().getExtras().getString(Resources.TODO_ID_KEY);
+        todoId = getIntent().getExtras().getString(Resources.OBJECT_ID);
         querry = new BackendlessDataQuery();
         querry.setWhereClause(Resources.OBJECT_ID + "'" + todoId + "'");
 

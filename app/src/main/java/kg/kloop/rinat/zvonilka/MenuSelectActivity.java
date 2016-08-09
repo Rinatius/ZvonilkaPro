@@ -1,5 +1,6 @@
 package kg.kloop.rinat.zvonilka;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.design.widget.TabLayout;
@@ -18,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
@@ -31,6 +33,7 @@ import kg.kloop.rinat.zvonilka.adapters.BaseListAdapter;
 import kg.kloop.rinat.zvonilka.adapters.EventsAdapter;
 import kg.kloop.rinat.zvonilka.adapters.ToDoAdapter;
 import kg.kloop.rinat.zvonilka.adapters.UsersDataAdapter;
+import kg.kloop.rinat.zvonilka.data.BackendlessData;
 import kg.kloop.rinat.zvonilka.data.Event;
 import kg.kloop.rinat.zvonilka.data.ToDo;
 import kg.kloop.rinat.zvonilka.data.UserData;
@@ -74,7 +77,7 @@ public class MenuSelectActivity extends AppCompatActivity {
      */
         ViewPager mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-//        mViewPager.setCurrentItem(1);
+        mViewPager.setCurrentItem(1);
         progressBar = (ProgressBar) findViewById(R.id.progress_bar_load_background);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
@@ -163,26 +166,33 @@ public class MenuSelectActivity extends AppCompatActivity {
 
         private void initEventsFragment(View view) {
             eventsList = (ListView) view.findViewById(R.id.select_activity_list_events);
-            eventsAdapter = new EventsAdapter(getContext(), new ArrayList<Event>());
+            if (eventsAdapter == null)
+                eventsAdapter = new EventsAdapter(getContext(), new ArrayList<Event>());
             eventsList.setAdapter(eventsAdapter);
             eventsList.setOnScrollListener(new OnScroll(eventsAdapter, Event.class, 0));
+            eventsList.setOnItemClickListener(new OnItemClick(getContext(), EventActivity.class));
 
         }
 
 
         private void initUsersFragment(View view) {
             userDataList = (ListView) view.findViewById(R.id.select_activity_list_users);
-            usersDataAdapter = new UsersDataAdapter(getContext(), new ArrayList<UserData>());
+            if (usersDataAdapter == null)
+                usersDataAdapter = new UsersDataAdapter(getContext(), new ArrayList<UserData>());
             userDataList.setAdapter(usersDataAdapter);
             userDataList.setOnScrollListener(new OnScroll(usersDataAdapter, UserData.class, 1));
+            userDataList.setOnItemClickListener(new OnItemClick(getContext(), UserDataActivity.class));
 
         }
 
         private void initToDoFragment(View view) {
             userToDoList = (ListView) view.findViewById(R.id.select_activity_list_to_do_list);
-            toDoAdapter = new ToDoAdapter(getContext(), new ArrayList<ToDo>());
+            if (toDoAdapter == null)
+                toDoAdapter = new ToDoAdapter(getContext(), new ArrayList<ToDo>());
             userToDoList.setAdapter(toDoAdapter);
             userToDoList.setOnScrollListener(new OnScroll(toDoAdapter, ToDo.class, 2));
+            userToDoList.setOnItemClickListener(new OnItemClick(getContext(), ToDoActivity.class));
+
 
         }
 
@@ -214,6 +224,25 @@ public class MenuSelectActivity extends AppCompatActivity {
                 LoadData loadData = new LoadData(i1, i2, type, adapter, number);
                 loadData.execute();
             }
+        }
+    }
+
+    static class OnItemClick implements AdapterView.OnItemClickListener {
+
+        Context context;
+        Class type;
+
+        public OnItemClick(Context context, Class type) {
+            this.context = context;
+            this.type = type;
+        }
+
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            Intent intent = new Intent(context, type);
+            BackendlessData data = (BackendlessData) adapterView.getAdapter().getItem(i);
+            intent.putExtra(Resources.OBJECT_ID, data.getObjectId());
+            context.startActivity(intent);
         }
     }
 

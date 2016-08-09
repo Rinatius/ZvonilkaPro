@@ -7,7 +7,7 @@ import com.backendless.async.callback.AsyncCallback;
 import com.backendless.geo.GeoPoint;
 import com.backendless.persistence.BackendlessDataQuery;
 
-public class Event
+public class Event extends BackendlessData
 {
   private String ownerId;
   private java.util.Date created;

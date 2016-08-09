@@ -66,7 +66,7 @@ public class UserDataActivity extends AppCompatActivity {
         setContentView(R.layout.activity_user_data);
         initUi();
         programButtons();
-        userId = getIntent().getExtras().getString(Resources.USER_DATA_ID_KEY);
+        userId = getIntent().getExtras().getString(Resources.OBJECT_ID);
         querry = new BackendlessDataQuery();
         querry.setWhereClause(Resources.OBJECT_ID + " = '" + userId + "'");
         Log.d("LoadUserEvents", "Executed! -");

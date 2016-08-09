@@ -7,7 +7,7 @@ import com.backendless.async.callback.AsyncCallback;
 import com.backendless.geo.GeoPoint;
 import com.backendless.persistence.BackendlessDataQuery;
 
-public class ToDo
+public class ToDo extends BackendlessData
 {
   private java.util.Date Deadline;
   private String objectId;
