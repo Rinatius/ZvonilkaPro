@@ -39,7 +39,8 @@
         <activity android:name=".CallActivity" />
         <activity android:name=".AddUserDataActivity" />
         <activity android:name=".AddEventActivity" />
-        <activity android:name=".CompanyActivity"></activity>
+        <activity android:name=".CompanyActivity" />
+        <activity android:name=".AppCompanyActivity"></activity>
     </application>
 
 </manifest>

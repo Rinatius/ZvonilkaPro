@@ -106,7 +106,7 @@ public class EventActivity extends AppCompatActivity {
                         public void onClick(DialogInterface dialogInterface, int i) {
                             Intent intent = new Intent(EventActivity.this, UserDataActivity.class);
                             UserData userData = userDataList.get(i);
-                            intent.putExtra(Resources.USER_DATA_ID_KEY, userData.getObjectId());
+                            intent.putExtra(Resources.OBJECT_ID, userData.getObjectId());
                             startActivity(intent);
                         }
                     });

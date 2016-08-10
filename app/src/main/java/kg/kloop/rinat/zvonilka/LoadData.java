@@ -2,6 +2,7 @@ package kg.kloop.rinat.zvonilka;
 
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.backendless.persistence.BackendlessDataQuery;
 import com.backendless.persistence.QueryOptions;
@@ -43,6 +44,7 @@ public class LoadData extends AsyncTask<Integer, Integer, List> {
         } else {
             adapter.add(list);
             adapter.notifyDataSetChanged();
+            Log.d("Laaded", type.toString() + " " + list.size());
         }
         super.onPostExecute(list);
     }

@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,7 +20,12 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
+import com.backendless.async.callback.AsyncCallback;
+import com.backendless.exceptions.BackendlessFault;
+
 import java.util.ArrayList;
+import java.util.Date;
+
 import kg.kloop.rinat.zvonilka.adapters.EventsAdapter;
 import kg.kloop.rinat.zvonilka.adapters.ToDoAdapter;
 import kg.kloop.rinat.zvonilka.adapters.UsersDataAdapter;
@@ -39,7 +45,6 @@ public class MenuSelectActivity extends AppCompatActivity {
      */
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
-    private static ProgressBar progressBar;
     private static EventsAdapter eventsAdapter;
     private static UsersDataAdapter usersDataAdapter;
     private static ToDoAdapter toDoAdapter;
@@ -65,7 +70,6 @@ public class MenuSelectActivity extends AppCompatActivity {
         ViewPager mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
         mViewPager.setCurrentItem(1);
-        progressBar = (ProgressBar) findViewById(R.id.progress_bar_load_background);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
@@ -161,7 +165,7 @@ public class MenuSelectActivity extends AppCompatActivity {
                 eventsAdapter = new EventsAdapter(getContext(), new ArrayList<Event>());
             eventsList.setAdapter(eventsAdapter);
             eventsList.setOnItemClickListener(new OnItemClick(getContext(), EventActivity.class));
-
+            eventsList.setOnScrollListener(new OnScroll(eventsAdapter, Event.class));
         }
 
         private void initUsersFragment(View view) {
@@ -170,7 +174,7 @@ public class MenuSelectActivity extends AppCompatActivity {
                 usersDataAdapter = new UsersDataAdapter(getContext(), new ArrayList<UserData>());
             userDataList.setAdapter(usersDataAdapter);
             userDataList.setOnItemClickListener(new OnItemClick(getContext(), UserDataActivity.class));
-
+            userDataList.setOnScrollListener(new OnScroll(usersDataAdapter, UserData.class));
         }
 
         private void initToDoFragment(View view) {
@@ -179,8 +183,7 @@ public class MenuSelectActivity extends AppCompatActivity {
                 toDoAdapter = new ToDoAdapter(getContext(), new ArrayList<ToDo>());
             userToDoList.setAdapter(toDoAdapter);
             userToDoList.setOnItemClickListener(new OnItemClick(getContext(), ToDoActivity.class));
-
-
+            userToDoList.setOnScrollListener(new OnScroll(toDoAdapter, ToDo.class));
         }
 
     }

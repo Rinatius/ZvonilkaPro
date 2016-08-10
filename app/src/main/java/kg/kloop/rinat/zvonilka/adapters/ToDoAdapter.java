@@ -1,7 +1,6 @@
 package kg.kloop.rinat.zvonilka.adapters;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +8,6 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import kg.kloop.rinat.zvonilka.LoadData;
 import kg.kloop.rinat.zvonilka.R;
 import kg.kloop.rinat.zvonilka.data.ToDo;
 
@@ -21,7 +19,6 @@ public class ToDoAdapter extends BaseListAdapter {
     public ToDoAdapter(Context context, List<ToDo> toDoList) {
         this.context = context;
         this.toDoList = toDoList;
-        loadDataAsync();
     }
 
     @Override
@@ -43,19 +40,10 @@ public class ToDoAdapter extends BaseListAdapter {
         toDoList.addAll(toDos);
     }
 
-    @Override
-    void loadDataAsync() {
-        if (!allLoaded && (loadData == null || (loadData.getStatus() == AsyncTask.Status.FINISHED))){
-            loadData = new LoadData(toDoList.size(), 10, ToDo.class, this, allLoaded);
-            loadData.execute();
-        }
-    }
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        if(i == getCount() - 5) {
-            loadDataAsync();
-        }
+
         View v = view;
         if (v == null){
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

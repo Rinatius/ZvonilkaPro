@@ -124,7 +124,7 @@ public class UserDataActivity extends AppCompatActivity {
                         public void onClick(DialogInterface dialogInterface, int i) {
                             Intent intent = new Intent(UserDataActivity.this, EventActivity.class);
                             Event event = list.get(i);
-                            intent.putExtra(Resources.EVENT_ID_KEY, event.getObjectId());
+                            intent.putExtra(Resources.OBJECT_ID, event.getObjectId());
                             startActivity(intent);
                         }
                     });

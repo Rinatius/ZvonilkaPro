@@ -75,7 +75,7 @@
                 android:layout_height="50dp"
                 android:id="@+id/userDataActivityCallBtn"
                 android:src="@android:drawable/sym_call_outgoing"
-                android:contentDescription="@string/imagebuttondescription"
+                android:contentDescription="@string/image_button_description"
                 android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"

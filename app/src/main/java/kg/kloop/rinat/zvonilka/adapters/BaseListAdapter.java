@@ -8,8 +8,7 @@ import java.util.List;
 import kg.kloop.rinat.zvonilka.LoadData;
 
 public abstract class BaseListAdapter extends BaseAdapter {
-    LoadData loadData;
-    boolean allLoaded = false;
+    public LoadData loadData;
+    public boolean allLoaded = false;
     public abstract void add(List list);
-    abstract void loadDataAsync();
 }

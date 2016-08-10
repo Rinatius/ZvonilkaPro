@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import kg.kloop.rinat.zvonilka.LoadData;
 import kg.kloop.rinat.zvonilka.R;
 import kg.kloop.rinat.zvonilka.data.AppCompany;
 
@@ -24,7 +23,7 @@ public class CompanyAdapter extends BaseListAdapter {
 
     @Override
     public int getCount() {
-        return 0;
+        return appCompanyList.size();
     }
 
     @Override
@@ -43,23 +42,15 @@ public class CompanyAdapter extends BaseListAdapter {
     }
 
     @Override
-    void loadDataAsync() {
-        if (!allLoaded && (loadData == null || (loadData.getStatus() == AsyncTask.Status.FINISHED))){
-            loadData = new LoadData(appCompanyList.size(), 10, AppCompany.class, this, allLoaded);
-            loadData.execute();
-        }
-    }
-
-    @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        if(i == getCount()) {
-            loadDataAsync();
-        }
+
         View v = view;
+
         if (v == null){
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             v = inflater.inflate(R.layout.app_company_list, null);
         }
+
         AppCompany company = getItem(i);
         TextView companyName = (TextView) v.findViewById(R.id.app_company_list_name);
         companyName.setText(company.getName());

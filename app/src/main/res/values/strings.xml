@@ -43,7 +43,7 @@
     <string name="interests">Interests: </string>
     <string name="bithdaydate">Birthday date: </string>
     <string name="family">Family: </string>
-    <string name="imagebuttondescription">Call to current contact</string>
+    <string name="image_button_description">Call to current contact</string>
     <string name="objectidquerry">objectId</string>
     <string name="eventIdkey">eventId</string>
     <string name="userDataIdkey">userDataId</string>
@@ -60,7 +60,7 @@
     <string name="menu_select_message">Select Action</string>
     <string name="first_name">First Name</string>
     <string name="second_name">Second Name</string>
-    <string name="position">Posotion:</string>
+    <string name="position">Position:</string>
     <string name="cancel">Cancel</string>
     <string name="set">Set</string>
     <string name="set_birthday_here">Set Birthday here!</string>
@@ -70,5 +70,5 @@
     <string name="saving">Saving…</string>
     <string name="saved">Saved!</string>
     <string name="loading">Loading…</string>
-    <string name="add_company">Add Company</string>
+    <string name="add_company">Company</string>
 </resources>

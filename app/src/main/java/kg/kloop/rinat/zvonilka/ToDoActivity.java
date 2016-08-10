@@ -48,7 +48,7 @@ public class ToDoActivity extends AppCompatActivity {
 
         todoId = getIntent().getExtras().getString(Resources.OBJECT_ID);
         querry = new BackendlessDataQuery();
-        querry.setWhereClause(Resources.OBJECT_ID + "'" + todoId + "'");
+        querry.setWhereClause(Resources.OBJECT_ID + " = '" + todoId + "'");
 
         Backendless.Persistence.of(ToDo.class).find(querry, new DefaultCallback<BackendlessCollection<ToDo>>(this){
             @Override
@@ -58,12 +58,12 @@ public class ToDoActivity extends AppCompatActivity {
                 String text;
                 text = Resources.DEADLINE + ": " + toDo.getDeadline();
                 deadline.setText(text);
-                text = Resources.NAME + ": "+ userData.getFirstName() + userData.getSecondName();
-                name.setText(text);
+//                text = Resources.NAME + ": "+ userData.getFirstName() + userData.getSecondName();
+//                name.setText(text);
                 text = Resources.DETAILS + ": " + toDo.getNote();
                 note.setText(text);
-                text = Resources.EVENT + ": " + event.getName();
-                eventName.setText(text);
+//                text = Resources.EVENT + ": " + event.getName();
+//                eventName.setText(text);
                 super.handleResponse(toDoBackendlessCollection);
             }
 
