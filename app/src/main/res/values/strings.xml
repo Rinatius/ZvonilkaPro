@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Zvonilka-Login</string>
-    <string name="login_success_message">Login successful! This concludes an example.</string>
+    <string name="app_name">Zvonilka</string>
     <string name="login_text">Log in</string>
     <string name="logout_text">Log out</string>
 
@@ -13,7 +12,7 @@
     <string name="login_prompt">Login:</string>
     <string name="password_prompt">Password:</string>
     <string name="password_recovery_page_name">Password Recovery</string>
-    <string name="warning_icon_description">warning icon</string>
+    <string name="warning_icon_description">Warning icon</string>
     <string name="remember_login_text">Remember me</string>
 
     <string name="email_field_prompt">Email:</string>
@@ -25,7 +24,7 @@
     <string name="default_registered_text">Registered successfully!</string>
 
     <string name="registration_success_message">Thank you for registering with the %1$s. Click the button below to proceed to the login.</string>
-    <string name="title_activity_select">Event!</string>
+    <string name="title_activity_select">ZvonilkaPRO</string>
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="fragment_select_events">Events</string>
@@ -44,11 +43,8 @@
     <string name="bithdaydate">Birthday date: </string>
     <string name="family">Family: </string>
     <string name="image_button_description">Call to current contact</string>
-    <string name="objectidquerry">objectId</string>
-    <string name="eventIdkey">eventId</string>
-    <string name="userDataIdkey">userDataId</string>
     <string name="markasdone">Mark as Done</string>
-    <string name="event">Event:</string>
+    <string name="event">Event</string>
     <string name="notes">Notes:</string>
     <string name="fragment_select_to_do">ToDo</string>
     <string name="save_changes">Save Changes</string>
@@ -66,9 +62,13 @@
     <string name="set_birthday_here">Set Birthday here!</string>
     <string name="error_didnt_write_field">Write field first name, second name and phone!</string>
     <string name="set_date_here">Set Date Here!</string>
-    <string name="write_name_city">Write Enent\'s name and city!</string>
+    <string name="write_name_city">Write Event\'s name and city!</string>
     <string name="saving">Saving…</string>
     <string name="saved">Saved!</string>
     <string name="loading">Loading…</string>
     <string name="add_company">Company</string>
+    <string name="add_todo">Add ToDo</string>
+    <string name="title_activity_user_data_activity_demo">UserDataActivityDemo</string>
+    <string name="user_data">UserData</string>
+    <string name="history">History</string>
 </resources>

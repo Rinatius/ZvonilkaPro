@@ -1,7 +1,10 @@
 package kg.kloop.rinat.zvonilka;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import kg.kloop.rinat.zvonilka.data.BackendAction;
 import kg.kloop.rinat.zvonilka.data.Call;
 import kg.kloop.rinat.zvonilka.data.Event;
 import kg.kloop.rinat.zvonilka.data.EventUserStatus;
@@ -45,13 +49,14 @@ public class CallActivity extends AppCompatActivity {
     List<Call> callList;
     List<EventUserStatus> eventUserStatusForEvent, eventUserStatusForUserData;
 
-    private static final String TAG = "CallActivityDebug";
+    protected static final String TAG = "CallActivityDebug";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_call);
         initUi();
+        getUserEvents();
 //
 //        userDataNumber = getIntent().getData().toString().substring(4);
 
@@ -63,44 +68,22 @@ public class CallActivity extends AppCompatActivity {
         startActivity(intent);
 
         BackendlessDataQuery querry = new BackendlessDataQuery();
-
-
         querry.setWhereClause(Resources.PHONE_NUMBER_KEY + " = '" + userDataNumber + "'");
-        Backendless.Persistence.of(UserData.class).find(querry, new DefaultCallback<BackendlessCollection<UserData>>(CallActivity.this){
+        Backendless.Persistence.of(UserData.class).find(querry, new DefaultCallback<BackendlessCollection<UserData>>(CallActivity.this) {
             @Override
             public void handleResponse(BackendlessCollection<UserData> userDataBackendlessCollection) {
                 userData = userDataBackendlessCollection.getData().get(0);
 
 
-                text = Resources.NAME + ": " + userData.getFirstName() +" " + userData.getSecondName();
+                text = Resources.NAME + ": " + userData.getFirstName() + " " + userData.getSecondName();
                 name.setText(text);
 
                 text = Resources.DATE + ": " + Resources.DATE_FORMAT.format(afterCall);
                 date.setText(text);
 
-                Backendless.Persistence.of(Event.class).find(new DefaultCallback<BackendlessCollection<Event>>(CallActivity.this){
+                Backendless.Persistence.of(Event.class).find(new DefaultCallback<BackendlessCollection<Event>>(CallActivity.this) {
                     public void handleResponse(BackendlessCollection<Event> eventBackendlessCollection) {
-                        listEvent = eventBackendlessCollection.getData();
 
-                        list = new ArrayList<>();
-
-                        for (int i = 0; i < listEvent.size(); i++) {
-                            list.add(listEvent.get(i).getName());
-                            Log.d(TAG, listEvent.get(i).getName());
-                        }
-
-                        if(!list.isEmpty()) {
-
-                            Log.d(TAG, list.get(0));
-
-                            ArrayAdapter<String> adapter = new ArrayAdapter<>(CallActivity.this, android.R.layout.simple_spinner_dropdown_item, list);
-                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            eventSpinner.setAdapter(adapter);
-                        }
-                        else{
-                            ViewGroup parent = (ViewGroup) eventSpinner.getParent();
-                            parent.removeView(eventSpinner);
-                        }
                         super.handleResponse(eventBackendlessCollection);
                     }
                 });
@@ -120,7 +103,7 @@ public class CallActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
 
             case R.id.action_save:
                 call = new Call();
@@ -129,7 +112,7 @@ public class CallActivity extends AppCompatActivity {
 
                 event = listEvent.get((int) eventSpinner.getSelectedItemId());
                 text = Resources.EVENT_EVENTUSERSTATUS_ID_OBJECTID + " = '" + event.getObjectId() + "'" +
-                        " and " +  Resources.EVENTUSERSTATUS_CALL_ID_OBJECTID + " = '" + userData.getObjectId() + "'";
+                        " and " + Resources.EVENTUSERSTATUS_CALL_ID_OBJECTID + " = '" + userData.getObjectId() + "'";
                 Log.d(TAG, text);
                 querry.setWhereClause(text);
                 Backendless.Persistence.of(EventUserStatus.class).find(querry,
@@ -138,18 +121,18 @@ public class CallActivity extends AppCompatActivity {
                             public void handleResponse(BackendlessCollection<EventUserStatus> eventUserStatusBackendlessCollection) {
                                 final List<EventUserStatus> listEUS = eventUserStatusBackendlessCollection.getData();
                                 Log.d(TAG, listEUS.size() + "");
-                                querry.setWhereClause( Resources.EVENT_EVENTUSERSTATUS_ID_OBJECTID + " = '" + event.getObjectId() + "'");
+                                querry.setWhereClause(Resources.EVENT_EVENTUSERSTATUS_ID_OBJECTID + " = '" + event.getObjectId() + "'");
                                 Backendless.Persistence.of(EventUserStatus.class).find(querry, new AsyncCallback<BackendlessCollection<EventUserStatus>>() {
                                     @Override
                                     public void handleResponse(BackendlessCollection<EventUserStatus> eventUserStatusBackendlessCollection) {
                                         eventUserStatusForEvent = eventUserStatusBackendlessCollection.getData();
-                                        querry.setWhereClause( Resources.EVENTUSERSTATUS_CALL_ID_OBJECTID + " = '" + userData.getObjectId() + "'");
+                                        querry.setWhereClause(Resources.EVENTUSERSTATUS_CALL_ID_OBJECTID + " = '" + userData.getObjectId() + "'");
                                         Backendless.Persistence.of(EventUserStatus.class).find(querry, new AsyncCallback<BackendlessCollection<EventUserStatus>>() {
                                             @Override
                                             public void handleResponse(BackendlessCollection<EventUserStatus> eventUserStatusBackendlessCollection) {
                                                 eventUserStatusForUserData = eventUserStatusBackendlessCollection.getData();
 
-                                                if(eventUserStatusBackendlessCollection.getData().size() == 0) {
+                                                if (eventUserStatusBackendlessCollection.getData().size() == 0) {
                                                     callList = new ArrayList<>();
                                                     callList.add(call);
                                                     eventUserStatus = new EventUserStatus();
@@ -180,8 +163,7 @@ public class CallActivity extends AppCompatActivity {
 
                                                                 }
                                                             });
-                                                }
-                                                else{
+                                                } else {
                                                     eventUserStatus = listEUS.get(0);
                                                     querry.setWhereClause(Resources.EVENTUSERSTATUS_CALL_ID_OBJECTID + " = '" + eventUserStatus.getObjectId() + "'");
                                                     Backendless.Persistence.of(Call.class).find(querry, new AsyncCallback<BackendlessCollection<Call>>() {
@@ -214,11 +196,13 @@ public class CallActivity extends AppCompatActivity {
                                                     });
                                                 }
                                             }
+
                                             @Override
                                             public void handleFault(BackendlessFault backendlessFault) {
                                             }
                                         });
                                     }
+
                                     @Override
                                     public void handleFault(BackendlessFault backendlessFault) {
                                     }
@@ -231,17 +215,66 @@ public class CallActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void initUi(){
+    private void initUi() {
         afterCall = new Date();
-        date = (TextView)findViewById(R.id.callActivityCallDate);
-        duration = (TextView)findViewById(R.id.callActivityCallDuration);
-        name = (TextView)findViewById(R.id.callActivityClientName);
+        date = (TextView) findViewById(R.id.callActivityCallDate);
+        duration = (TextView) findViewById(R.id.callActivityCallDuration);
+        name = (TextView) findViewById(R.id.callActivityClientName);
         note = (EditText) findViewById(R.id.callActivityNote);
         status = (EditText) findViewById(R.id.callActivityStatus);
-        eventSpinner = (Spinner)findViewById(R.id.callActivityEventSpinner);
+        eventSpinner = (Spinner) findViewById(R.id.callActivityEventSpinner);
     }
 
     public void getUserEvents() {
-
+        LoadUserEvent loadUserEvent = new LoadUserEvent(getApplicationContext(), eventSpinner, listEvent);
+        loadUserEvent.execute();
     }
+}
+
+class LoadUserEvent extends AsyncTask<UserData, Long, List> {
+
+    Context context;
+    Spinner eventSpinner;
+    List<Event> listEvent;
+    ProgressDialog progressDialog;
+
+    public LoadUserEvent(Context context, Spinner eventSpinner, List<Event> listEvent) {
+        this.context = context;
+        this.eventSpinner = eventSpinner;
+        this.listEvent = listEvent;
+    }
+
+    @Override
+    protected void onPreExecute() {
+        progressDialog = ProgressDialog.show(context, "", context.getString(R.string.loading), false);
+        super.onPreExecute();
+    }
+
+    @Override
+    protected List doInBackground(UserData... userDatas) {
+        return BackendAction.getData(Event.class, new BackendlessDataQuery());
+    }
+
+    @Override
+    protected void onPostExecute(List list) {
+        listEvent = list;
+        ArrayList<String> stringList = new ArrayList<>();
+
+        if (!list.isEmpty()) {
+            for (int i = 0; i < listEvent.size(); i++) {
+                stringList .add(listEvent.get(i).getName());
+//                Log.d(CallActivity.TAG, listEvent.get(i).getName());
+            }
+
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_dropdown_item, stringList );
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            eventSpinner.setAdapter(adapter);
+        } else {
+            ViewGroup parent = (ViewGroup) eventSpinner.getParent();
+            parent.removeView(eventSpinner);
+        }
+        progressDialog.cancel();
+        super.onPostExecute(list);
+    }
+
 }

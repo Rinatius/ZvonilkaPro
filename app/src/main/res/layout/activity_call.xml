@@ -64,6 +64,25 @@
                 android:id="@+id/callActivityNote"
                 android:hint="@string/notes" />
 
+            <Switch
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/add_todo"
+                android:id="@+id/call_activity_to_do"
+                android:checked="false" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/date"
+                android:id="@+id/call_activity_to_do_date" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/call_activity_to_do_notes"
+                android:hint="@string/fragment_select_to_do"/>
+
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>

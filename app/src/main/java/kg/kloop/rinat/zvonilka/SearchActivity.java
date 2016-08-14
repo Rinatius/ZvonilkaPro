@@ -30,6 +30,7 @@ import kg.kloop.rinat.zvonilka.adapters.EventsAdapter;
 import kg.kloop.rinat.zvonilka.adapters.ToDoAdapter;
 import kg.kloop.rinat.zvonilka.adapters.UsersDataAdapter;
 import kg.kloop.rinat.zvonilka.data.Event;
+import kg.kloop.rinat.zvonilka.data.BackendAction;
 import kg.kloop.rinat.zvonilka.data.ToDo;
 import kg.kloop.rinat.zvonilka.data.UserData;
 import kg.kloop.rinat.zvonilka.login.DefaultCallback;
@@ -285,7 +286,7 @@ class LoadSearchData extends AsyncTask<Integer, Integer, List>{
     @Override
     protected List doInBackground(Integer... integers) {
         query.setQueryOptions(new QueryOptions(pageSize, offset));
-        return GetBackendlessData.getData(type, query);
+        return BackendAction.getData(type, query);
     }
     @Override
     protected void onPostExecute(List list) {

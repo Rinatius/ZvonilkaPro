@@ -10,19 +10,22 @@ import com.backendless.persistence.QueryOptions;
 import java.util.List;
 
 import kg.kloop.rinat.zvonilka.adapters.BaseListAdapter;
+import kg.kloop.rinat.zvonilka.data.BackendAction;
 
-public class LoadData extends AsyncTask<Integer, Integer, List> {
+public class LoadDataList extends AsyncTask<Integer, Integer, List> {
     int offset, pageSize;
     Class type;
     BaseListAdapter adapter;
     boolean allLoaded, onBackground;
+    String query;
 
-    public LoadData(int offset, int pageSize, Class type, BaseListAdapter adapter, boolean allLoaded) {
+    public LoadDataList(int offset, int pageSize, Class type, BaseListAdapter adapter, boolean allLoaded, String query) {
         this.offset = offset;
         this.pageSize = pageSize;
         this.type = type;
         this.adapter = adapter;
         this.allLoaded = allLoaded;
+        this.query = query;
     }
 
     @Override
@@ -34,7 +37,10 @@ public class LoadData extends AsyncTask<Integer, Integer, List> {
     @Override
     protected List doInBackground(Integer... integers) {
         BackendlessDataQuery dataQuery = new BackendlessDataQuery(new QueryOptions(pageSize, offset));
-        return GetBackendlessData.getData(type, dataQuery);
+        if (query != null){
+            dataQuery.setWhereClause(query);
+        }
+        return BackendAction.getData(type, dataQuery);
     }
 
     @Override
@@ -44,7 +50,7 @@ public class LoadData extends AsyncTask<Integer, Integer, List> {
         } else {
             adapter.add(list);
             adapter.notifyDataSetChanged();
-            Log.d("Laaded", type.toString() + " " + list.size());
+            Log.d("Loaded", type.toString() + " " + list.size());
         }
         super.onPostExecute(list);
     }

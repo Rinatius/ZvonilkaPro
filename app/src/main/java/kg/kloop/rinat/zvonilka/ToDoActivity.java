@@ -44,7 +44,7 @@ public class ToDoActivity extends AppCompatActivity {
         toEventActivity = new Intent(this, EventActivity.class);
         initUi();
 //        showDialogOnTextClick();
-        programmButtons();
+        programButtons();
 
         todoId = getIntent().getExtras().getString(Resources.OBJECT_ID);
         querry = new BackendlessDataQuery();
@@ -124,7 +124,7 @@ public class ToDoActivity extends AppCompatActivity {
         eventName.setClickable(true);
     }
 
-    private void programmButtons(){
+    private void programButtons(){
         name.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -159,6 +159,14 @@ public class UserData extends BackendlessData
     this.PhoneNumber = PhoneNumber;
   }
 
+  public void addEventStatus(  ){
+
+  }
+
+    public java.util.List getEventStatus(){
+        return null;
+    }
+
   public java.util.List<AppUserStatus> getAppUserStatus_ID()
   {
     return AppUserStatus_ID;

@@ -18,6 +18,7 @@ import android.widget.Toast;
 import java.util.Date;
 
 import kg.kloop.rinat.zvonilka.data.Event;
+import kg.kloop.rinat.zvonilka.data.BackendAction;
 
 public class AddEventActivity extends AppCompatActivity {
 
@@ -117,7 +118,7 @@ class SaveEvent extends AsyncTask<Integer, Integer, Integer>{
 
     @Override
     protected Integer doInBackground(Integer... integers) {
-        event.save();
+        BackendAction.saveData(Event.class, event);
         return null;
     }
 

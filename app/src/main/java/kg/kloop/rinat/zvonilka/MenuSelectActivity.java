@@ -1,7 +1,6 @@
 package kg.kloop.rinat.zvonilka;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -11,20 +10,14 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.ProgressBar;
-
-import com.backendless.async.callback.AsyncCallback;
-import com.backendless.exceptions.BackendlessFault;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 import kg.kloop.rinat.zvonilka.adapters.EventsAdapter;
 import kg.kloop.rinat.zvonilka.adapters.ToDoAdapter;
@@ -89,21 +82,22 @@ public class MenuSelectActivity extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+        
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         } else if (id == R.id.action_search) {
-            Intent intent = new Intent(getApplicationContext(), SearchActivity.class);
+            Intent intent = new Intent(MenuSelectActivity.this, SearchActivity.class);
             startActivity(intent);
         } else if (id == R.id.action_add_user_data) {
-            Intent intent = new Intent(getApplicationContext(), AddUserDataActivity.class);
+            Intent intent = new Intent(MenuSelectActivity.this, AddUserDataActivity.class);
             startActivity(intent);
         } else if (id == R.id.action_add_event) {
-            Intent intent = new Intent(getApplicationContext(), AddEventActivity.class);
+            Intent intent = new Intent(MenuSelectActivity.this, AddEventActivity.class);
             startActivity(intent);
         } else if (id == R.id.action_add_company){
-            Intent intent = new Intent(getApplicationContext(), CompanyActivity.class);
+            Intent intent = new Intent(MenuSelectActivity.this, CompanyActivity.class);
             startActivity(intent);
         }
 
@@ -139,51 +133,47 @@ public class MenuSelectActivity extends AppCompatActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            View rootView = null;
-
+            View rootView = inflater.inflate(R.layout.fragment_list, container, false);
             switch (getArguments().getInt(ARG_SECTION_NUMBER)) {
                 case 0:
-                    rootView = inflater.inflate(R.layout.fragment_select_events, container, false);
                     initEventsFragment(rootView);
                     break;
                 case 1:
-                    rootView = inflater.inflate(R.layout.fragment_select_users, container, false);
                     initUsersFragment(rootView);
                     break;
                 case 2:
-                    rootView = inflater.inflate(R.layout.fragment_select_to_do, container, false);
                     initToDoFragment(rootView);
+                    break;
             }
-
             return rootView;
 
         }
 
         private void initEventsFragment(View view) {
-            eventsList = (ListView) view.findViewById(R.id.select_activity_list_events);
+            eventsList = (ListView) view.findViewById(R.id.fragment_list);
             if (eventsAdapter == null)
                 eventsAdapter = new EventsAdapter(getContext(), new ArrayList<Event>());
             eventsList.setAdapter(eventsAdapter);
             eventsList.setOnItemClickListener(new OnItemClick(getContext(), EventActivity.class));
-            eventsList.setOnScrollListener(new OnScroll(eventsAdapter, Event.class));
+            eventsList.setOnScrollListener(new OnScrollGetAllList(eventsAdapter, Event.class));
         }
 
         private void initUsersFragment(View view) {
-            userDataList = (ListView) view.findViewById(R.id.select_activity_list_users);
+            userDataList = (ListView) view.findViewById(R.id.fragment_list);
             if (usersDataAdapter == null)
                 usersDataAdapter = new UsersDataAdapter(getContext(), new ArrayList<UserData>());
             userDataList.setAdapter(usersDataAdapter);
-            userDataList.setOnItemClickListener(new OnItemClick(getContext(), UserDataActivity.class));
-            userDataList.setOnScrollListener(new OnScroll(usersDataAdapter, UserData.class));
+            userDataList.setOnItemClickListener(new OnItemClick(getContext(), UserDataActivityDemo.class));
+            userDataList.setOnScrollListener(new OnScrollGetAllList(usersDataAdapter, UserData.class));
         }
 
         private void initToDoFragment(View view) {
-            userToDoList = (ListView) view.findViewById(R.id.select_activity_list_to_do_list);
+            userToDoList = (ListView) view.findViewById(R.id.fragment_list);
             if (toDoAdapter == null)
                 toDoAdapter = new ToDoAdapter(getContext(), new ArrayList<ToDo>());
             userToDoList.setAdapter(toDoAdapter);
             userToDoList.setOnItemClickListener(new OnItemClick(getContext(), ToDoActivity.class));
-            userToDoList.setOnScrollListener(new OnScroll(toDoAdapter, ToDo.class));
+            userToDoList.setOnScrollListener(new OnScrollGetAllList(toDoAdapter, ToDo.class));
         }
 
     }

@@ -20,7 +20,6 @@ public class EventsAdapter extends BaseListAdapter{
     public EventsAdapter(Context context, List<Event> events) {
         this.context = context;
         this.events = events;
-        loadDataAsync();
     }
 
     @Override
@@ -40,10 +39,6 @@ public class EventsAdapter extends BaseListAdapter{
 
     public void add(List events){
         this.events.addAll(events);
-    }
-
-    void loadDataAsync() {
-
     }
 
     @Override

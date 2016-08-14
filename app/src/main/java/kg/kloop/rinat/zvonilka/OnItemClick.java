@@ -7,34 +7,43 @@ import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 
+import com.backendless.persistence.BackendlessDataQuery;
+
 import kg.kloop.rinat.zvonilka.adapters.BaseListAdapter;
 import kg.kloop.rinat.zvonilka.data.BackendlessData;
-import kg.kloop.rinat.zvonilka.data.Event;
 
 class OnItemClick implements AdapterView.OnItemClickListener {
 
     Context context;
-    Class type;
+    Class activity;
 
-    public OnItemClick(Context context, Class type) {
+    public OnItemClick(Context context, Class activity) {
         this.context = context;
-        this.type = type;
+        this.activity = activity;
     }
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        Intent intent = new Intent(context, type);
+        Intent intent = new Intent(context, activity);
         BackendlessData data = (BackendlessData) adapterView.getAdapter().getItem(i);
         intent.putExtra(Resources.OBJECT_ID, data.getObjectId());
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }
 }
-class OnScroll implements AbsListView.OnScrollListener{
+
+class OnScrollGetAllList implements AbsListView.OnScrollListener{
     BaseListAdapter adapter;
     Class type;
+    String query;
 
-    public OnScroll(BaseListAdapter adapter, Class type) {
+    public OnScrollGetAllList(BaseListAdapter adapter, Class type, String query) {
+        this.adapter = adapter;
+        this.type = type;
+        this.query = query;
+    }
+
+    public OnScrollGetAllList(BaseListAdapter adapter, Class type) {
         this.adapter = adapter;
         this.type = type;
     }
@@ -46,10 +55,24 @@ class OnScroll implements AbsListView.OnScrollListener{
 
     @Override
     public void onScroll(AbsListView absListView, int i, int i1, int i2) {
-        if ((i+i1 - i2 == 0) && !adapter.allLoaded && (adapter.loadData == null || (adapter.loadData.getStatus() == AsyncTask.Status.FINISHED))){
-            adapter.loadData = new LoadData(adapter.getCount(), 10, type, adapter, adapter.allLoaded);
-            adapter.loadData.execute();
+        if ((i+i1 - i2 == 0) && !adapter.allLoaded && (adapter.loadDataList == null || (adapter.loadDataList.getStatus() == AsyncTask.Status.FINISHED))){
+            adapter.loadDataList = new LoadDataList(adapter.getCount(), 10, type,
+                                                    adapter, adapter.allLoaded, query);
+            adapter.loadDataList.execute();
         }
+    }
+}
+
+class OnScrollGetUserData implements AbsListView.OnScrollListener{
+
+    @Override
+    public void onScrollStateChanged(AbsListView absListView, int i) {
+
+    }
+
+    @Override
+    public void onScroll(AbsListView absListView, int i, int i1, int i2) {
+
     }
 }
 
