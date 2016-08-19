@@ -7,7 +7,7 @@ import com.backendless.async.callback.AsyncCallback;
 import com.backendless.geo.GeoPoint;
 import com.backendless.persistence.BackendlessDataQuery;
 
-public class EventUserStatus
+public class EventUserStatus extends BackendlessData
 {
   private Boolean HasBeen;
   private String Status;

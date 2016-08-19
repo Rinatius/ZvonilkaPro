@@ -8,7 +8,7 @@ import com.backendless.async.callback.AsyncCallback;
 import com.backendless.geo.GeoPoint;
 import com.backendless.persistence.BackendlessDataQuery;
 
-public class Call
+public class Call extends BackendlessData
 {
   private java.util.Date DateCall;
   private java.util.Date updated;

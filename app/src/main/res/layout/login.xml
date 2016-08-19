@@ -1,166 +1,122 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
     android:paddingLeft="@dimen/dp16"
     android:paddingRight="@dimen/dp16">
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="@dimen/dp48"
-        android:gravity="center_vertical|center_horizontal"
-        android:orientation="horizontal"
-        android:paddingBottom="@dimen/dp4">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingRight="@dimen/dp4"
-            android:text="@string/app_name"
-            android:textSize="@dimen/text_large" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/dp4"
-            android:text="@string/login_text"
-            android:textSize="@dimen/text_large" />
-    </LinearLayout>
-                                    
-    <TableLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/dp4"
-        android:layout_marginTop="@dimen/dp4">
-
-        <TableRow
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/dp4"
-            android:gravity="center">
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/dp48"
-                android:layout_marginRight="@dimen/dp4"
                 android:gravity="center_vertical|right"
                 android:text="@string/login_prompt"
-                android:textSize="@dimen/text_medium"/>
+                android:textSize="@dimen/text_medium"
+                android:layout_above="@+id/passwordField"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:id="@+id/textView20" />
 
             <EditText
                 android:id="@+id/identityField"
                 android:layout_width="@dimen/dp144"
                 android:layout_height="@dimen/dp48"
-                android:layout_marginLeft="@dimen/dp4"
-                android:layout_marginRight="@dimen/dp4"
                 android:gravity="center_vertical"
                 android:inputType="text"
-                android:textSize="@dimen/text_medium"/>
+                android:textSize="@dimen/text_medium"
+                android:layout_above="@+id/passwordField"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_toRightOf="@+id/textView20"
+                android:layout_toEndOf="@+id/textView20" />
 
-            <Space
+
+    <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/dp48"
-                android:layout_marginLeft="@dimen/dp4"/>
-
-        </TableRow>
-
-        <TableRow
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/dp4"
-            android:layout_marginTop="@dimen/dp4"
-            android:gravity="center">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/dp48"
-                android:layout_marginRight="@dimen/dp4"
                 android:gravity="center_vertical|right"
                 android:text="@string/password_prompt"
-                android:textSize="@dimen/text_medium"/>
+                android:textSize="@dimen/text_medium"
+                android:id="@+id/textView19"
+                android:layout_alignTop="@+id/passwordField"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
 
             <EditText
                 android:id="@+id/passwordField"
                 android:layout_width="@dimen/dp144"
                 android:layout_height="@dimen/dp48"
-                android:layout_marginLeft="@dimen/dp4"
-                android:layout_marginRight="@dimen/dp4"
                 android:gravity="center_vertical"
                 android:inputType="textPassword"
                 android:singleLine="false"
-                android:textSize="@dimen/text_medium"/>
+                android:textSize="@dimen/text_medium"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_toEndOf="@+id/textView19"
+                android:layout_toRightOf="@+id/textView19" />
 
-            <TextView
+            <Button
                 android:id="@+id/restoreLink"
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/dp48"
-                android:layout_marginLeft="@dimen/dp4"
-                android:clickable="true"
-                android:gravity="bottom|right"
+                android:layout_height="wrap_content"
                 android:text="@string/restore_link"
-                android:textColor="@android:color/holo_blue_light"
-                android:textSize="@dimen/text_medium"/>
-        </TableRow>
-
-        <TableRow
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp4"
-            android:gravity="center">
+                android:layout_below="@+id/loginButton"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignRight="@+id/rememberLoginBox"
+                android:layout_alignEnd="@+id/rememberLoginBox" />
 
             <CheckBox
                 android:id="@+id/rememberLoginBox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/remember_login_text"/>
-        </TableRow>
-    </TableLayout>
+                android:text="@string/remember_login_text"
+                android:layout_below="@+id/textView19"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dp48"
-        android:layout_marginBottom="@dimen/dp4"
-        android:layout_marginTop="@dimen/dp16"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal">
 
-        <TextView
+
+        <Button
             android:id="@+id/registerLink"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/dp48"
-            android:layout_marginRight="@dimen/dp4"
-            android:clickable="true"
-            android:gravity="center_vertical"
-            android:linksClickable="false"
-            android:singleLine="false"
+            android:layout_height="wrap_content"
             android:text="@string/register_text"
-            android:textColor="@android:color/holo_blue_light"
-            android:textSize="@dimen/text_medium"/>
+            android:layout_below="@+id/loginButton"
+            android:layout_alignRight="@+id/loginButton"
+            android:layout_alignEnd="@+id/loginButton"
+            android:layout_alignLeft="@+id/loginButton"
+            android:layout_alignStart="@+id/loginButton" />
 
         <Button
             android:id="@+id/loginButton"
             android:layout_width="@dimen/dp144"
             android:layout_height="@dimen/dp48"
-            android:layout_marginLeft="@dimen/dp4"
             android:text="@string/login_text"
-            android:textSize="@dimen/text_medium"/>
-    </LinearLayout>
-                                    
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_marginTop="@dimen/dp4"
-        android:gravity="center"
-        android:orientation="vertical">
-                                    
-    </LinearLayout>
+            android:textSize="@dimen/text_medium"
+            android:layout_below="@+id/passwordField"
+            android:layout_toRightOf="@+id/progressBar"
+            android:layout_toEndOf="@+id/progressBar" />
+
 
     <ProgressBar
         android:id="@+id/progressBar"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="right" />
-</LinearLayout>
+        android:layout_gravity="right"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/title_activity_select"
+        android:id="@+id/textView21"
+        android:layout_marginTop="73dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+</RelativeLayout>
