@@ -18,9 +18,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Medium Text"
         android:id="@+id/call_data_list_date"
-        android:layout_alignParentTop="true"
+        android:layout_above="@+id/textView18"
         android:layout_toRightOf="@+id/textView17"
         android:layout_toEndOf="@+id/textView17" />
 
@@ -38,7 +37,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Medium Text"
         android:id="@+id/call_data_list_notes"
         android:layout_below="@+id/textView18"
         android:layout_alignParentLeft="true"

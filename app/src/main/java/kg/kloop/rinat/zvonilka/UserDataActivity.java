@@ -102,7 +102,7 @@ public class UserDataActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(UserDataActivity.this, CallActivityDemo.class);
+                Intent intent = new Intent(UserDataActivity.this, CallActivity.class);
                 intent.putExtra(Resources.OBJECT_ID, userData.getObjectId());
                 intent.putExtra(Resources.PHONE_NUMBER_KEY, userData.getPhoneNumber());
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -326,7 +326,7 @@ public class UserDataActivity extends AppCompatActivity {
         private void initEvents(View rootView) {
             eventsList = (ListView) rootView.findViewById(R.id.fragment_list);
             eventsList.setAdapter(eventsAdapter);
-            eventsList.setOnItemClickListener(new OnItemClick(getContext(), EventActivity.class));
+            eventsList.setOnItemClickListener(new OnItemClick(getContext(), EventActivityDemo.class));
 //            eventsList.setOnScrollListener(new OnScrollGetAllList(eventsAdapter, Event.class));
         }
     }

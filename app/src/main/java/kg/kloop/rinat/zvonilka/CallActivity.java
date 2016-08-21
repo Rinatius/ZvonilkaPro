@@ -39,9 +39,8 @@ public class CallActivity extends AppCompatActivity {
     Spinner eventSpinner;
     String userDataNumber;
     UserData userData;
-    Date afterCall, beforeCall;
-    List<Event> listEvent;
-    List<String> list;
+    Date afterCall;
+    List<Event> listEvent = new ArrayList<>();
     Call call;
     EventUserStatus eventUserStatus;
     String text;
@@ -109,8 +108,11 @@ public class CallActivity extends AppCompatActivity {
                 call = new Call();
 
                 final BackendlessDataQuery querry = new BackendlessDataQuery();
+                int a = eventSpinner.getSelectedItemPosition();
+                if (listEvent != null)
+                    event = listEvent.get(a);
 
-                event = listEvent.get((int)eventSpinner.getSelectedItemId());
+                Log.d("CallActivity", a + " " + listEvent.toString());
                 text = Resources.OBJECT_ID + " = '" + event.getObjectId() + "'" +
                         " and " + Resources.OBJECT_ID + " = '" + userData.getObjectId() + "'";
                 Log.d(TAG, text);
@@ -257,16 +259,16 @@ class LoadUserEvent extends AsyncTask<UserData, Long, List> {
 
     @Override
     protected void onPostExecute(List list) {
-        listEvent = list;
+        listEvent.addAll(list);
         ArrayList<String> stringList = new ArrayList<>();
 
-        if (!list.isEmpty()) {
+        if (!listEvent.isEmpty()) {
             for (int i = 0; i < listEvent.size(); i++) {
-                stringList .add(listEvent.get(i).getName());
+                stringList.add(listEvent.get(i).getName());
 //                Log.d(CallActivity.TAG, listEvent.get(i).getName());
             }
 
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_dropdown_item, stringList );
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_dropdown_item, stringList);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             eventSpinner.setAdapter(adapter);
         } else {
