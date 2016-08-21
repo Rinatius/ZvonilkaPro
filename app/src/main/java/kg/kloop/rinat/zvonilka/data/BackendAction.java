@@ -16,4 +16,8 @@ public class BackendAction {
     public static void saveData(Class type, BackendlessData data){
         Backendless.Persistence.of(type).save(data);
     }
+
+    public static BackendlessData findById(Class type, String id){
+        return (BackendlessData) Backendless.Persistence.of(type).findById(id);
+    }
 }

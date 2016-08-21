@@ -45,6 +45,11 @@ public class UsersDataAdapter extends BaseListAdapter {
     }
 
     @Override
+    public void replaceAdapter(List list) {
+        userDatas = list;
+    }
+
+    @Override
     public View getView(final int i, View view, ViewGroup viewGroup) {
 
         View v = view;
@@ -61,9 +66,9 @@ public class UsersDataAdapter extends BaseListAdapter {
         String nameStr = user.getFirstName() + " " + user.getSecondName();
         name.setText(nameStr);
 
-        TextView events = (TextView) v.findViewById(R.id.user_data_list_events);
-        nameStr = Resources.EVENT + ": " + user.getEventUserStatus_ID().toString();
-        events.setText(nameStr);
+//        TextView events = (TextView) v.findViewById(R.id.user_data_list_events);
+//        nameStr = Resources.EVENT + ": " + user.getEventUserStatus_ID().get(i).getCall_ID().get(;
+//        events.setText(nameStr);
 
         ImageButton button = (ImageButton) v.findViewById(R.id.user_data_list_call);
         button.setOnClickListener(new View.OnClickListener() {
@@ -71,7 +76,7 @@ public class UsersDataAdapter extends BaseListAdapter {
             public void onClick(View view) {
                 Intent intent = new Intent(context, CallActivity.class);
                 intent.putExtra(Resources.PHONE_NUMBER_KEY, user.getPhoneNumber());
-                intent.putExtra(Resources.USER_DATA_ID_KEY, user.getObjectId());
+                intent.putExtra(Resources.OBJECT_ID, user.getObjectId());
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
             }

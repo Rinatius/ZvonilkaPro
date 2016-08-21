@@ -2,10 +2,8 @@ package kg.kloop.rinat.zvonilka;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.design.widget.TabLayout;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -14,23 +12,28 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+
 import android.widget.ListView;
+import android.widget.TextView;
+
+import com.backendless.persistence.BackendlessDataQuery;
 
 import java.util.ArrayList;
+import java.util.List;
 
-import kg.kloop.rinat.zvonilka.adapters.EventsAdapter;
-import kg.kloop.rinat.zvonilka.adapters.ToDoAdapter;
 import kg.kloop.rinat.zvonilka.adapters.UsersDataAdapter;
+import kg.kloop.rinat.zvonilka.data.BackendAction;
 import kg.kloop.rinat.zvonilka.data.Event;
-import kg.kloop.rinat.zvonilka.data.ToDo;
+import kg.kloop.rinat.zvonilka.data.EventUserStatus;
 import kg.kloop.rinat.zvonilka.data.UserData;
 
-public class MenuSelectActivity extends AppCompatActivity {
+public class EventActivityDemo extends AppCompatActivity {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -42,21 +45,23 @@ public class MenuSelectActivity extends AppCompatActivity {
      */
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
-    private static EventsAdapter eventsAdapter;
+    /**
+     * The {@link ViewPager} that will host the section contents.
+     */
+    private ViewPager mViewPager;
     private static UsersDataAdapter usersDataAdapter;
-    private static ToDoAdapter toDoAdapter;
-    private static ListView eventsList;
-    private static ListView userDataList;
-    private static ListView userToDoList;
-    private static OnScrollGetAllList eventScroll;
-    private static OnScrollGetAllList userScroll;
-    private static OnScrollGetAllList toDoScroll;
-
+    private static ListView userList;
+    private static String eventId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_select);
+        setContentView(R.layout.activity_event_activity_demo);
+
+        eventId = getIntent().getExtras().getString(Resources.OBJECT_ID);
+        usersDataAdapter = new UsersDataAdapter(EventActivityDemo.this, new ArrayList<UserData>());
+        LoadEvent loadEvent = new LoadEvent(EventActivityDemo.this, usersDataAdapter, eventId);
+        loadEvent.execute();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -65,22 +70,19 @@ public class MenuSelectActivity extends AppCompatActivity {
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
-        /*
-      The {@link ViewPager} that will host the section contents.
-     */
-        ViewPager mViewPager = (ViewPager) findViewById(R.id.container);
+        mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-        mViewPager.setCurrentItem(1);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_select, menu);
+        getMenuInflater().inflate(R.menu.menu_event_activity_demo, menu);
         return true;
     }
 
@@ -91,40 +93,24 @@ public class MenuSelectActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
-        } else if (id == R.id.action_search) {
-            Intent intent = new Intent(MenuSelectActivity.this, SearchActivity.class);
-            startActivity(intent);
-        } else if (id == R.id.action_add_user_data) {
-            Intent intent = new Intent(MenuSelectActivity.this, AddUserDataActivity.class);
-            intent.putExtra(Resources.ACTION, Resources.ADD_USER_DATA);
-            startActivity(intent);
-        } else if (id == R.id.action_add_event) {
-            Intent intent = new Intent(MenuSelectActivity.this, AddEventActivity.class);
-            startActivity(intent);
-        } else if (id == R.id.action_add_company) {
-            Intent intent = new Intent(MenuSelectActivity.this, CompanyActivity.class);
-            startActivity(intent);
-        } else if (id == R.id.action_update) {
-            OnRefresh refresh = new OnRefresh(MenuSelectActivity.this, eventsAdapter, Event.class, null);
-            refresh.Refresh();
-            refresh = new OnRefresh(MenuSelectActivity.this, usersDataAdapter, UserData.class, null);
-            refresh.Refresh();
-            refresh = new OnRefresh(MenuSelectActivity.this, toDoAdapter, ToDo.class, null);
-            refresh.Refresh();
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-
     /**
      * A placeholder fragment containing a simple view.
      */
     public static class PlaceholderFragment extends Fragment {
+        static TextView name;
+        static TextView date;
+        static TextView city;
+        static TextView notes;
+
+
         /**
          * The fragment argument representing the section number for this
          * fragment.
@@ -149,58 +135,42 @@ public class MenuSelectActivity extends AppCompatActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_list, container, false);
+            View rootView = null;
             switch (getArguments().getInt(ARG_SECTION_NUMBER)) {
                 case 0:
-                    initEventsFragment(rootView);
-//                    rootView.setOnRefreshListener(new OnRefresh(eventsAdapter, Event.class, null));
+                    rootView = inflater.inflate(R.layout.fragment_event_activity_demo, container, false);
+                    initEventFragment(rootView);
                     break;
                 case 1:
-                    initUsersFragment(rootView);
-                    break;
-                case 2:
-                    initToDoFragment(rootView);
+                    rootView = inflater.inflate(R.layout.fragment_list, container, false);
+                    initUserListFragment(rootView);
                     break;
             }
             return rootView;
-
         }
 
-        private void initEventsFragment(View view) {
-            eventsList = (ListView) view.findViewById(R.id.fragment_list);
-            if (eventsAdapter == null)
-                eventsAdapter = new EventsAdapter(getContext(), new ArrayList<Event>());
-            if (eventScroll == null)
-                eventScroll = new OnScrollGetAllList(eventsAdapter, Event.class);
-            eventsList.setAdapter(eventsAdapter);
-            eventsList.setOnItemClickListener(new OnItemClick(getContext(), EventActivityDemo.class));
-            eventsList.setOnScrollListener(eventScroll);
+        private void initEventFragment(View rootView) {
+            name = (TextView) rootView.findViewById(R.id.event_activity_name);
+            date = (TextView) rootView.findViewById(R.id.date);
+            city = (TextView) rootView.findViewById(R.id.city);
+            notes = (TextView) rootView.findViewById(R.id.notes);
         }
 
-        private void initUsersFragment(View view) {
-            userDataList = (ListView) view.findViewById(R.id.fragment_list);
-            if (usersDataAdapter == null)
-                usersDataAdapter = new UsersDataAdapter(getContext(), new ArrayList<UserData>());
-            if (userScroll == null)
-                userScroll = new OnScrollGetAllList(usersDataAdapter, UserData.class);
-            userDataList.setAdapter(usersDataAdapter);
-            userDataList.setOnItemClickListener(new OnItemClick(getContext(), UserDataActivity.class));
-            userDataList.setOnScrollListener(userScroll);
+        private void initUserListFragment(View rootView) {
+            userList = (ListView) rootView.findViewById(R.id.fragment_list);
+            userList.setAdapter(usersDataAdapter);
+            userList.setOnItemClickListener(new OnItemClick(getContext(), UserDataActivity.class));
         }
 
-        private void initToDoFragment(View view) {
-            userToDoList = (ListView) view.findViewById(R.id.fragment_list);
-            if (toDoAdapter == null)
-                toDoAdapter = new ToDoAdapter(getContext(), new ArrayList<ToDo>());
-            if (toDoScroll == null)
-                toDoScroll = new OnScrollGetAllList(toDoAdapter, ToDo.class);
-            userToDoList.setAdapter(toDoAdapter);
-            userToDoList.setOnItemClickListener(new OnItemClick(getContext(), ToDoActivity.class));
-            userToDoList.setOnScrollListener(toDoScroll);
+        protected static void updateEvent(Event event){
+            name.setText(event.getName());
+            city.setText(event.getCity());
+            notes.setText(event.getNote());
+            if (event.getDateOfEvent() != null)
+                date.setText(event.getDateOfEvent().toString());
         }
 
     }
-
 
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
@@ -221,24 +191,62 @@ public class MenuSelectActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            // Show 3 total pages.
-            return 3;
+            // Show 2 total pages.
+            return 2;
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return getResources().getString(R.string.fragment_select_events);
+                    return getString(R.string.event);
                 case 1:
-                    return getResources().getString(R.string.fragment_select_users);
-                case 2:
-                    return getResources().getString(R.string.fragment_select_to_do);
+                    return getString(R.string.users);
+            }
+            return null;
+        }
+    }
+
+    static class LoadEvent extends AsyncTask<Long, Long, Long> {
+        Context context;
+        String eventId;
+        Event event;
+        UsersDataAdapter usersDataAdapter;
+        ProgressDialog dialog;
+
+        public LoadEvent(Context context, UsersDataAdapter usersDataAdapter, String eventId) {
+            this.context = context;
+            this.eventId = eventId;
+            this.usersDataAdapter = usersDataAdapter;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            dialog = ProgressDialog.show(context, "", context.getString(R.string.loading), false);
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Long doInBackground(Long... longs) {
+            BackendlessDataQuery query = new BackendlessDataQuery(Resources.OBJECT_ID + " ='" + eventId + "'");
+            Log.d("WhereClause", query.getWhereClause());
+            event = (Event) BackendAction.getData(Event.class, query).get(0);
+            List<EventUserStatus> eventUserStatuses = event.getEventUserStatus_ID_Event();
+            for (int i = 0; i < eventUserStatuses.size(); i++) {
+                query = new BackendlessDataQuery(Resources.EVENT_USER_STATUS_ID_OBJECTID
+                        + " = '" + eventUserStatuses.get(i).getObjectId() + "'");
+                usersDataAdapter.add(BackendAction.getData(UserData.class, query));
+                Log.d("UsersDataAdapter", usersDataAdapter.getCount() + "");
             }
             return null;
         }
 
+        @Override
+        protected void onPostExecute(Long aLong) {
+            PlaceholderFragment.updateEvent(event);
+            usersDataAdapter.notifyDataSetChanged();
+            dialog.cancel();
+            super.onPostExecute(aLong);
+        }
     }
 }
-
-

@@ -42,6 +42,11 @@ public class ToDoAdapter extends BaseListAdapter {
 
 
     @Override
+    public void replaceAdapter(List list) {
+        toDoList = list;
+    }
+
+    @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
 
         View v = view;
@@ -54,12 +59,11 @@ public class ToDoAdapter extends BaseListAdapter {
         TextView name = (TextView) v.findViewById(R.id.user_to_do_list_name);
         TextView events = (TextView) v.findViewById(R.id.user_to_do_list_notes);
 
-//        if (toDo != null) {
-//            String nameStr = context.getResources().getString(R.string.name) + toDo.getUserData_ID().getFirstName()
-//                    + " " + toDo.getUserData_ID().getSecondName();
-//            name.setText(nameStr);
-//        }
-        String dateStr = context.getResources().getString(R.string.notes) + toDo.getDeadline();
+        if (toDo != null) {
+            String nameStr = context.getString(R.string.name);
+            name.setText(nameStr);
+        }
+        String dateStr = context.getResources().getString(R.string.notes) + toDo.getNote();
         events.setText(dateStr);
 
         return v;

@@ -110,9 +110,9 @@ public class CallActivity extends AppCompatActivity {
 
                 final BackendlessDataQuery querry = new BackendlessDataQuery();
 
-                event = listEvent.get((int) eventSpinner.getSelectedItemId());
-                text = Resources.EVENT_EVENTUSERSTATUS_ID_OBJECTID + " = '" + event.getObjectId() + "'" +
-                        " and " + Resources.EVENTUSERSTATUS_CALL_ID_OBJECTID + " = '" + userData.getObjectId() + "'";
+                event = listEvent.get((int)eventSpinner.getSelectedItemId());
+                text = Resources.OBJECT_ID + " = '" + event.getObjectId() + "'" +
+                        " and " + Resources.OBJECT_ID + " = '" + userData.getObjectId() + "'";
                 Log.d(TAG, text);
                 querry.setWhereClause(text);
                 Backendless.Persistence.of(EventUserStatus.class).find(querry,
@@ -126,7 +126,7 @@ public class CallActivity extends AppCompatActivity {
                                     @Override
                                     public void handleResponse(BackendlessCollection<EventUserStatus> eventUserStatusBackendlessCollection) {
                                         eventUserStatusForEvent = eventUserStatusBackendlessCollection.getData();
-                                        querry.setWhereClause(Resources.EVENTUSERSTATUS_CALL_ID_OBJECTID + " = '" + userData.getObjectId() + "'");
+                                        querry.setWhereClause(Resources.OBJECT_ID + " = '" + userData.getObjectId() + "'");
                                         Backendless.Persistence.of(EventUserStatus.class).find(querry, new AsyncCallback<BackendlessCollection<EventUserStatus>>() {
                                             @Override
                                             public void handleResponse(BackendlessCollection<EventUserStatus> eventUserStatusBackendlessCollection) {
@@ -226,7 +226,7 @@ public class CallActivity extends AppCompatActivity {
     }
 
     public void getUserEvents() {
-        LoadUserEvent loadUserEvent = new LoadUserEvent(getApplicationContext(), eventSpinner, listEvent);
+        LoadUserEvent loadUserEvent = new LoadUserEvent(CallActivity.this, eventSpinner, listEvent);
         loadUserEvent.execute();
     }
 }

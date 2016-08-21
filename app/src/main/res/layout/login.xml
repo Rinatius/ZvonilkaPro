@@ -1,123 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical"
-    android:paddingLeft="@dimen/dp16"
-    android:paddingRight="@dimen/dp16">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/dp48"
-                android:gravity="center_vertical|right"
-                android:text="@string/login_prompt"
-                android:textSize="@dimen/text_medium"
-                android:layout_above="@+id/passwordField"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:id="@+id/textView20" />
-
-            <EditText
-                android:id="@+id/identityField"
-                android:layout_width="@dimen/dp144"
-                android:layout_height="@dimen/dp48"
-                android:gravity="center_vertical"
-                android:inputType="text"
-                android:textSize="@dimen/text_medium"
-                android:layout_above="@+id/passwordField"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                android:layout_toRightOf="@+id/textView20"
-                android:layout_toEndOf="@+id/textView20" />
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/dp16"
+                android:paddingRight="@dimen/dp16">
 
 
-    <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/dp48"
-                android:gravity="center_vertical|right"
-                android:text="@string/password_prompt"
-                android:textSize="@dimen/text_medium"
-                android:id="@+id/textView19"
-                android:layout_alignTop="@+id/passwordField"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
-
-            <EditText
-                android:id="@+id/passwordField"
-                android:layout_width="@dimen/dp144"
-                android:layout_height="@dimen/dp48"
-                android:gravity="center_vertical"
-                android:inputType="textPassword"
-                android:singleLine="false"
-                android:textSize="@dimen/text_medium"
-                android:layout_centerVertical="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                android:layout_toEndOf="@+id/textView19"
-                android:layout_toRightOf="@+id/textView19" />
-
-            <Button
-                android:id="@+id/restoreLink"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/restore_link"
-                android:layout_below="@+id/loginButton"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_alignRight="@+id/rememberLoginBox"
-                android:layout_alignEnd="@+id/rememberLoginBox" />
-
-            <CheckBox
-                android:id="@+id/rememberLoginBox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/remember_login_text"
-                android:layout_below="@+id/textView19"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
-
-
-
-        <Button
-            android:id="@+id/registerLink"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/register_text"
-            android:layout_below="@+id/loginButton"
-            android:layout_alignRight="@+id/loginButton"
-            android:layout_alignEnd="@+id/loginButton"
-            android:layout_alignLeft="@+id/loginButton"
-            android:layout_alignStart="@+id/loginButton" />
-
-        <Button
-            android:id="@+id/loginButton"
-            android:layout_width="@dimen/dp144"
-            android:layout_height="@dimen/dp48"
-            android:text="@string/login_text"
-            android:textSize="@dimen/text_medium"
-            android:layout_below="@+id/passwordField"
-            android:layout_toRightOf="@+id/progressBar"
-            android:layout_toEndOf="@+id/progressBar" />
-
-
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyleHorizontal"
+    <Button
+        android:id="@+id/restoreLink"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="right"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:indeterminate="false" />
+        android:text="@string/restore_link"
+        android:layout_below="@+id/loginButton"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
-    <TextView
+    <CheckBox
+        android:id="@+id/rememberLoginBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/app_name"
-        android:id="@+id/textView21"
-        android:layout_marginTop="73dp"
+        android:text="@string/remember_login_text"
+        android:layout_below="@+id/linearLayout2"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+
+    <Button
+        android:id="@+id/registerLink"
+        android:layout_width="@dimen/dp144"
+        android:layout_height="@dimen/dp48"
+        android:text="@string/register_text"
+        android:textSize="@dimen/text_medium"
+        android:layout_below="@+id/loginButton"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <Button
+        android:id="@+id/loginButton"
+        android:layout_width="@dimen/dp144"
+        android:layout_height="@dimen/dp48"
+        android:text="@string/login_text"
+        android:textSize="@dimen/text_medium"
+        android:layout_below="@+id/linearLayout2"
+        android:layout_alignRight="@+id/linearLayout2"
+        android:layout_alignEnd="@+id/linearLayout2" />
+
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="27dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <EditText
+            android:id="@+id/identityField"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp48"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:background="@android:drawable/editbox_background_normal"
+            android:gravity="center_vertical"
+            android:hint="@string/login"
+            android:inputType="text"
+            android:textSize="@dimen/text_medium"/>
+
+        <EditText
+            android:id="@+id/passwordField"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp48"
+            android:layout_alignParentTop="true"
+            android:background="@android:drawable/editbox_background_normal"
+            android:gravity="center_vertical"
+            android:hint="@string/password"
+            android:inputType="textPassword"
+            android:singleLine="false"
+            android:textSize="@dimen/text_medium"/>
+    </LinearLayout>
+
+
 </RelativeLayout>

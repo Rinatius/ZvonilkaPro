@@ -12,23 +12,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.backendless.Backendless;
 import com.backendless.BackendlessCollection;
-import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessException;
 import com.backendless.exceptions.BackendlessFault;
 import com.backendless.persistence.BackendlessDataQuery;
-import com.backendless.social.BackendlessSocialJSInterface;
 
-import org.xml.sax.DTDHandler;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 
 import kg.kloop.rinat.zvonilka.data.Event;
@@ -42,9 +36,9 @@ public class EventActivity extends AppCompatActivity {
 
     Event event;
     String eventId;
-    EditText  city, company, notes, name;
+    EditText city, company, notes, name;
 
-    TextView date,participants;
+    TextView date, participants;
     BackendlessDataQuery querry;
     String text;
     List<UserData> userDataList;
@@ -53,7 +47,6 @@ public class EventActivity extends AppCompatActivity {
     private static final String TAG = "EventActivityDebug";
 
     int editCount = 0;
-
 
 
     @Override
@@ -75,17 +68,17 @@ public class EventActivity extends AppCompatActivity {
                 event = eventBackendlessCollection.getData().get(0);
                 LoadUsers loadUsers = new LoadUsers(event, EventActivity.this);
                 loadUsers.execute();
-                text = Resources.NAME + ": " + event.getName();
+                text = event.getName();
                 name.setText(text);
-                text = Resources.DATE + ": " + Resources.DATE_FORMAT.format(event.getDateOfEvent());
+                text = Resources.DATE_FORMAT.format(event.getDateOfEvent());
                 date.setText(text);
-                text = Resources.CITY + ": " + event.getCity();
+                text = event.getCity();
                 city.setText(text);
                 if (event.getAppCompany_ID_Event() != null) {
 //                        text = Resources.COMPANY + ": " + event.getAppCompany_ID_Event().getName();
                     company.setText(text);
                 }
-                text = Resources.DESCRIPTION + ": " + event.getNote();
+                text = event.getNote();
                 notes.setText(text);
                 text = "";
                 BackendlessDataQuery query = new BackendlessDataQuery();
@@ -119,7 +112,6 @@ public class EventActivity extends AppCompatActivity {
                 participants.setText(text);
 
 
-
                 super.handleResponse(eventBackendlessCollection);
 
 
@@ -143,10 +135,10 @@ public class EventActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
 
             case R.id.action_edit:
-                if(editCount ==0 ){
+                if (editCount == 0) {
 
 //                date.setEnabled(true);
                     notes.setEnabled(true);
@@ -154,15 +146,14 @@ public class EventActivity extends AppCompatActivity {
                     name.setEnabled(true);
                     editCount++;
                     item.setIcon(getResources().getDrawable(android.R.drawable.ic_menu_save));
-                }
-                else{
+                } else {
                     date.setEnabled(false);
                     notes.setEnabled(false);
                     city.setEnabled(false);
                     name.setEnabled(false);
 
                     String text;
-                    text =notes.getText().toString().substring(13);
+                    text = notes.getText().toString().substring(13);
                     event.setNote(text);
                     text = name.getText().toString().substring(6);
                     event.setName(text);
@@ -177,14 +168,13 @@ public class EventActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void initUI(){
+    private void initUI() {
         date = (TextView) findViewById(R.id.eventActivityDate);
         notes = (EditText) findViewById(R.id.eventActivityNotes);
         city = (EditText) findViewById(R.id.eventActivityCity);
         company = (EditText) findViewById(R.id.eventActivityCompany);
         participants = (TextView) findViewById(R.id.eventActivityParticipants);
         name = (EditText) findViewById(R.id.eventActivityName);
-
 
 
         date.setEnabled(false);
@@ -194,7 +184,7 @@ public class EventActivity extends AppCompatActivity {
         name.setEnabled(false);
     }
 
-    private void setOnClick(){
+    private void setOnClick() {
         participants.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -206,7 +196,7 @@ public class EventActivity extends AppCompatActivity {
 
 }
 
-class LoadUsers extends AsyncTask<Event, Integer , List<UserData>>{
+class LoadUsers extends AsyncTask<Event, Integer, List<UserData>> {
 
     Event event;
     Context context;
@@ -225,12 +215,12 @@ class LoadUsers extends AsyncTask<Event, Integer , List<UserData>>{
 
         for (int i = 0; i < listEUSAs.size(); i++) {
 
-            query.setWhereClause("EventUserStatus_ID.objectId = '" + listEUSAs.get(i).getObjectId()+ "'");
+            query.setWhereClause("EventUserStatus_ID.objectId = '" + listEUSAs.get(i).getObjectId() + "'");
             Log.d("userData", query.getWhereClause());
             List<UserData> newList;
             try {
                 newList = Backendless.Persistence.of(UserData.class).find(query).getData();
-                if(newList.size()!=0){
+                if (newList.size() != 0) {
                     listUserData.add(newList.get(0));
                 }
             } catch (BackendlessException e) {

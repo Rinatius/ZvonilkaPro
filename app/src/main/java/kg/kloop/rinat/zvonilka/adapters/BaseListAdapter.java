@@ -10,4 +10,5 @@ public abstract class BaseListAdapter extends BaseAdapter {
     public LoadDataList loadDataList;
     public boolean allLoaded = false;
     public abstract void add(List list);
+    public abstract void replaceAdapter(List list);
 }

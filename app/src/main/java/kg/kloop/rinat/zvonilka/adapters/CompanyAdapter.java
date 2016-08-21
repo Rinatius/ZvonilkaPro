@@ -42,6 +42,11 @@ public class CompanyAdapter extends BaseListAdapter {
     }
 
     @Override
+    public void replaceAdapter(List list) {
+        appCompanyList = list;
+    }
+
+    @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
 
         View v = view;

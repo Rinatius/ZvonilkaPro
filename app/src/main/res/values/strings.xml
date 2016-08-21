@@ -24,7 +24,7 @@
     <string name="default_registered_text">Registered successfully!</string>
 
     <string name="registration_success_message">Thank you for registering with the %1$s. Click the button below to proceed to the login.</string>
-    <string name="title_activity_select">ZvonilkaPRO</string>
+    <string name="title_activity_select">Zvonilka</string>
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="fragment_select_events">Events</string>
@@ -60,7 +60,7 @@
     <string name="cancel">Cancel</string>
     <string name="set">Set</string>
     <string name="set_birthday_here">Set Birthday here!</string>
-    <string name="error_didnt_write_field">Write field first name, second name and phone!</string>
+    <string name="error_didnt_write_field">Write field First name, Second name and phone number!</string>
     <string name="set_date_here">Set Date Here!</string>
     <string name="write_name_city">Write Event\'s name and city!</string>
     <string name="saving">Saving…</string>
@@ -68,7 +68,13 @@
     <string name="loading">Loading…</string>
     <string name="add_company">Company</string>
     <string name="add_todo">Add ToDo</string>
-    <string name="title_activity_user_data_activity_demo">UserDataActivityDemo</string>
+    <string name="title_activity_user_data_activity_demo">Client Profile</string>
     <string name="user_data">UserData</string>
     <string name="history">History</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="update_client_profile">Update Client Profile</string>
+    <string name="update">Update</string>
+    <string name="title_activity_event_activity_demo">Event</string>
+    <string name="users">Users</string>
 </resources>

@@ -5,7 +5,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="@string/name"
         android:id="@+id/user_to_do_list_name"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"

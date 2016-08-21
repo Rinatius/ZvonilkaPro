@@ -16,6 +16,11 @@ public class CallAdapter extends BaseListAdapter{
     Context context;
     List<Call> callList;
 
+    @Override
+    public void replaceAdapter(List list) {
+        callList = list;
+    }
+
     public CallAdapter(Context context, List<Call> callList) {
         this.context = context;
         this.callList = callList;

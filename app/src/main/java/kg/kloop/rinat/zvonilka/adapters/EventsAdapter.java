@@ -17,6 +17,11 @@ public class EventsAdapter extends BaseListAdapter{
     Context context;
     List<Event> events;
 
+    @Override
+    public void replaceAdapter(List list) {
+        events = list;
+    }
+
     public EventsAdapter(Context context, List<Event> events) {
         this.context = context;
         this.events = events;
@@ -56,7 +61,7 @@ public class EventsAdapter extends BaseListAdapter{
         TextView date = (TextView) v.findViewById(R.id.user_event_list_event_date);
         name.setTextColor(context.getResources().getColor(R.color.textColor));
 
-        String nameStr = context.getResources().getString(R.string.name) + event.getName();
+        String nameStr = event.getName();
         name.setText(nameStr);
         String cityStr = context.getResources().getString(R.string.city) + event.getCity();
         city.setText(cityStr);
