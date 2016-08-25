@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -21,10 +22,14 @@ import com.backendless.Backendless;
 import com.backendless.BackendlessUser;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.io.BackendlessUserFactory;
+import com.backendless.persistence.BackendlessDataQuery;
 
 import java.util.Date;
+import java.util.List;
 
 import kg.kloop.rinat.zvonilka.data.BackendAction;
+import kg.kloop.rinat.zvonilka.data.Event;
+import kg.kloop.rinat.zvonilka.data.EventUserStatus;
 import kg.kloop.rinat.zvonilka.data.UserData;
 
 public class AddUserDataActivity extends AppCompatActivity {
@@ -42,6 +47,8 @@ public class AddUserDataActivity extends AppCompatActivity {
     static EditText company;
     static EditText position;
     static TextView birthdayText;
+    static Button addEvents;
+    static BackendlessDataQuery query;
     String action;
     UserData userData;
     String userId;
@@ -93,6 +100,14 @@ public class AddUserDataActivity extends AppCompatActivity {
             }
         });
         birthday.setNegativeButton(R.string.cancel, null);
+        addEvents = (Button) findViewById(R.id.add_events);
+        addEvents.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(AddUserDataActivity.this, UsersList.class);
+                startActivityForResult(intent, UsersList.LOAD_EVENTS);
+            }
+        });
 
         if (action.equals(Resources.UPDATE_USER_DATA)) {
             new LoadUserData(AddUserDataActivity.this, userId, userData).execute();
@@ -121,6 +136,31 @@ public class AddUserDataActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_call_activity, menu);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public void startActivityForResult(Intent intent, int requestCode) {
+        intent.putExtra("requestCode", requestCode);
+        super.startActivityForResult(intent, requestCode);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            query = new BackendlessDataQuery();
+            String whereClause = "";
+            for (int i = 0; i < data.getIntExtra("backendlessDatas size", 0); i++) {
+                if (i == 0) {
+                    whereClause = Resources.OBJECT_ID + " = '" + data.getStringExtra("Checked_" + i) + "'";
+                } else {
+                    whereClause = whereClause.concat(" or " + Resources.OBJECT_ID + " = '" + data.getStringExtra("Checked_" + i) + "'");
+                }
+            }
+            Log.d("WhereClause", whereClause);
+            query.setWhereClause(whereClause);
+
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -166,7 +206,7 @@ public class AddUserDataActivity extends AppCompatActivity {
                     datePicker.getMonth(),
                     datePicker.getDayOfMonth());
             userData.setBirthday(birthday);
-            new SaveUserData(userData, AddUserDataActivity.this, this).execute();
+            new SaveUserData(userData, AddUserDataActivity.this, query).execute();
 
         }
 
@@ -203,49 +243,61 @@ public class AddUserDataActivity extends AppCompatActivity {
         }
     }
 
+
+    public static class SaveUserData extends AsyncTask<Integer, Integer, Integer> {
+
+        UserData userData;
+        Context context;
+        BackendlessDataQuery query;
+        ProgressDialog dialog;
+
+
+        public SaveUserData(UserData userData, Context context, BackendlessDataQuery query) {
+            this.userData = userData;
+            this.context = context;
+            this.query = query;
+        }
+
+        public SaveUserData(UserData userData, Context context) {
+            this.userData = userData;
+            this.context = context;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            Log.d("Save", "Saving...");
+            dialog = ProgressDialog.show(context, "", context.getString(R.string.saving), true);
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Integer doInBackground(Integer... integers) {
+            List<Event> events = BackendAction.getData(Event.class, query);
+            for (int i = 0; i < events.size(); i++) {
+                EventUserStatus eventUserStatus = new EventUserStatus();
+                eventUserStatus.setHasBeen(false);
+                eventUserStatus.setStatus("Recorded!");
+                eventUserStatus.save();
+                Log.d("AddEvent", "EventUserStatus Saved!" + eventUserStatus.getObjectId());
+
+                events.get(i).addEventStatus_ID_Event(eventUserStatus);
+                events.get(i).save();
+                Log.d("AddEvent", "Event Updated!");
+                userData.addEventStatus(eventUserStatus);
+            }
+            userData.save();
+            return 0;
+        }
+
+        @Override
+        protected void onPostExecute(Integer integer) {
+            dialog.cancel();
+            Toast.makeText(context, R.string.saved, Toast.LENGTH_SHORT).show();
+            Log.d("Save", "Saved!");
+            super.onPostExecute(integer);
+        }
+    }
+
 }
 
-
-class SaveUserData extends AsyncTask<Integer, Integer, Integer> {
-
-    UserData userData;
-    Context context;
-    AppCompatActivity appCompatActivity;
-    ProgressDialog dialog;
-
-
-    public SaveUserData(UserData userData, Context context, AppCompatActivity appCompatActivity) {
-        this.userData = userData;
-        this.context = context;
-        this.appCompatActivity = appCompatActivity;
-    }
-
-    public SaveUserData(UserData userData, Context context) {
-        this.userData = userData;
-        this.context = context;
-    }
-
-    @Override
-    protected void onPreExecute() {
-        Log.d("Save", "Saving...");
-        dialog = ProgressDialog.show(context, "", context.getString(R.string.saving), true);
-        super.onPreExecute();
-    }
-
-    @Override
-    protected Integer doInBackground(Integer... integers) {
-        userData.save();
-        return 0;
-    }
-
-    @Override
-    protected void onPostExecute(Integer integer) {
-        dialog.cancel();
-        Toast.makeText(context, R.string.saved, Toast.LENGTH_SHORT).show();
-        Log.d("Save", "Saved!");
-        if (appCompatActivity != null)
-            appCompatActivity.finish();
-        super.onPostExecute(integer);
-    }
-}
 

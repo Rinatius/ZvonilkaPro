@@ -230,20 +230,34 @@ public class EventActivityDemo extends AppCompatActivity {
         protected Long doInBackground(Long... longs) {
             BackendlessDataQuery query = new BackendlessDataQuery(Resources.OBJECT_ID + " ='" + eventId + "'");
             Log.d("WhereClause", query.getWhereClause());
-            event = (Event) BackendAction.getData(Event.class, query).get(0);
+            event = (Event) BackendAction.getData(Event.class, query).get(0); // Load Event
             List<EventUserStatus> eventUserStatuses = event.getEventUserStatus_ID_Event();
+
+
+//            Making a query for load event's clients //
+            String eventUsersQuery = "";
+
             for (int i = 0; i < eventUserStatuses.size(); i++) {
-                query = new BackendlessDataQuery(Resources.EVENT_USER_STATUS_ID_OBJECTID
-                        + " = '" + eventUserStatuses.get(i).getObjectId() + "'");
-                usersDataAdapter.add(BackendAction.getData(UserData.class, query));
-                Log.d("UsersDataAdapter", usersDataAdapter.getCount() + "");
+                if (i == 0){        // if first user, we make without OR operator
+                    eventUsersQuery = Resources.EVENT_USER_STATUS_ID_OBJECTID
+                            + " = '" + eventUserStatuses.get(i).getObjectId() + "'";
+                } else {            // else with OR operator
+                    eventUsersQuery = eventUsersQuery.concat(" or " + Resources.EVENT_USER_STATUS_ID_OBJECTID
+                            + " = '" + eventUserStatuses.get(i).getObjectId() + "'");
+                }
             }
+
+            query.setWhereClause(eventUsersQuery);
+            List eventUsers = BackendAction.getData(UserData.class, query); // Load Event's clients
+            usersDataAdapter.add(eventUsers);
+            Log.d("EventActivity", eventUsersQuery + " " + eventUsers.toString());
+
             return null;
         }
 
         @Override
         protected void onPostExecute(Long aLong) {
-            PlaceholderFragment.updateEvent(event);
+            PlaceholderFragment.updateEvent(event); // Write at
             usersDataAdapter.notifyDataSetChanged();
             dialog.cancel();
             super.onPostExecute(aLong);

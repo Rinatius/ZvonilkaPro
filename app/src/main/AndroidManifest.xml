@@ -46,7 +46,8 @@
         <activity
             android:name=".EventActivityDemo"
             android:label="@string/title_activity_event_activity_demo"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".UsersList"></activity>
     </application>
 
 </manifest>

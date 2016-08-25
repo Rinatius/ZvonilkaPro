@@ -12,7 +12,7 @@
     <item
         android:id="@+id/action_add_user_data"
         android:orderInCategory="40"
-        android:title="@string/add_user_data"
+        android:title="@string/add_client"
         app:showAsAction="never" />
 
     <item

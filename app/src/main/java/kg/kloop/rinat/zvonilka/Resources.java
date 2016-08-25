@@ -13,6 +13,7 @@ public class Resources {
     public static final String OBJECT_ID = "objectId";
     public static final String EVENTUSERSTATUS_CALL_ID_OBJECTID = "EventUserStatus[Call_ID].objectId";
     public static final String EVENT_USER_STATUS_ID_OBJECTID = "EventUserStatus_ID.objectId";
+    public static final String EVENT_USER_STATUS_ID_EVENT = "EventUserStatus_ID_Event.objectId";
     public static final String EVENT_EVENTUSERSTATUS_ID_OBJECTID = "Event[EventUserStatus_ID].objectId";
     public static final String USER_CALL_ID = "UserData[Call_ID].objectId";
     public static final String EVENT_ID_KEY = "eventId";

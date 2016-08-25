@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +15,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -51,6 +53,7 @@ public class MenuSelectActivity extends AppCompatActivity {
     private static OnScrollGetAllList eventScroll;
     private static OnScrollGetAllList userScroll;
     private static OnScrollGetAllList toDoScroll;
+    private static FloatingActionButton fab;
 
 
     @Override
@@ -74,6 +77,16 @@ public class MenuSelectActivity extends AppCompatActivity {
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
+
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MenuSelectActivity.this, AddUserDataActivity.class);
+                intent.putExtra(Resources.ACTION, Resources.ADD_USER_DATA);
+                startActivity(intent);
+            }
+        });
 
     }
 

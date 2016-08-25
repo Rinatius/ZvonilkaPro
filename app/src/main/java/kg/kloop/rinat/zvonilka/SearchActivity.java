@@ -110,8 +110,8 @@ public class SearchActivity extends AppCompatActivity {
 //        Backendless.Persistence.of(Event.class).find(dataQuery, new DefaultCallback<BackendlessCollection<Event>>(SearchActivity.this) {
 //            @Override
 //            public void handleResponse(final BackendlessCollection<Event> response) {
-//                List<Event> events = response.getData();
-//                final EventsAdapter adapterEvents = new EventsAdapter(getApplicationContext(), events);
+//                List<Event> backendlessDatas = response.getData();
+//                final EventsAdapter adapterEvents = new EventsAdapter(getApplicationContext(), backendlessDatas);
 //                Log.d("Data", response.getData().toString() + " " + searchQuery);
 //                listView.setAdapter(adapterEvents);
 //                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

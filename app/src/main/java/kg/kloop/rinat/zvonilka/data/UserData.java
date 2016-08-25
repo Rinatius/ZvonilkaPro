@@ -10,6 +10,7 @@ import com.backendless.geo.GeoPoint;
 import com.backendless.persistence.BackendlessDataQuery;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class UserData extends BackendlessData {
     private String City;
@@ -137,8 +138,10 @@ public class UserData extends BackendlessData {
         this.PhoneNumber = PhoneNumber;
     }
 
-    public void addEventStatus() {
-
+    public void addEventStatus(EventUserStatus e) {
+        if (EventUserStatus_ID == null)
+            EventUserStatus_ID = new ArrayList<>();
+        EventUserStatus_ID.add(e);
     }
 
     public java.util.List getEventStatus() {

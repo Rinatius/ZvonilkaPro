@@ -129,7 +129,7 @@ public class UserDataActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
-        } else if (id == R.id.action_update_user_data){
+        } else if (id == R.id.action_update_user_data) {
             Intent intent = new Intent(UserDataActivity.this, AddUserDataActivity.class);
             intent.putExtra(Resources.ACTION, Resources.UPDATE_USER_DATA);
             intent.putExtra(Resources.OBJECT_ID, userId);
@@ -311,7 +311,7 @@ public class UserDataActivity extends AppCompatActivity {
                         datePicker.getMonth(),
                         datePicker.getDayOfMonth());
                 userData.setBirthday(birthday);
-                new SaveUserData(userData, getContext()).execute();
+                new AddUserDataActivity.SaveUserData(userData, getContext()).execute();
             }
         }
 
@@ -370,51 +370,59 @@ public class UserDataActivity extends AppCompatActivity {
         }
     }
 
-   static class LoadUserData extends AsyncTask<Long, Long, UserData>{
-       Context context;
-       String userId;
-       ProgressDialog dialog;
+    static class LoadUserData extends AsyncTask<Long, Long, UserData> {
+        Context context;
+        String userId;
+        ProgressDialog dialog;
 
-       public LoadUserData(Context context, String userId) {
-           this.context = context;
-           this.userId = userId;
-       }
+        public LoadUserData(Context context, String userId) {
+            this.context = context;
+            this.userId = userId;
+        }
 
-       @Override
-       protected void onPreExecute() {
-           dialog = ProgressDialog.show(context, "", context.getString(R.string.loading), false);
-           super.onPreExecute();
-       }
+        @Override
+        protected void onPreExecute() {
+            dialog = ProgressDialog.show(context, "", context.getString(R.string.loading), false);
+            super.onPreExecute();
+        }
 
-       @Override
-       protected UserData doInBackground(Long... longs) {
-           BackendlessDataQuery query = new BackendlessDataQuery(Resources.OBJECT_ID +  " = '"+ userId + "'");
-           QueryOptions queryOptions = new QueryOptions();
-           queryOptions.setRelationsDepth(3);
-           query.setQueryOptions(queryOptions);
-           UserData userData = (UserData) BackendAction.getData(UserData.class, query).get(0);
-           Log.d("UserCall", userData.getCall_ID().toString());
-//           List<EventUserStatus> list = userData.getEventUserStatus_ID();
-//           for (int i = 0; i < list.size(); i++) {
-//               query = new BackendlessDataQuery(Resources.EVENT_USER_STATUS_ID_OBJECTID
-//                       + " = '" + list.get(i).getObjectId() + "'");
-//               Event event = (Event) BackendAction.getData(Event.class, query);
-//               eventsAdapter.add((List) event);
-//           }
-           return userData;
-       }
+        @Override
+        protected UserData doInBackground(Long... longs) {
+            BackendlessDataQuery query = new BackendlessDataQuery(Resources.OBJECT_ID + " = '" + userId + "'");
+            QueryOptions queryOptions = new QueryOptions();
+            queryOptions.setRelationsDepth(3);
+            query.setQueryOptions(queryOptions);
+            UserData userData = (UserData) BackendAction.getData(UserData.class, query).get(0); // Load client's data
+            Log.d("UserCall", userData.getCall_ID().toString());
+            List<EventUserStatus> list = userData.getEventUserStatus_ID();
+            Log.d(getClass().getSimpleName(), list.toString());
+            String whereClause = "";
+            for (int i = 0; i < list.size(); i++) {
+                Log.d(getClass().getSimpleName(), list.get(i).getObjectId());
+                if (i == 0) {
+                    whereClause = Resources.EVENT_USER_STATUS_ID_EVENT
+                            + " = '" + list.get(i).getObjectId() + "'";
+                } else {
+                    whereClause = whereClause.concat(" or " + Resources.EVENT_USER_STATUS_ID_EVENT
+                            + " = '" + list.get(i).getObjectId() + "'");
+                }
+            }
+            query = new BackendlessDataQuery(whereClause);
+            eventsAdapter.add(BackendAction.getData(Event.class, query));
+            return userData;
+        }
 
-       @Override
-       protected void onPostExecute(UserData userData) {
-           PlaceholderFragment.loadUserData(userData);
-           toDoAdapter.add(userData.getToDo_ID());
-           toDoAdapter.notifyDataSetChanged();
-           callAdapter.add(userData.getCall_ID());
-           callAdapter.notifyDataSetChanged();
-           eventsAdapter.notifyDataSetChanged();
-           Log.d("Adapters", userData.getCall_ID().size() + " " + userData.getToDo_ID() + " " + userData.getEventUserStatus_ID());
-           dialog.cancel();
-           super.onPostExecute(userData);
-       }
-   }
+        @Override
+        protected void onPostExecute(UserData userData) {
+            PlaceholderFragment.loadUserData(userData);
+            toDoAdapter.add(userData.getToDo_ID());
+            toDoAdapter.notifyDataSetChanged();
+            callAdapter.add(userData.getCall_ID());
+            callAdapter.notifyDataSetChanged();
+            eventsAdapter.notifyDataSetChanged();
+            Log.d("Adapters", userData.getCall_ID().size() + " " + userData.getToDo_ID() + " " + userData.getEventUserStatus_ID());
+            dialog.cancel();
+            super.onPostExecute(userData);
+        }
+    }
 }

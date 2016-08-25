@@ -52,7 +52,7 @@
     <string name="action_save_edit">Edit</string>
     <string name="status">Status:</string>
     <string name="add_event">Add Event</string>
-    <string name="add_user_data">Add User Data</string>
+    <string name="add_client">Add User Data</string>
     <string name="menu_select_message">Select Action</string>
     <string name="first_name">First Name</string>
     <string name="second_name">Second Name</string>
